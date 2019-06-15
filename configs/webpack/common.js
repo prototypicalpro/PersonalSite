@@ -2,6 +2,9 @@
 const {resolve} = require('path');
 const {CheckerPlugin} = require('awesome-typescript-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
+
+const styledComponentsTransformer = createStyledComponentsTransformer();
 
 module.exports = {
   resolve: {
@@ -17,7 +20,16 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
-        use: ['babel-loader', 'awesome-typescript-loader'],
+        use: [
+          'babel-loader', 
+          {
+            loader: 'awesome-typescript-loader',
+            options: {
+              getCustomTransformers: () => ({ before: [styledComponentsTransformer] })
+            }
+          }
+        ],
+        
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
