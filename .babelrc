@@ -5,14 +5,15 @@
   ],
   "plugins": [
     "react-hot-loader/babel",
-    "babel-plugin-styled-components"
+    "minify-constant-folding",
+    "babel-plugin-styled-components",
   ],
   "env": {
     "production": {
-      "presets": ["minify"]
+      "presets": ["react-optimize", "minify"]
     },
     "test": {
-      "presets": ["@babel/preset-env", "@babel/preset-react"]
+      "presets": ["@babel/preset-env", "@babel/preset-react", "react-optimize"]
     }
   }
 }

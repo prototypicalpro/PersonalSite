@@ -21,12 +21,12 @@ const main_theme = {
     },
     font: {
         size: {
-            xlarge: "175px",
+            xlarge: "19vh",
             xlarge_num: 175,
-            large: "56px",
+            large: "5.6vh",
             large_num: 56,
-            medium: "44px",
-            small: "30px",
+            medium: "4.4vh",
+            small: "3vh",
         },
         type: {
             header_footer: "'Open Sans', sans-serif",
@@ -35,9 +35,9 @@ const main_theme = {
     },
     logo: {
         size: {
-            small: "100px",
-            medium: "125px",
-            large: "275px",
+            small: "10vh",
+            medium: "12.5vh",
+            large: "27.5vh",
         },
         url: {
             main: reactLogo,
@@ -103,9 +103,9 @@ const ResumeText = styledTS<{ theme: typeof main_theme }>(styled.div)`
     font-family: ${ props => props.theme.font.type.content };
     font-weight: 100;
     font-size: ${ props => props.theme.font.size.large };
-    line-height: 76px;
+    line-height: 7.6vh;
     text-align: left;
-    max-width: 1200px;
+    max-width: 22em;
 `;
 
 const BodyElem = styledTS<{ theme: typeof main_theme, x?: number, y?: number, spanx?: number, spany?: number }>(styled.div)`
