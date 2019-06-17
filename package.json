@@ -24,7 +24,8 @@
   "homepage": "https://github.com/vikpe/react-webpack-typescript-starter",
   "scripts": {
     "build": "yarn run clean-dist && webpack -p --config=configs/webpack/prod.js",
-    "clean-dist": "rm -f -r -d dist",
+    "build-dev": "yarn run clean-dist && webpack -p --config=configs/webpack/dev.js",
+    "clean-dist": "del /s /q .\\dist && rmdir /s /q .\\dist",
     "lint": "tslint './src/**/*.ts*' --format stylish --force",
     "start": "yarn run start-dev",
     "start-dev": "webpack-dev-server --config=configs/webpack/dev.js",
@@ -36,7 +37,6 @@
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
-    "@hot-loader/react-dom": "^16.8.6",
     "@types/jest": "^24.0.14",
     "@types/node": "^12.0.8",
     "@types/react": "^16.8.20",
