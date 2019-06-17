@@ -209,7 +209,7 @@ class MainPage extends React.Component<AppProps, undefined> {
                     </ContentContainer>
                     <ContentContainer height="55vh" color="dark_background">
                         <PerfectCenter className="content">
-                            <ResumeText>I am a <b>maker</b> who enjoys the creative application of technology. I am a <b>hard worker</b> with an ability to turn ideas into reality. <b>Resourceful</b> and <b>motivated</b>, I have a track record of rapidly applying new concepts.</TextElement>
+                            <ResumeText>I am a <b>maker</b> who enjoys the creative application of technology. I am a <b>hard worker</b> with an ability to turn ideas into reality. <b>Resourceful</b> and <b>motivated</b>, I have a track record of rapidly applying new concepts.</ResumeText>
                         </PerfectCenter>
                     </ContentContainer>
                     <ContentContainer height="65vh" color="light_background">
