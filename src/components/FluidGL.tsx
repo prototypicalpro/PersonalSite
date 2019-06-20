@@ -18,7 +18,6 @@ const FluidGL: React.FunctionComponent<{ className: string }> = ({ className = "
         if (++number.current === 100) {
             number.current = 0;
             fluid_ref.current.randomSplats(5);
-            
         }
         // fluid_ref.current.splat(100, 100, 100, 100, { r: 255, g:  255, b: 255});
         animation_ref.current = requestAnimationFrame(animationCallback);

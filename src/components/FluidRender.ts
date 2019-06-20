@@ -1,6 +1,4 @@
-'use strict';
 import getShaders from "./FluidShaders";
-const WebGLDebugUtil = require("webgl-debug");
 
 /**
  * Port of stable fluid simulation using WebGL
@@ -70,24 +68,6 @@ class GLProgram {
     }
 }
 
-function throwOnGLError(err, funcName, args) {
-    console.log("error!");
-    throw WebGLDebugUtil.glEnumToString(err)
-    + "was caused by call to "
-    + funcName;
- }
-
- function pointerPrototype () {
-    this.id = -1;
-    this.x = 0;
-    this.y = 0;
-    this.dx = 0;
-    this.dy = 0;
-    this.down = false;
-    this.moved = false;
-    this.color = [30, 0, 300];
-}
-
 class FluidRender {
     private readonly canvas: HTMLCanvasElement;
     private readonly gl: WebGL2RenderingContext;
@@ -125,16 +105,12 @@ class FluidRender {
     private pressure;
     private bloom;
 
-    private splatStack = [];
-    private pointers = [];
-    private lastColorChangeTime = Date.now();
-
     private readonly blit: (destination: WebGLFramebuffer) => void;
 
     private static readonly DEFAULT_CONF = {
-        SIM_RESOLUTION: 128,
-        DYE_RESOLUTION: 512,
-        DENSITY_DISSIPATION: 1,
+        SIM_RESOLUTION: 512,
+        DYE_RESOLUTION: 2048,
+        DENSITY_DISSIPATION: .996,
         VELOCITY_DISSIPATION: 0.98,
         PRESSURE_DISSIPATION: 0.8,
         PRESSURE_ITERATIONS: 20,
@@ -157,12 +133,6 @@ class FluidRender {
     }
 
     constructor(canvas: HTMLCanvasElement, config: typeof FluidRender.DEFAULT_CONF, text_url: string) {
-        console.log("Ctor called!");
-        
-        this.pointers.push(new pointerPrototype());
-
-        WebGLDebugUtil.init();
-        // debugger;
         this.canvas = canvas;
         // get the GL context from the canvas, and read support information
         const { gl, ext } = FluidRender.getWebGLContext(canvas);
@@ -236,15 +206,12 @@ class FluidRender {
 
         const image = new Image();
         image.onload = (() => {
-            console.log("Image loaded!");
             this.ditheringTexture.width = image.width;
             this.ditheringTexture.height = image.height;
             this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
             this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGB, this.gl.RGB, this.gl.UNSIGNED_BYTE, image);
         }).bind(this);
         image.src = text_url;
-
-        console.log(text_url);
 
         this.clearProgram               = new GLProgram(this.gl, baseVertexShader, clearShader);
         this.colorProgram               = new GLProgram(this.gl, baseVertexShader, colorShader);
@@ -266,77 +233,16 @@ class FluidRender {
 
         // init framebuffers
         this.initFrameBuffers();
-
-        canvas.addEventListener('mousemove', (e => {
-            this.pointers[0].moved = this.pointers[0].down;
-            this.pointers[0].dx = (e.offsetX - this.pointers[0].x) * 5.0;
-            this.pointers[0].dy = (e.offsetY - this.pointers[0].y) * 5.0;
-            this.pointers[0].x = e.offsetX;
-            this.pointers[0].y = e.offsetY;
-        }).bind(this));
-        
-        canvas.addEventListener('touchmove', (e => {
-            e.preventDefault();
-            const touches = e.targetTouches;
-            for (let i = 0; i < touches.length; i++) {
-                let pointer = this.pointers[i];
-                pointer.moved = pointer.down;
-                pointer.dx = (touches[i].pageX - pointer.x) * 8.0;
-                pointer.dy = (touches[i].pageY - pointer.y) * 8.0;
-                pointer.x = touches[i].pageX;
-                pointer.y = touches[i].pageY;
-            }
-        }).bind(this), false);
-        
-        canvas.addEventListener('mousedown', (() => {
-            this.pointers[0].down = true;
-            this.pointers[0].color = FluidRender.generateColor();
-        }).bind(this));
-        
-        canvas.addEventListener('touchstart', (e => {
-            e.preventDefault();
-            const touches = e.targetTouches;
-            for (let i = 0; i < touches.length; i++) {
-                if (i >= this.pointers.length)
-                    this.pointers.push(new pointerPrototype());
-        
-                this.pointers[i].id = touches[i].identifier;
-                this.pointers[i].down = true;
-                this.pointers[i].x = touches[i].pageX;
-                this.pointers[i].y = touches[i].pageY;
-                this.pointers[i].color = FluidRender.generateColor();
-            }
-        }).bind(this));
-        
-        window.addEventListener('mouseup', (() => {
-            this.pointers[0].down = false;
-        }).bind(this));
-        
-        window.addEventListener('touchend', (e => {
-            const touches = e.changedTouches;
-            for (let i = 0; i < touches.length; i++)
-                for (let j = 0; j < this.pointers.length; j++)
-                    if (touches[i].identifier === this.pointers[j].id)
-                        this.pointers[j].down = false;
-        }).bind(this));
-        
-        window.addEventListener('keydown', (e => {
-            if (e.code === 'KeyP')
-                this.config.PAUSED = !this.config.PAUSED;
-            if (e.key === ' ')
-                this.splatStack.push(Math.random() * 20 + 5);
-        }).bind(this));
     }
 
     private initFrameBuffers() {
-        console.log("Framebuffers!");
         let simRes = this.getResolution(this.config.SIM_RESOLUTION);
         let dyeRes = this.getResolution(this.config.DYE_RESOLUTION);
 
-        const simWidth  = simRes.width;
-        const simHeight = simRes.height;
-        const dyeWidth  = dyeRes.width;
-        const dyeHeight = dyeRes.height;
+        this.simWidth  = simRes.width;
+        this.simHeight = simRes.height;
+        this.dyeWidth  = dyeRes.width;
+        this.dyeHeight = dyeRes.height;
 
         const texType = this.ext.halfFloatTexType;
         const rgba    = this.ext.formatRGBA;
@@ -345,18 +251,18 @@ class FluidRender {
         const filtering = this.ext.supportLinearFiltering ? this.gl.LINEAR : this.gl.NEAREST;
 
         if (this.density == null)
-            this.density = this.createDoubleFBO(dyeWidth, dyeHeight, rgba.internalFormat, rgba.format, texType, filtering);
+            this.density = this.createDoubleFBO(this.dyeWidth, this.dyeHeight, rgba.internalFormat, rgba.format, texType, filtering);
         else
-            this.density = this.resizeDoubleFBO(this.density, dyeWidth, dyeHeight, rgba.internalFormat, rgba.format, texType, filtering);
+            this.density = this.resizeDoubleFBO(this.density, this.dyeWidth, this.dyeHeight, rgba.internalFormat, rgba.format, texType, filtering);
 
         if (this.velocity == null)
-            this.velocity = this.createDoubleFBO(simWidth, simHeight, rg.internalFormat, rg.format, texType, filtering);
+            this.velocity = this.createDoubleFBO(this.simWidth, this.simHeight, rg.internalFormat, rg.format, texType, filtering);
         else
-            this.velocity = this.resizeDoubleFBO(this.velocity, simWidth, simHeight, rg.internalFormat, rg.format, texType, filtering);
+            this.velocity = this.resizeDoubleFBO(this.velocity, this.simWidth, this.simHeight, rg.internalFormat, rg.format, texType, filtering);
 
-        this.divergence = this.createFBO      (simWidth, simHeight, r.internalFormat, r.format, texType, this.gl.NEAREST);
-        this.curl       = this.createFBO      (simWidth, simHeight, r.internalFormat, r.format, texType, this.gl.NEAREST);
-        this.pressure   = this.createDoubleFBO(simWidth, simHeight, r.internalFormat, r.format, texType, this.gl.NEAREST);
+        this.divergence = this.createFBO      (this.simWidth, this.simHeight, r.internalFormat, r.format, texType, this.gl.NEAREST);
+        this.curl       = this.createFBO      (this.simWidth, this.simHeight, r.internalFormat, r.format, texType, this.gl.NEAREST);
+        this.pressure   = this.createDoubleFBO(this.simWidth, this.simHeight, r.internalFormat, r.format, texType, this.gl.NEAREST);
 
         this.initBloomFramebuffers();
     }
@@ -640,9 +546,7 @@ class FluidRender {
     }
 
     private checkResizeCanvas () {
-        debugger;
         if (this.canvas.width !== this.canvas.clientWidth || this.canvas.height !== this.canvas.clientHeight) {
-            console.log("resized!");
             this.canvas.width = this.canvas.clientWidth;
             this.canvas.height = this.canvas.clientHeight;
             this.initFrameBuffers();
@@ -671,8 +575,6 @@ class FluidRender {
         const isWebGL2 = !!gl;
         if (!isWebGL2)
             gl = (canvas.getContext("webgl", params) || canvas.getContext("experimental-webgl", params)) as WebGL2RenderingContext;
-
-        gl = WebGLDebugUtil.makeDebugContext(gl, throwOnGLError);
 
         let halfFloat;
         let supportLinearFiltering;
@@ -794,31 +696,6 @@ class FluidRender {
         if (this.ditheringTexture.width === 1) console.log("Attempted to render when image is not loaded!");
         else {
             this.checkResizeCanvas();
-
-            if (this.splatStack.length > 0)
-                this.randomSplats(this.splatStack.pop());
-
-            for (let i = 0; i < this.pointers.length; i++) {
-                const p = this.pointers[i];
-                if (p.moved) {
-                    this.splat(p.x, p.y, p.dx, p.dy, p.color);
-                    p.moved = false;
-                }
-            }
-
-            if (!this.config.COLORFUL)
-                return;
-
-            if (this.lastColorChangeTime + 100 < Date.now())
-            {
-                this.lastColorChangeTime = Date.now();
-                for (let i = 0; i < this.pointers.length; i++) {
-                    const p = this.pointers[i];
-                    p.color = FluidRender.generateColor();
-                }
-            }
-
-
             this.step(dt);
             this.render(null);
         }
