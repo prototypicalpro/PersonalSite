@@ -1,4 +1,6 @@
+'use strict';
 import getShaders from "./FluidShaders";
+const WebGLDebugUtil = require("webgl-debug");
 
 /**
  * Port of stable fluid simulation using WebGL
@@ -10,7 +12,7 @@ interface IGLExtentsions {
     formatRG;
     formatR;
     halfFloatTexType;
-    supportLinearFiltering: boolean;
+    supportLinearFiltering;
 }
 
 function HSVtoRGB (h, s, v) {
@@ -42,11 +44,12 @@ function isMobile (): boolean {
 }
 
 class GLProgram {
-    uniforms: any = {};
+    uniforms: any;
     program: WebGLProgram;
 
     constructor ( gl: WebGL2RenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader) {
         this.program = gl.createProgram();
+        this.uniforms = {};
 
         gl.attachShader(this.program, vertexShader);
         gl.attachShader(this.program, fragmentShader);
@@ -65,6 +68,24 @@ class GLProgram {
     bind (gl: WebGL2RenderingContext) {
         gl.useProgram(this.program);
     }
+}
+
+function throwOnGLError(err, funcName, args) {
+    console.log("error!");
+    throw WebGLDebugUtil.glEnumToString(err)
+    + "was caused by call to "
+    + funcName;
+ }
+
+ function pointerPrototype () {
+    this.id = -1;
+    this.x = 0;
+    this.y = 0;
+    this.dx = 0;
+    this.dy = 0;
+    this.down = false;
+    this.moved = false;
+    this.color = [30, 0, 300];
 }
 
 class FluidRender {
@@ -104,12 +125,16 @@ class FluidRender {
     private pressure;
     private bloom;
 
+    private splatStack = [];
+    private pointers = [];
+    private lastColorChangeTime = Date.now();
+
     private readonly blit: (destination: WebGLFramebuffer) => void;
 
     private static readonly DEFAULT_CONF = {
         SIM_RESOLUTION: 128,
         DYE_RESOLUTION: 512,
-        DENSITY_DISSIPATION: 0.97,
+        DENSITY_DISSIPATION: 1,
         VELOCITY_DISSIPATION: 0.98,
         PRESSURE_DISSIPATION: 0.8,
         PRESSURE_ITERATIONS: 20,
@@ -117,7 +142,6 @@ class FluidRender {
         SPLAT_RADIUS: 0.5,
         SHADING: true,
         COLORFUL: true,
-        PAUSED: false,
         BACK_COLOR: { r: 0, g: 0, b: 0 },
         TRANSPARENT: false,
         BLOOM: true,
@@ -126,59 +150,34 @@ class FluidRender {
         BLOOM_INTENSITY: 0.8,
         BLOOM_THRESHOLD: 0.6,
         BLOOM_SOFT_KNEE: 0.7,
-        TEXTURE_URL: "LDR_RGB1_0.png",
     };
 
-    static getDefaultConfig(support: IGLExtentsions): typeof FluidRender.DEFAULT_CONF {
-        const config = Object.assign({}, FluidRender.DEFAULT_CONF);
-
-        if (isMobile())
-            config.SHADING = false;
-
-        if (!support.supportLinearFiltering) {
-            config.SHADING = false;
-            config.BLOOM = false;
-        }
-
-        return config;
+    static getDefaultConfig(): typeof FluidRender.DEFAULT_CONF {
+        return Object.assign({}, FluidRender.DEFAULT_CONF);
     }
 
-    constructor(canvas: HTMLCanvasElement, config: typeof FluidRender.DEFAULT_CONF) {
+    constructor(canvas: HTMLCanvasElement, config: typeof FluidRender.DEFAULT_CONF, text_url: string) {
+        console.log("Ctor called!");
+        
+        this.pointers.push(new pointerPrototype());
+
+        WebGLDebugUtil.init();
+        // debugger;
+        this.canvas = canvas;
         // get the GL context from the canvas, and read support information
         const { gl, ext } = FluidRender.getWebGLContext(canvas);
         this.gl = gl;
         // set the extensions and config data
         this.ext = ext;
         this.config = config;
+        // modify the config for platform specific things
+        if (isMobile())
+            this.config.SHADING = false;
 
-        // load the image texture for dithering
-        const texture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255]));
-
-        this.ditheringTexture = {
-            texture,
-            width: 1,
-            height: 1,
-            attach: ((id) => {
-                this.gl.activeTexture(this.gl.TEXTURE0 + id);
-                this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-                return id;
-            }).bind(this)
-        };
-
-        const image = new Image();
-        image.onload = (() => {
-            this.ditheringTexture.width = image.width;
-            this.ditheringTexture.height = image.height;
-            this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGB, this.gl.RGB, this.gl.UNSIGNED_BYTE, image);
-        }).bind(this);
-        image.src = this.config.TEXTURE_URL;
+        if (!this.ext.supportLinearFiltering) {
+            this.config.SHADING = false;
+            this.config.BLOOM = false;
+        }
 
         // process the shaders
         const {
@@ -203,6 +202,50 @@ class FluidRender {
             gradientSubtractShader
         } = getShaders(this.gl);
 
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.gl.createBuffer());
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), this.gl.STATIC_DRAW);
+        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.gl.createBuffer());
+        this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), this.gl.STATIC_DRAW);
+        this.gl.vertexAttribPointer(0, 2, this.gl.FLOAT, false, 0, 0);
+        this.gl.enableVertexAttribArray(0);
+
+        this.blit = ((destination: WebGLFramebuffer) => {
+            this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, destination);
+            this.gl.drawElements(this.gl.TRIANGLES, 6, this.gl.UNSIGNED_SHORT, 0);
+        }).bind(this);
+
+        // load the image texture for dithering
+        const texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255]));
+
+        this.ditheringTexture = {
+            texture,
+            width: 1,
+            height: 1,
+            attach: ((id) => {
+                this.gl.activeTexture(this.gl.TEXTURE0 + id);
+                this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+                return id;
+            }).bind(this)
+        };
+
+        const image = new Image();
+        image.onload = (() => {
+            console.log("Image loaded!");
+            this.ditheringTexture.width = image.width;
+            this.ditheringTexture.height = image.height;
+            this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGB, this.gl.RGB, this.gl.UNSIGNED_BYTE, image);
+        }).bind(this);
+        image.src = text_url;
+
+        console.log(text_url);
+
         this.clearProgram               = new GLProgram(this.gl, baseVertexShader, clearShader);
         this.colorProgram               = new GLProgram(this.gl, baseVertexShader, colorShader);
         this.backgroundProgram          = new GLProgram(this.gl, baseVertexShader, backgroundShader);
@@ -221,23 +264,72 @@ class FluidRender {
         this.pressureProgram            = new GLProgram(this.gl, baseVertexShader, pressureShader);
         this.gradientSubtractProgram     = new GLProgram(this.gl, baseVertexShader, gradientSubtractShader);
 
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.gl.createBuffer());
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), this.gl.STATIC_DRAW);
-        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.gl.createBuffer());
-        this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), this.gl.STATIC_DRAW);
-        this.gl.vertexAttribPointer(0, 2, this.gl.FLOAT, false, 0, 0);
-        this.gl.enableVertexAttribArray(0);
-
-        this.blit = (destination: WebGLFramebuffer) => {
-            this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, destination);
-            this.gl.drawElements(this.gl.TRIANGLES, 6, this.gl.UNSIGNED_SHORT, 0);
-        };
-
         // init framebuffers
         this.initFrameBuffers();
+
+        canvas.addEventListener('mousemove', (e => {
+            this.pointers[0].moved = this.pointers[0].down;
+            this.pointers[0].dx = (e.offsetX - this.pointers[0].x) * 5.0;
+            this.pointers[0].dy = (e.offsetY - this.pointers[0].y) * 5.0;
+            this.pointers[0].x = e.offsetX;
+            this.pointers[0].y = e.offsetY;
+        }).bind(this));
+        
+        canvas.addEventListener('touchmove', (e => {
+            e.preventDefault();
+            const touches = e.targetTouches;
+            for (let i = 0; i < touches.length; i++) {
+                let pointer = this.pointers[i];
+                pointer.moved = pointer.down;
+                pointer.dx = (touches[i].pageX - pointer.x) * 8.0;
+                pointer.dy = (touches[i].pageY - pointer.y) * 8.0;
+                pointer.x = touches[i].pageX;
+                pointer.y = touches[i].pageY;
+            }
+        }).bind(this), false);
+        
+        canvas.addEventListener('mousedown', (() => {
+            this.pointers[0].down = true;
+            this.pointers[0].color = FluidRender.generateColor();
+        }).bind(this));
+        
+        canvas.addEventListener('touchstart', (e => {
+            e.preventDefault();
+            const touches = e.targetTouches;
+            for (let i = 0; i < touches.length; i++) {
+                if (i >= this.pointers.length)
+                    this.pointers.push(new pointerPrototype());
+        
+                this.pointers[i].id = touches[i].identifier;
+                this.pointers[i].down = true;
+                this.pointers[i].x = touches[i].pageX;
+                this.pointers[i].y = touches[i].pageY;
+                this.pointers[i].color = FluidRender.generateColor();
+            }
+        }).bind(this));
+        
+        window.addEventListener('mouseup', (() => {
+            this.pointers[0].down = false;
+        }).bind(this));
+        
+        window.addEventListener('touchend', (e => {
+            const touches = e.changedTouches;
+            for (let i = 0; i < touches.length; i++)
+                for (let j = 0; j < this.pointers.length; j++)
+                    if (touches[i].identifier === this.pointers[j].id)
+                        this.pointers[j].down = false;
+        }).bind(this));
+        
+        window.addEventListener('keydown', (e => {
+            if (e.code === 'KeyP')
+                this.config.PAUSED = !this.config.PAUSED;
+            if (e.key === ' ')
+                this.splatStack.push(Math.random() * 20 + 5);
+        }).bind(this));
     }
 
     private initFrameBuffers() {
+        console.log("Framebuffers!");
         let simRes = this.getResolution(this.config.SIM_RESOLUTION);
         let dyeRes = this.getResolution(this.config.DYE_RESOLUTION);
 
@@ -279,7 +371,6 @@ class FluidRender {
         this.bloom = this.createFBO(res.width, res.height, rgba.internalFormat, rgba.format, texType, filtering);
 
         this.bloomFramebuffers = [];
-        this.bloomFramebuffers.length = 0;
         for (let i = 0; i < this.config.BLOOM_ITERATIONS; i++) {
             let width = res.width >> (i + 1);
             let height = res.height >> (i + 1);
@@ -326,11 +417,11 @@ class FluidRender {
             fbo,
             width: w,
             height: h,
-            attach (id) {
+            attach: ((id) => {
                 this.gl.activeTexture(this.gl.TEXTURE0 + id);
                 this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
                 return id;
-            }
+            }).bind(this)
         };
     }
 
@@ -549,7 +640,9 @@ class FluidRender {
     }
 
     private checkResizeCanvas () {
+        debugger;
         if (this.canvas.width !== this.canvas.clientWidth || this.canvas.height !== this.canvas.clientHeight) {
+            console.log("resized!");
             this.canvas.width = this.canvas.clientWidth;
             this.canvas.height = this.canvas.clientHeight;
             this.initFrameBuffers();
@@ -578,6 +671,8 @@ class FluidRender {
         const isWebGL2 = !!gl;
         if (!isWebGL2)
             gl = (canvas.getContext("webgl", params) || canvas.getContext("experimental-webgl", params)) as WebGL2RenderingContext;
+
+        gl = WebGLDebugUtil.makeDebugContext(gl, throwOnGLError);
 
         let halfFloat;
         let supportLinearFiltering;
@@ -698,9 +793,33 @@ class FluidRender {
     update(dt: number) {
         if (this.ditheringTexture.width === 1) console.log("Attempted to render when image is not loaded!");
         else {
-             this.checkResizeCanvas();
-            if (!this.config.PAUSED)
-                this.step(dt);
+            this.checkResizeCanvas();
+
+            if (this.splatStack.length > 0)
+                this.randomSplats(this.splatStack.pop());
+
+            for (let i = 0; i < this.pointers.length; i++) {
+                const p = this.pointers[i];
+                if (p.moved) {
+                    this.splat(p.x, p.y, p.dx, p.dy, p.color);
+                    p.moved = false;
+                }
+            }
+
+            if (!this.config.COLORFUL)
+                return;
+
+            if (this.lastColorChangeTime + 100 < Date.now())
+            {
+                this.lastColorChangeTime = Date.now();
+                for (let i = 0; i < this.pointers.length; i++) {
+                    const p = this.pointers[i];
+                    p.color = FluidRender.generateColor();
+                }
+            }
+
+
+            this.step(dt);
             this.render(null);
         }
     }

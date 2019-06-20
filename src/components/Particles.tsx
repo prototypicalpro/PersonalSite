@@ -3,6 +3,7 @@
  */
 
 import * as React from "react";
+import useAnimation from "./useAnimation";
 
 function clamp(num: number, min: number, max: number): number {
     return num <= min ? min : num >= max ? max : num;
@@ -26,7 +27,7 @@ function drawSurface(image_data: ImageData, grid_size: number, cur_step: number)
             const x_radian = x * sinstep + cur_step * STEP_FACTOR;
             const y_radian = y * sinstep + cur_step * STEP_FACTOR;
             // draw a dot offset by the slope of a sine curve
-            const x_coord = Math.round(x * grid_size + (y & 1 ? grid_size / 2 : 0) + Math.sin(x_radian) * Math.cos(y_radian) * 75); //;
+            const x_coord = Math.round(x * grid_size + (y & 1 ? grid_size / 2 : 0) + Math.sin(x_radian) * Math.cos(y_radian) * 75);
             const y_coord = Math.round(y * grid_size + Math.cos(x_radian) * Math.sin(y_radian) * 75);
             const index = coordToIndex(x_coord, y_coord, image_data.width, image_data.height, 4);
             image_data.data[index] = 0;
@@ -39,26 +40,16 @@ function drawSurface(image_data: ImageData, grid_size: number, cur_step: number)
 
 const Particles: React.FunctionComponent<{ className: string }> = ({ className = "" }) => {
     const canvas_ref = React.useRef<HTMLCanvasElement>();
-    const animation_ref = React.useRef<number>();
     const time_step = React.useRef<number>(0);
 
-    React.useEffect(() => {
-        const animation_callback = () => {
-            const ctx = canvas_ref.current.getContext("2d");
-            ctx.clearRect(0, 0, 1440, 700);
-            const image_data = ctx.getImageData(0, 0, canvas_ref.current.width, canvas_ref.current.height);
-            drawSurface(image_data, 10, time_step.current++);
-            ctx.putImageData(image_data, 0, 0);
-            animation_ref.current = requestAnimationFrame(animation_callback);
-        };
-
-        animation_callback();
-
-        return () => {
-            window.cancelAnimationFrame(animation_ref.current);
-            time_step.current = 0;
-        };
-    }, [canvas_ref.current]);
+    useAnimation(() => {
+        const ctx = canvas_ref.current.getContext("2d");
+        ctx.clearRect(0, 0, 1440, 700);
+        const image_data = ctx.getImageData(0, 0, canvas_ref.current.width, canvas_ref.current.height);
+        drawSurface(image_data, 10, time_step.current++);
+        if (time_step.current > 100000) time_step.current = 0;
+        ctx.putImageData(image_data, 0, 0);
+    }, () => time_step.current = 0);
 
     return (
         <canvas ref={canvas_ref} className={className} width={1440} height={700}></canvas>

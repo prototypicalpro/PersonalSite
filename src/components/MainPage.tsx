@@ -3,8 +3,9 @@ const reactLogo = require("./../assets/img/react_logo.svg");
 const stockPhoto = require("./../assets/img/image.png");
 import styled, { ThemeProvider, css, createGlobalStyle } from "styled-components";
 import styledTS from "styled-components-ts";
-import { number } from "prop-types";
 import Particles from "./Particles";
+import FluidDots from "./FluidJS";
+import FluidFull from "./FluidGL";
 
 /**
  * My personal website!
@@ -170,7 +171,10 @@ class MainPage extends React.Component<AppProps, undefined> {
                 <div>
                     <GlobalStyle />
                     <ContentContainer height="80vh" color="light_background">
-                        <Particles className="full"></Particles>
+                        <FluidFull className="content"></FluidFull>
+                    </ContentContainer>
+                    <ContentContainer height="80vh" color="light_background">
+                        
                         <PerfectCenter className="content" 
                             style={ { backgroundImage: `url(${main_theme.logo.url.stock})`, backgroundPosition: "center", backgroundSize: "cover" } }>
                             <MainText>Prototypical {"{"}P{"}"}ro</MainText>

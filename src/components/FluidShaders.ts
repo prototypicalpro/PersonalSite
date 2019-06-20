@@ -1,11 +1,13 @@
 
 function compileShader (gl: WebGL2RenderingContext, type: number, source: string): WebGLShader {
-    const shader = this.gl.createShader(type);
-    this.gl.shaderSource(shader, source);
-    this.gl.compileShader(shader);
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
 
-    if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS))
-        throw this.gl.getShaderInfoLog(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
+        throw gl.getShaderInfoLog(shader);
+
+    console.log("shader compiled!");
 
     return shader;
 }
