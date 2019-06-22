@@ -39,16 +39,18 @@ function drawSurface(image_data: ImageData, grid_size: number, cur_step: number)
 }
 
 const Particles: React.FunctionComponent<{ className: string }> = ({ className = "" }) => {
-    const canvas_ref = React.useRef<HTMLCanvasElement>();
+    const canvas_ref = React.useRef<HTMLCanvasElement | null>(null);
     const time_step = React.useRef<number>(0);
 
     useAnimation(() => {
-        const ctx = canvas_ref.current.getContext("2d");
-        ctx.clearRect(0, 0, 1440, 700);
-        const image_data = ctx.getImageData(0, 0, canvas_ref.current.width, canvas_ref.current.height);
-        drawSurface(image_data, 10, time_step.current++);
-        if (time_step.current > 100000) time_step.current = 0;
-        ctx.putImageData(image_data, 0, 0);
+        if (canvas_ref.current) {
+            const ctx = canvas_ref.current.getContext("2d") as CanvasRenderingContext2D;
+            ctx.clearRect(0, 0, 1440, 700);
+            const image_data = ctx.getImageData(0, 0, canvas_ref.current.width, canvas_ref.current.height);
+            drawSurface(image_data, 10, time_step.current++);
+            if (time_step.current > 100000) time_step.current = 0;
+            ctx.putImageData(image_data, 0, 0);
+        }
     }, () => time_step.current = 0);
 
     return (

@@ -1,6 +1,6 @@
 
 function compileShader (gl: WebGL2RenderingContext, type: number, source: string): WebGLShader {
-    const shader = gl.createShader(type);
+    const shader = gl.createShader(type) as WebGLShader;
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
 

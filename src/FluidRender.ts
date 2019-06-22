@@ -1,5 +1,7 @@
 import getShaders from "./FluidShaders";
 
+/*eslint no-unused-expressions: "off"*/
+
 /**
  * Port of stable fluid simulation using WebGL
  * From this project: https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
@@ -46,7 +48,7 @@ class GLProgram {
     program: WebGLProgram;
 
     constructor ( gl: WebGL2RenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader) {
-        this.program = gl.createProgram();
+        this.program = gl.createProgram() as WebGLProgram;
         this.uniforms = {};
 
         gl.attachShader(this.program, vertexShader);
@@ -58,7 +60,7 @@ class GLProgram {
 
         const uniformCount = gl.getProgramParameter(this.program, gl.ACTIVE_UNIFORMS);
         for (let i = 0; i < uniformCount; i++) {
-            const uniformName = gl.getActiveUniform(this.program, i).name;
+            const uniformName = (gl.getActiveUniform(this.program, i) as WebGLActiveInfo).name;
             this.uniforms[uniformName] = gl.getUniformLocation(this.program, uniformName);
         }
     }
@@ -93,7 +95,7 @@ class FluidRender {
     private readonly pressureProgram: GLProgram;
     private readonly gradientSubtractProgram: GLProgram;
 
-    private bloomFramebuffers: Array<any>;
+    private bloomFramebuffers: Array<any> = [];
     private simWidth;
     private simHeight;
     private dyeWidth;
@@ -105,12 +107,12 @@ class FluidRender {
     private pressure;
     private bloom;
 
-    private readonly blit: (destination: WebGLFramebuffer) => void;
+    private readonly blit: (destination: WebGLFramebuffer | null) => void;
 
     private static readonly DEFAULT_CONF = {
-        SIM_RESOLUTION: 512,
-        DYE_RESOLUTION: 2048,
-        DENSITY_DISSIPATION: .996,
+        SIM_RESOLUTION: 128,
+        DYE_RESOLUTION: 512,
+        DENSITY_DISSIPATION: 0.97,
         VELOCITY_DISSIPATION: 0.98,
         PRESSURE_DISSIPATION: 0.8,
         PRESSURE_ITERATIONS: 20,
@@ -118,6 +120,7 @@ class FluidRender {
         SPLAT_RADIUS: 0.5,
         SHADING: true,
         COLORFUL: true,
+        PAUSED: false,
         BACK_COLOR: { r: 0, g: 0, b: 0 },
         TRANSPARENT: false,
         BLOOM: true,
@@ -125,7 +128,7 @@ class FluidRender {
         BLOOM_RESOLUTION: 256,
         BLOOM_INTENSITY: 0.8,
         BLOOM_THRESHOLD: 0.6,
-        BLOOM_SOFT_KNEE: 0.7,
+        BLOOM_SOFT_KNEE: 0.7
     };
 
     static getDefaultConfig(): typeof FluidRender.DEFAULT_CONF {
@@ -179,10 +182,10 @@ class FluidRender {
         this.gl.vertexAttribPointer(0, 2, this.gl.FLOAT, false, 0, 0);
         this.gl.enableVertexAttribArray(0);
 
-        this.blit = ((destination: WebGLFramebuffer) => {
+        this.blit = (destination: WebGLFramebuffer | null) => {
             this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, destination);
             this.gl.drawElements(this.gl.TRIANGLES, 6, this.gl.UNSIGNED_SHORT, 0);
-        }).bind(this);
+        };
 
         // load the image texture for dithering
         const texture = gl.createTexture();
@@ -319,8 +322,8 @@ class FluidRender {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
         return {
-            texture,
-            fbo,
+            texture: texture as WebGLTexture,
+            fbo: fbo as WebGLFramebuffer,
             width: w,
             height: h,
             attach: ((id) => {
@@ -435,7 +438,7 @@ class FluidRender {
         this.gl.uniform1i(this.advectionProgram.uniforms.uVelocity, this.velocity.read.attach(0));
         this.gl.uniform1i(this.advectionProgram.uniforms.uSource, this.density.read.attach(1));
         this.gl.uniform1f(this.advectionProgram.uniforms.dissipation, this.config.DENSITY_DISSIPATION);
-        this. blit(this.density.write.fbo);
+        this.blit(this.density.write.fbo);
         this.density.swap();
     }
 
@@ -553,7 +556,7 @@ class FluidRender {
         }
     }
 
-    private static generateColor () {
+    static generateColor () {
         let c = HSVtoRGB(Math.random(), 1.0, 1.0);
         c.r *= 0.15;
         c.g *= 0.15;
@@ -660,14 +663,14 @@ class FluidRender {
         return true;
     }
 
-    splat (x: number, y: number, dx: number, dy:number, color: { r: number, g: number, b: number }) {
+    splat (x: number, y: number, dx: number, dy :number, color: { r: number, g: number, b: number }, radius?: number) {
         this.gl.viewport(0, 0, this.simWidth, this.simHeight);
         this.splatProgram.bind(this.gl);
         this.gl.uniform1i(this.splatProgram.uniforms.uTarget, this.velocity.read.attach(0));
         this.gl.uniform1f(this.splatProgram.uniforms.aspectRatio, this.canvas.width / this.canvas.height);
         this.gl.uniform2f(this.splatProgram.uniforms.point, x / this.canvas.width, 1.0 - y / this.canvas.height);
         this.gl.uniform3f(this.splatProgram.uniforms.color, dx, -dy, 1.0);
-        this.gl.uniform1f(this.splatProgram.uniforms.radius, this.config.SPLAT_RADIUS / 100.0);
+        this.gl.uniform1f(this.splatProgram.uniforms.radius, (radius || this.config.SPLAT_RADIUS) / 100.0);
         this.blit(this.velocity.write.fbo);
         this.velocity.swap();
 

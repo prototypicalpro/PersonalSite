@@ -1,29 +1,11 @@
-import * as React from "react";
-import {render} from "react-dom";
-import {AppContainer} from "react-hot-loader";
-import MainPage from "./components/MainPage";
+import React from "react";
+import ReactDOM from "react-dom";
+import * as serviceWorker from "./serviceWorker";
+import MainPage from "./MainPage";
 
-const rootEl = document.getElementById("root");
+ReactDOM.render(<MainPage />, document.getElementById("root"));
 
-render(
-    <AppContainer>
-        <MainPage/>
-    </AppContainer>,
-    rootEl
-);
-
-// Hot Module Replacement API
-declare let module: { hot: any };
-
-if (module.hot) {
-    module.hot.accept("./components/MainPage", () => {
-        const MainPage = require("./components/MainPage").default;
-
-        render(
-            <AppContainer>
-                <MainPage/>
-            </AppContainer>,
-            rootEl
-        );
-    });
-}
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();

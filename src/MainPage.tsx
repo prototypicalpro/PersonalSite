@@ -1,11 +1,10 @@
 import * as React from "react";
-const reactLogo = require("./../assets/img/react_logo.svg");
-const stockPhoto = require("./../assets/img/image.png");
 import styled, { ThemeProvider, css, createGlobalStyle } from "styled-components";
 import styledTS from "styled-components-ts";
-import Particles from "./Particles";
-import FluidDots from "./FluidJS";
 import FluidFull from "./FluidGL";
+const reactLogo = require("./img/react_logo.svg");
+const stockPhoto = require("./img/image.PNG");
+
 
 /**
  * My personal website!
@@ -161,10 +160,7 @@ const BodyGrid = styledTS<{ theme: typeof main_theme, col_count: number, col_gap
         [contentX] 1fr [contentX];
 `;
 
-export interface AppProps {
-}
-
-class MainPage extends React.Component<AppProps, undefined> {
+class MainPage extends React.Component {
     render() {
         return (
             <ThemeProvider theme={main_theme}>
