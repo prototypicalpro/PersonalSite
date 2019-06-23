@@ -170,10 +170,11 @@ const MaskImage = styledTS<{ theme: typeof main_theme, image: string }>(styled.d
 `;
 
 const MainPage: React.FunctionComponent = () => {
-    const [dimensions, setDimensions] = React.useState([window.innerWidth, window.innerHeight]);
+    // TODO: Set to however the size of the image is being calculated
+    const [dimension, setDimension] = React.useState<number>(Math.min(window.innerWidth, window.innerHeight * 0.8));
     // check for window resize to update our canvas
     useEventListener("resize", () => {
-        setDimensions([window.innerWidth, window.innerHeight]);
+        setDimension(Math.min(window.innerWidth, window.innerHeight * 0.8));
     });
 
     return (
@@ -182,7 +183,7 @@ const MainPage: React.FunctionComponent = () => {
                 <GlobalStyle />
                 <ContentContainer height="80vh" color="light_background">
                     <MaskImage className="full" image={protoMask}></MaskImage>
-                    <FluidFull className="full" canvaswidth={dimensions[0]} canvasheight={dimensions[1] * 0.8} ></FluidFull>
+                    <FluidFull className="full" canvaswidth={dimension} canvasheight={dimension} ></FluidFull>
                     <div className="content"></div>
                 </ContentContainer>
                 <ContentContainer height="80vh" color="light_background">

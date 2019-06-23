@@ -1,5 +1,6 @@
 import getShaders from "./FluidShaders";
-import { SplatVectorState } from "./FluidDraw";
+import SplatVector from "./FluidDraw";
+import HSVTools from "./HSVTools";
 
 /*eslint no-unused-expressions: "off"*/
 
@@ -14,30 +15,6 @@ interface IGLExtentsions {
     formatR;
     halfFloatTexType;
     supportLinearFiltering;
-}
-
-function HSVtoRGB (h, s, v) {
-    let r, g, b, i, f, p, q, t;
-    i = Math.floor(h * 6);
-    f = h * 6 - i;
-    p = v * (1 - s);
-    q = v * (1 - f * s);
-    t = v * (1 - (1 - f) * s);
-
-    switch (i % 6) {
-        case 0: r = v, g = t, b = p; break;
-        case 1: r = q, g = v, b = p; break;
-        case 2: r = p, g = v, b = t; break;
-        case 3: r = p, g = q, b = v; break;
-        case 4: r = t, g = p, b = v; break;
-        case 5: r = v, g = p, b = q; break;
-    }
-
-    return {
-        r,
-        g,
-        b
-    };
 }
 
 function isMobile (): boolean {
@@ -108,7 +85,8 @@ class FluidRender {
     private pressure;
     private bloom;
 
-    private splatVectorStates: Array<SplatVectorState> = [];
+    private splatVectorStates: Array<SplatVector> = [];
+    private paused: boolean = false;
 
     private readonly blit: (destination: WebGLFramebuffer | null) => void;
 
@@ -123,7 +101,6 @@ class FluidRender {
         SPLAT_RADIUS: 0.5,
         SHADING: true,
         COLORFUL: true,
-        PAUSED: false,
         BACK_COLOR: { r: 0, g: 0, b: 0 },
         TRANSPARENT: false,
         BLOOM: true,
@@ -203,20 +180,20 @@ class FluidRender {
             texture,
             width: 1,
             height: 1,
-            attach: ((id) => {
+            attach: (id) => {
                 this.gl.activeTexture(this.gl.TEXTURE0 + id);
                 this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
                 return id;
-            }).bind(this)
+            }
         };
 
         const image = new Image();
-        image.onload = (() => {
+        image.onload = () => {
             this.ditheringTexture.width = image.width;
             this.ditheringTexture.height = image.height;
             this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
             this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGB, this.gl.RGB, this.gl.UNSIGNED_BYTE, image);
-        }).bind(this);
+        };
         image.src = text_url;
 
         this.clearProgram               = new GLProgram(this.gl, baseVertexShader, clearShader);
@@ -329,11 +306,11 @@ class FluidRender {
             fbo: fbo as WebGLFramebuffer,
             width: w,
             height: h,
-            attach: ((id) => {
+            attach: (id) => {
                 this.gl.activeTexture(this.gl.TEXTURE0 + id);
                 this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
                 return id;
-            }).bind(this)
+            }
         };
     }
 
@@ -559,14 +536,6 @@ class FluidRender {
         }
     }
 
-    static generateColor () {
-        let c = HSVtoRGB(Math.random(), 1.0, 1.0);
-        c.r *= 0.15;
-        c.g *= 0.15;
-        c.b *= 0.15;
-        return c;
-    }
-
     private static getTextureScale (texture, width, height) {
         return {
             x: width / texture.width,
@@ -686,7 +655,7 @@ class FluidRender {
 
     randomSplats (amount: number) {
         for (let i = 0; i < amount; i++) {
-            const color = FluidRender.generateColor();
+            const color = HSVTools.generateColor();
             color.r *= 10.0;
             color.g *= 10.0;
             color.b *= 10.0;
@@ -698,16 +667,13 @@ class FluidRender {
         }
     }
 
-    addVector(vector: SplatVectorState) {
+    addVector(vector: SplatVector) {
         this.splatVectorStates.push(vector);
     }
 
     update(dt: number) {
         if (this.ditheringTexture.width === 1) console.log("Attempted to render when image is not loaded!");
-        else {
-            this.checkResizeCanvas();
-            this.step(dt);
-            this.render(null);
+        else if (!this.paused) {
             // update animations
             this.splatVectorStates = this.splatVectorStates.filter((s) => {
                 const next_splat = s.next_splat();
@@ -715,7 +681,15 @@ class FluidRender {
                 this.splat(next_splat.pos[0], next_splat.pos[1], next_splat.vel[0], next_splat.vel[1], next_splat.color, next_splat.size);
                 return true;
             });
+            // step the fluid
+            this.step(dt);
+            // render the fluid
+            this.render(null);
         }
+    }
+
+    setPause(pause: boolean) {
+        this.paused = pause;
     }
 }
 
