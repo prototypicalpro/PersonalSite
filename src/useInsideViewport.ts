@@ -33,7 +33,7 @@ const useInsideViewport: (element: React.MutableRefObject<HTMLElement | null>, i
             // tell react to run the cleanup if this component disapears
             return insideCallbackRef.current || undefined;
         }
-    }, [isInside, insidecallback]);
+    }, [isInside, insidecallback, element]);
 };
 
 export default useInsideViewport;

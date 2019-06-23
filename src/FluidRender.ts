@@ -1,4 +1,5 @@
 import getShaders from "./FluidShaders";
+import { SplatVectorState } from "./FluidDraw";
 
 /*eslint no-unused-expressions: "off"*/
 
@@ -106,6 +107,8 @@ class FluidRender {
     private curl;
     private pressure;
     private bloom;
+
+    private splatVectorStates: Array<SplatVectorState> = [];
 
     private readonly blit: (destination: WebGLFramebuffer | null) => void;
 
@@ -695,12 +698,23 @@ class FluidRender {
         }
     }
 
+    addVector(vector: SplatVectorState) {
+        this.splatVectorStates.push(vector);
+    }
+
     update(dt: number) {
         if (this.ditheringTexture.width === 1) console.log("Attempted to render when image is not loaded!");
         else {
             this.checkResizeCanvas();
             this.step(dt);
             this.render(null);
+            // update animations
+            this.splatVectorStates = this.splatVectorStates.filter((s) => {
+                const next_splat = s.next_splat();
+                if (next_splat === null) return false;
+                this.splat(next_splat.pos[0], next_splat.pos[1], next_splat.vel[0], next_splat.vel[1], next_splat.color, next_splat.size);
+                return true;
+            });
         }
     }
 }
