@@ -17,9 +17,12 @@ const protoMask = require("./img/proto.png");
 /** define a bunch of color constants that I can tweak later */
 const main_theme = {
     color: {
-        light_background: "#ECECEC",
-        dark_background: "#AEAEAE",
-        logo_background: "#C4C4C4",
+        // light_background: "#ECECEC",
+        // dark_background: "#AEAEAE",
+        // logo_background: "#C4C4C4",
+        light_background: "#385170",
+        dark_background: "#142d4c",
+        logo_background: "#9fd3c7",
         logo_text: "#919191",
     },
     font: {
@@ -34,6 +37,10 @@ const main_theme = {
         type: {
             header_footer: "'Open Sans', sans-serif",
             content: "'Roboto Slab', serif"
+        },
+        color: {
+            header_footer: "white",
+            content: "#EFEFEF",
         }
     },
     logo: {
@@ -54,8 +61,8 @@ const main_theme = {
     screen: {
         content_width: "1440px",
         side_pad: "50px",
-        top_bot_pad: "20px",
-        header_footer: "15vh",
+        top_bot_pad: "15px",
+        header_footer: "12vh",
     }
 };
 
@@ -106,6 +113,7 @@ const ResumeText = styledTS<{ theme: typeof main_theme }>(styled.div)`
     font-family: ${ props => props.theme.font.type.content };
     font-weight: 100;
     font-size: ${ props => props.theme.font.size.large };
+    color: ${ props => props.theme.font.color.content };
     line-height: 7.6vh;
     text-align: left;
     max-width: 22em;
@@ -131,6 +139,7 @@ const LogoElement = styledTS<{ imgname: string, size: string, theme: typeof main
 const TextElement = styledTS<{ size: string, type: string, align?: string, text_align?: string, theme: typeof main_theme }>(styled(BodyElem))`
     font-family: ${ props => props.theme.font.type[props.type] };
     font-size: ${ props => props.theme.font.size[props.size] };
+    color: ${ props => props.theme.font.color[props.type] };
     text-align: ${ props => props.text_align ? props.text_align : "center" };
     align-self: ${ props => props.align ? props.align : "unset" };
     white-space: nowrap;
@@ -182,18 +191,14 @@ const MainPage: React.FunctionComponent = () => {
             <div>
                 <GlobalStyle />
                 <ContentContainer height="80vh" color="light_background">
-                    <MaskImage className="full" image={protoMask}></MaskImage>
                     <FluidFull className="full" canvaswidth={dimension} canvasheight={dimension} ></FluidFull>
-                    <div className="content"></div>
-                </ContentContainer>
-                <ContentContainer height="80vh" color="light_background">
-                    <PerfectCenter className="content"
-                        style={ { backgroundImage: `url(${main_theme.logo.url.stock})`, backgroundPosition: "center", backgroundSize: "cover" } }>
+                    <MaskImage className="full" image={protoMask}></MaskImage>
+                    <PerfectCenter className="content">
                         <MainText>Prototypical {"{"}P{"}"}ro</MainText>
                     </PerfectCenter>
-                    <div className="content">
+                    <div className="content" style={{ zIndex: 100 }}>
                         <HeaderFooterGrid>
-                            <LogoElement x={1} y={1} spany={3} imgname="main" size="small"></LogoElement>
+                            {/*<LogoElement x={1} y={1} spany={3} imgname="main" size="small"></LogoElement>*/}
                             <TextElement x={2} y={2} type="header_footer" size="small">RESUME</TextElement>
                             <TextElement x={3} y={2} type="header_footer" size="small">GITHUB</TextElement>
                             <TextElement x={4} y={2} type="header_footer" size="small">CONTACT</TextElement>

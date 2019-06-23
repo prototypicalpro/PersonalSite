@@ -3,7 +3,7 @@
  */
 
 import * as React from "react";
-import useAnimation from "./useAnimation";
+// import useAnimation from "./useAnimation";
 
 function clamp(num: number, min: number, max: number): number {
     return num <= min ? min : num >= max ? max : num;
@@ -41,7 +41,7 @@ function drawSurface(image_data: ImageData, grid_size: number, cur_step: number)
 const Particles: React.FunctionComponent<{ className: string }> = ({ className = "" }) => {
     const canvas_ref = React.useRef<HTMLCanvasElement | null>(null);
     const time_step = React.useRef<number>(0);
-
+    /*
     useAnimation(() => {
         if (canvas_ref.current) {
             const ctx = canvas_ref.current.getContext("2d") as CanvasRenderingContext2D;
@@ -52,6 +52,7 @@ const Particles: React.FunctionComponent<{ className: string }> = ({ className =
             ctx.putImageData(image_data, 0, 0);
         }
     }, () => time_step.current = 0);
+    */
 
     return (
         <canvas ref={canvas_ref} className={className} width={1440} height={700}></canvas>
