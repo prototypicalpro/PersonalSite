@@ -663,7 +663,7 @@ class FluidRender {
         return true;
     }
 
-    splat (x: number, y: number, dx: number, dy :number, color: { r: number, g: number, b: number }, radius?: number) {
+    splat (x: number, y: number, dx: number, dy: number, color: { r: number, g: number, b: number }, radius?: number) {
         this.gl.viewport(0, 0, this.simWidth, this.simHeight);
         this.splatProgram.bind(this.gl);
         this.gl.uniform1i(this.splatProgram.uniforms.uTarget, this.velocity.read.attach(0));

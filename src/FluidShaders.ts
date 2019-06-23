@@ -7,8 +7,6 @@ function compileShader (gl: WebGL2RenderingContext, type: number, source: string
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
         throw gl.getShaderInfoLog(shader);
 
-    console.log("shader compiled!");
-
     return shader;
 }
 

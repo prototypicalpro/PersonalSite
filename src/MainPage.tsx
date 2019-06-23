@@ -2,8 +2,10 @@ import * as React from "react";
 import styled, { ThemeProvider, css, createGlobalStyle } from "styled-components";
 import styledTS from "styled-components-ts";
 import FluidFull from "./FluidGL";
+import useEventListener from "@use-it/event-listener";
 const reactLogo = require("./img/react_logo.svg");
 const stockPhoto = require("./img/image.PNG");
+const protoMask = require("./img/proto.png");
 
 
 /**
@@ -160,85 +162,97 @@ const BodyGrid = styledTS<{ theme: typeof main_theme, col_count: number, col_gap
         [contentX] 1fr [contentX];
 `;
 
-class MainPage extends React.Component {
-    render() {
-        return (
-            <ThemeProvider theme={main_theme}>
-                <div>
-                    <GlobalStyle />
-                    <ContentContainer height="80vh" color="light_background">
-                        <FluidFull className="content"></FluidFull>
-                    </ContentContainer>
-                    <ContentContainer height="80vh" color="light_background">
-                        
-                        <PerfectCenter className="content" 
-                            style={ { backgroundImage: `url(${main_theme.logo.url.stock})`, backgroundPosition: "center", backgroundSize: "cover" } }>
-                            <MainText>Prototypical {"{"}P{"}"}ro</MainText>
-                        </PerfectCenter>
-                        <div className="content">
-                            <HeaderFooterGrid>
-                                <LogoElement x={1} y={1} spany={3} imgname="main" size="small"></LogoElement>
-                                <TextElement x={2} y={2} type="header_footer" size="small">RESUME</TextElement>
-                                <TextElement x={3} y={2} type="header_footer" size="small">GITHUB</TextElement>
-                                <TextElement x={4} y={2} type="header_footer" size="small">CONTACT</TextElement>
-                            </HeaderFooterGrid>
-                        </div>
-                    </ContentContainer>
-                    <ContentContainer height="55vh" color="dark_background">
-                        <BodyGrid className="content" col_count={3} col_gap={150} col_min={main_theme.logo.size.medium} col_max={main_theme.logo.size.large}>
-                            <TextElement x={3} y={1} spanx={5} spany={2} type="content" size="medium">My name is Noah Koontz <br></br> and I build stuff</TextElement>
-                            <LogoElement x={3} y={2} spany={6} imgname="cloud" size="large"></LogoElement>
-                            <TextElement x={3} y={7} type="content" size="medium" align="end">Cloud</TextElement>
-                            <LogoElement x={5} y={2} spany={6} imgname="embedded" size="large"></LogoElement>
-                            <TextElement x={5} y={7} type="content" size="medium" align="end">Embedded</TextElement>
-                            <LogoElement x={7} y={2} spany={6} imgname="web" size="large"></LogoElement>
-                            <TextElement x={7} y={7} type="content" size="medium" align="end">Web</TextElement>
-                        </BodyGrid>
-                    </ContentContainer>
-                    <ContentContainer height="65vh" color="light_background">
-                        <div className="full" style={ { backgroundImage: `url(${main_theme.logo.url.stock})`, backgroundPosition: "center", backgroundSize: "cover" } }></div>
-                        <BodyGrid className="content"
-                            col_count={2}
-                            col_gap={110}
-                            col_min={(main_theme.font.size.large_num * 4).toString() + "px"}
-                            col_max={(main_theme.font.size.xlarge_num * 4).toString() + "px"}>
+const MaskImage = styledTS<{ theme: typeof main_theme, image: string }>(styled.div)`
+    background-image: url(${ props => props.image});
+    background-size: cover;
+    background-position: center;
+    z-index: 99;
+`;
 
-                            <TextElement x={3} y={3} spany={3} type="content" align="center" size="xlarge">1212</TextElement>
-                            <TextElement x={3} y={6} type="content" align="center" size="medium">Git Commits</TextElement>
-                            <TextElement x={5} y={3} spany={3} type="content" align="center" size="xlarge">12123</TextElement>
-                            <TextElement x={5} y={6} type="content" align="center" size="medium">Lines of Code</TextElement>
-                        </BodyGrid>
-                    </ContentContainer>
-                    <ContentContainer height="55vh" color="dark_background">
-                        <PerfectCenter className="content">
-                            <ResumeText>I am a <b>maker</b> who enjoys the creative application of technology. I am a <b>hard worker</b> with an ability to turn ideas into reality. <b>Resourceful</b> and <b>motivated</b>, I have a track record of rapidly applying new concepts.</ResumeText>
-                        </PerfectCenter>
-                    </ContentContainer>
-                    <ContentContainer height="65vh" color="light_background">
-                    <BodyGrid className="content" col_count={1} col_gap={0} col_min="110px" col_max="500px" style={{ backgroundImage: `url(${main_theme.logo.url.stock})`, backgroundPosition: "center", backgroundSize: "cover" }}>
-                        <BodyGrid style={{ backgroundColor: main_theme.color.dark_background }} x={3} y={3} spany={3}
-                            col_count={4} col_gap={20} col_min={main_theme.logo.size.small} col_max={main_theme.logo.size.small}>
+const MainPage: React.FunctionComponent = () => {
+    const [dimensions, setDimensions] = React.useState([window.innerWidth, window.innerHeight]);
+    // check for window resize to update our canvas
+    useEventListener("resize", () => {
+        setDimensions([window.innerWidth, window.innerHeight]);
+    });
 
-                            <TextElement x={3} y={2} spanx={7} spany={2} type="content" align="center" size="small">Get In Touch</TextElement>
-                            <LogoElement x={3} y={4} spany={4} imgname="web" size="small"></LogoElement>
-                            <LogoElement x={5} y={4} spany={4} imgname="web" size="small"></LogoElement>
-                            <LogoElement x={7} y={4} spany={4} imgname="web" size="small"></LogoElement>
-                            <LogoElement x={9} y={4} spany={4} imgname="web" size="small"></LogoElement>
-                        </BodyGrid>
+    return (
+        <ThemeProvider theme={main_theme}>
+            <div>
+                <GlobalStyle />
+                <ContentContainer height="80vh" color="light_background">
+                    <MaskImage className="full" image={protoMask}></MaskImage>
+                    <FluidFull className="full" canvaswidth={dimensions[0]} canvasheight={dimensions[1] * 0.8} ></FluidFull>
+                    <div className="content"></div>
+                </ContentContainer>
+                <ContentContainer height="80vh" color="light_background">
+                    <PerfectCenter className="content"
+                        style={ { backgroundImage: `url(${main_theme.logo.url.stock})`, backgroundPosition: "center", backgroundSize: "cover" } }>
+                        <MainText>Prototypical {"{"}P{"}"}ro</MainText>
+                    </PerfectCenter>
+                    <div className="content">
+                        <HeaderFooterGrid>
+                            <LogoElement x={1} y={1} spany={3} imgname="main" size="small"></LogoElement>
+                            <TextElement x={2} y={2} type="header_footer" size="small">RESUME</TextElement>
+                            <TextElement x={3} y={2} type="header_footer" size="small">GITHUB</TextElement>
+                            <TextElement x={4} y={2} type="header_footer" size="small">CONTACT</TextElement>
+                        </HeaderFooterGrid>
+                    </div>
+                </ContentContainer>
+                <ContentContainer height="55vh" color="dark_background">
+                    <BodyGrid className="content" col_count={3} col_gap={150} col_min={main_theme.logo.size.medium} col_max={main_theme.logo.size.large}>
+                        <TextElement x={3} y={1} spanx={5} spany={2} type="content" size="medium">My name is Noah Koontz <br></br> and I build stuff</TextElement>
+                        <LogoElement x={3} y={2} spany={6} imgname="cloud" size="large"></LogoElement>
+                        <TextElement x={3} y={7} type="content" size="medium" align="end">Cloud</TextElement>
+                        <LogoElement x={5} y={2} spany={6} imgname="embedded" size="large"></LogoElement>
+                        <TextElement x={5} y={7} type="content" size="medium" align="end">Embedded</TextElement>
+                        <LogoElement x={7} y={2} spany={6} imgname="web" size="large"></LogoElement>
+                        <TextElement x={7} y={7} type="content" size="medium" align="end">Web</TextElement>
                     </BodyGrid>
-                    </ContentContainer>
-                    <ContentContainer height={main_theme.screen.header_footer} color="dark_background">
-                        <div className="content">
-                            <HeaderFooterGrid>
-                                <LogoElement x={1} y={1} spany={3} imgname="main" size="small"></LogoElement>
-                                <TextElement x={2} y={2} type="header_footer" size="small">©2019 Noah Koontz</TextElement>
-                            </HeaderFooterGrid>
-                        </div>
-                    </ContentContainer>
-                </div>
-            </ThemeProvider>
-        );
-    }
+                </ContentContainer>
+                <ContentContainer height="65vh" color="light_background">
+                    <div className="full" style={ { backgroundImage: `url(${main_theme.logo.url.stock})`, backgroundPosition: "center", backgroundSize: "cover" } }></div>
+                    <BodyGrid className="content"
+                        col_count={2}
+                        col_gap={110}
+                        col_min={(main_theme.font.size.large_num * 4).toString() + "px"}
+                        col_max={(main_theme.font.size.xlarge_num * 4).toString() + "px"}>
+
+                        <TextElement x={3} y={3} spany={3} type="content" align="center" size="xlarge">1212</TextElement>
+                        <TextElement x={3} y={6} type="content" align="center" size="medium">Git Commits</TextElement>
+                        <TextElement x={5} y={3} spany={3} type="content" align="center" size="xlarge">12123</TextElement>
+                        <TextElement x={5} y={6} type="content" align="center" size="medium">Lines of Code</TextElement>
+                    </BodyGrid>
+                </ContentContainer>
+                <ContentContainer height="55vh" color="dark_background">
+                    <PerfectCenter className="content">
+                        <ResumeText>I am a <b>maker</b> who enjoys the creative application of technology. I am a <b>hard worker</b> with an ability to turn ideas into reality. <b>Resourceful</b> and <b>motivated</b>, I have a track record of rapidly applying new concepts.</ResumeText>
+                    </PerfectCenter>
+                </ContentContainer>
+                <ContentContainer height="65vh" color="light_background">
+                <BodyGrid className="content" col_count={1} col_gap={0} col_min="110px" col_max="500px" style={{ backgroundImage: `url(${main_theme.logo.url.stock})`, backgroundPosition: "center", backgroundSize: "cover" }}>
+                    <BodyGrid style={{ backgroundColor: main_theme.color.dark_background }} x={3} y={3} spany={3}
+                        col_count={4} col_gap={20} col_min={main_theme.logo.size.small} col_max={main_theme.logo.size.small}>
+
+                        <TextElement x={3} y={2} spanx={7} spany={2} type="content" align="center" size="small">Get In Touch</TextElement>
+                        <LogoElement x={3} y={4} spany={4} imgname="web" size="small"></LogoElement>
+                        <LogoElement x={5} y={4} spany={4} imgname="web" size="small"></LogoElement>
+                        <LogoElement x={7} y={4} spany={4} imgname="web" size="small"></LogoElement>
+                        <LogoElement x={9} y={4} spany={4} imgname="web" size="small"></LogoElement>
+                    </BodyGrid>
+                </BodyGrid>
+                </ContentContainer>
+                <ContentContainer height={main_theme.screen.header_footer} color="dark_background">
+                    <div className="content">
+                        <HeaderFooterGrid>
+                            <LogoElement x={1} y={1} spany={3} imgname="main" size="small"></LogoElement>
+                            <TextElement x={2} y={2} type="header_footer" size="small">©2019 Noah Koontz</TextElement>
+                        </HeaderFooterGrid>
+                    </div>
+                </ContentContainer>
+            </div>
+        </ThemeProvider>
+    );
 }
 
 export default MainPage;
