@@ -77,27 +77,6 @@ function getShaders(gl: WebGL2RenderingContext) {
         }
     `);
 
-    const displayBloomShader = compileShader(gl, gl.FRAGMENT_SHADER, `
-        precision highp float;
-        precision highp sampler2D;
-        varying vec2 vUv;
-        uniform sampler2D uTexture;
-        uniform sampler2D uBloom;
-        uniform sampler2D uDithering;
-        uniform vec2 ditherScale;
-        void main () {
-            vec3 C = texture2D(uTexture, vUv).rgb;
-            vec3 bloom = texture2D(uBloom, vUv).rgb;
-            vec3 noise = texture2D(uDithering, vUv * ditherScale).rgb;
-            noise = noise * 2.0 - 1.0;
-            bloom += noise / 800.0;
-            bloom = pow(bloom.rgb, vec3(1.0 / 2.2));
-            C += bloom;
-            float a = max(C.r, max(C.g, C.b));
-            gl_FragColor = vec4(C, a);
-        }
-    `);
-
     const displayShadingShader = compileShader(gl, gl.FRAGMENT_SHADER, `
         precision highp float;
         precision highp sampler2D;
@@ -122,98 +101,6 @@ function getShaders(gl: WebGL2RenderingContext) {
             C.rgb *= diffuse;
             float a = max(C.r, max(C.g, C.b));
             gl_FragColor = vec4(C, a);
-        }
-    `);
-
-    const displayBloomShadingShader = compileShader(gl, gl.FRAGMENT_SHADER, `
-        precision highp float;
-        precision highp sampler2D;
-        varying vec2 vUv;
-        varying vec2 vL;
-        varying vec2 vR;
-        varying vec2 vT;
-        varying vec2 vB;
-        uniform sampler2D uTexture;
-        uniform sampler2D uBloom;
-        uniform sampler2D uDithering;
-        uniform vec2 ditherScale;
-        uniform vec2 texelSize;
-        void main () {
-            vec3 L = texture2D(uTexture, vL).rgb;
-            vec3 R = texture2D(uTexture, vR).rgb;
-            vec3 T = texture2D(uTexture, vT).rgb;
-            vec3 B = texture2D(uTexture, vB).rgb;
-            vec3 C = texture2D(uTexture, vUv).rgb;
-            float dx = length(R) - length(L);
-            float dy = length(T) - length(B);
-            vec3 n = normalize(vec3(dx, dy, length(texelSize)));
-            vec3 l = vec3(0.0, 0.0, 1.0);
-            float diffuse = clamp(dot(n, l) + 0.7, 0.7, 1.0);
-            C *= diffuse;
-            vec3 bloom = texture2D(uBloom, vUv).rgb;
-            vec3 noise = texture2D(uDithering, vUv * ditherScale).rgb;
-            noise = noise * 2.0 - 1.0;
-            bloom += noise / 800.0;
-            bloom = pow(bloom.rgb, vec3(1.0 / 2.2));
-            C += bloom;
-            float a = max(C.r, max(C.g, C.b));
-            gl_FragColor = vec4(C, a);
-        }
-    `);
-
-    const bloomPrefilterShader = compileShader(gl, gl.FRAGMENT_SHADER, `
-        precision mediump float;
-        precision mediump sampler2D;
-        varying vec2 vUv;
-        uniform sampler2D uTexture;
-        uniform vec3 curve;
-        uniform float threshold;
-        void main () {
-            vec3 c = texture2D(uTexture, vUv).rgb;
-            float br = max(c.r, max(c.g, c.b));
-            float rq = clamp(br - curve.x, 0.0, curve.y);
-            rq = curve.z * rq * rq;
-            c *= max(rq, br - threshold) / max(br, 0.0001);
-            gl_FragColor = vec4(c, 0.0);
-        }
-    `);
-
-    const bloomBlurShader = compileShader(gl, gl.FRAGMENT_SHADER, `
-        precision mediump float;
-        precision mediump sampler2D;
-        varying vec2 vL;
-        varying vec2 vR;
-        varying vec2 vT;
-        varying vec2 vB;
-        uniform sampler2D uTexture;
-        void main () {
-            vec4 sum = vec4(0.0);
-            sum += texture2D(uTexture, vL);
-            sum += texture2D(uTexture, vR);
-            sum += texture2D(uTexture, vT);
-            sum += texture2D(uTexture, vB);
-            sum *= 0.25;
-            gl_FragColor = sum;
-        }
-    `);
-
-    const bloomFinalShader = compileShader(gl, gl.FRAGMENT_SHADER, `
-        precision mediump float;
-        precision mediump sampler2D;
-        varying vec2 vL;
-        varying vec2 vR;
-        varying vec2 vT;
-        varying vec2 vB;
-        uniform sampler2D uTexture;
-        uniform float intensity;
-        void main () {
-            vec4 sum = vec4(0.0);
-            sum += texture2D(uTexture, vL);
-            sum += texture2D(uTexture, vR);
-            sum += texture2D(uTexture, vT);
-            sum += texture2D(uTexture, vB);
-            sum *= 0.25;
-            gl_FragColor = sum * intensity;
         }
     `);
 
@@ -408,12 +295,7 @@ function getShaders(gl: WebGL2RenderingContext) {
         colorShader,
         backgroundShader,
         displayShader,
-        displayBloomShader,
         displayShadingShader,
-        displayBloomShadingShader,
-        bloomPrefilterShader,
-        bloomBlurShader,
-        bloomFinalShader,
         splatShader,
         advectionShader,
         advectionManualFilteringShader,

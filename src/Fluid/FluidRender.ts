@@ -53,18 +53,12 @@ class FluidRender {
     private readonly gl: WebGL2RenderingContext;
     private readonly ext: IGLExtentsions;
     private readonly config;
-    private readonly ditheringTexture;
 
     private readonly clearProgram: GLProgram;
     private readonly colorProgram: GLProgram;
     private readonly backgroundProgram: GLProgram;
     private readonly displayProgram: GLProgram;
-    private readonly displayBloomProgram: GLProgram;
     private readonly displayShadingProgram: GLProgram;
-    private readonly displayBloomShadingProgram: GLProgram;
-    private readonly bloomPrefilterProgram: GLProgram;
-    private readonly bloomBlurProgram: GLProgram;
-    private readonly bloomFinalProgram: GLProgram;
     private readonly splatProgram: GLProgram;
     private readonly advectionProgram: GLProgram;
     private readonly divergenceProgram: GLProgram;
@@ -73,7 +67,6 @@ class FluidRender {
     private readonly pressureProgram: GLProgram;
     private readonly gradientSubtractProgram: GLProgram;
 
-    private bloomFramebuffers: Array<any> = [];
     private simWidth;
     private simHeight;
     private dyeWidth;
@@ -83,7 +76,6 @@ class FluidRender {
     private divergence;
     private curl;
     private pressure;
-    private bloom;
 
     private splatVectorStates: Array<SplatVector> = [];
     private paused: boolean = false;
@@ -103,19 +95,13 @@ class FluidRender {
         COLORFUL: true,
         BACK_COLOR: { r: 0, g: 0, b: 0 },
         TRANSPARENT: false,
-        BLOOM: true,
-        BLOOM_ITERATIONS: 8,
-        BLOOM_RESOLUTION: 256,
-        BLOOM_INTENSITY: 0.8,
-        BLOOM_THRESHOLD: 0.6,
-        BLOOM_SOFT_KNEE: 0.7
     };
 
     static getDefaultConfig(): typeof FluidRender.DEFAULT_CONF {
         return Object.assign({}, FluidRender.DEFAULT_CONF);
     }
 
-    constructor(canvas: HTMLCanvasElement, config: typeof FluidRender.DEFAULT_CONF, text_url: string) {
+    constructor(canvas: HTMLCanvasElement, config: typeof FluidRender.DEFAULT_CONF) {
         this.canvas = canvas;
         // get the GL context from the canvas, and read support information
         const { gl, ext } = FluidRender.getWebGLContext(canvas);
@@ -124,13 +110,8 @@ class FluidRender {
         this.ext = ext;
         this.config = config;
         // modify the config for platform specific things
-        if (isMobile())
+        if (isMobile() || !this.ext.supportLinearFiltering)
             this.config.SHADING = false;
-
-        if (!this.ext.supportLinearFiltering) {
-            this.config.SHADING = false;
-            this.config.BLOOM = false;
-        }
 
         // process the shaders
         const {
@@ -139,12 +120,7 @@ class FluidRender {
             colorShader,
             backgroundShader,
             displayShader,
-            displayBloomShader,
             displayShadingShader,
-            displayBloomShadingShader,
-            bloomPrefilterShader,
-            bloomBlurShader,
-            bloomFinalShader,
             splatShader,
             advectionShader,
             advectionManualFilteringShader,
@@ -167,60 +143,26 @@ class FluidRender {
             this.gl.drawElements(this.gl.TRIANGLES, 6, this.gl.UNSIGNED_SHORT, 0);
         };
 
-        // load the image texture for dithering
-        const texture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255]));
-
-        this.ditheringTexture = {
-            texture,
-            width: 1,
-            height: 1,
-            attach: (id) => {
-                this.gl.activeTexture(this.gl.TEXTURE0 + id);
-                this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-                return id;
-            }
-        };
-
-        const image = new Image();
-        image.onload = () => {
-            this.ditheringTexture.width = image.width;
-            this.ditheringTexture.height = image.height;
-            this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGB, this.gl.RGB, this.gl.UNSIGNED_BYTE, image);
-        };
-        image.src = text_url;
-
         this.clearProgram               = new GLProgram(this.gl, baseVertexShader, clearShader);
         this.colorProgram               = new GLProgram(this.gl, baseVertexShader, colorShader);
         this.backgroundProgram          = new GLProgram(this.gl, baseVertexShader, backgroundShader);
         this.displayProgram             = new GLProgram(this.gl, baseVertexShader, displayShader);
-        this.displayBloomProgram        = new GLProgram(this.gl, baseVertexShader, displayBloomShader);
         this.displayShadingProgram      = new GLProgram(this.gl, baseVertexShader, displayShadingShader);
-        this.displayBloomShadingProgram = new GLProgram(this.gl, baseVertexShader, displayBloomShadingShader);
-        this.bloomPrefilterProgram      = new GLProgram(this.gl, baseVertexShader, bloomPrefilterShader);
-        this.bloomBlurProgram           = new GLProgram(this.gl, baseVertexShader, bloomBlurShader);
-        this.bloomFinalProgram          = new GLProgram(this.gl, baseVertexShader, bloomFinalShader);
         this.splatProgram               = new GLProgram(this.gl, baseVertexShader, splatShader);
         this.advectionProgram           = new GLProgram(this.gl, baseVertexShader, ext.supportLinearFiltering ? advectionShader : advectionManualFilteringShader);
         this.divergenceProgram          = new GLProgram(this.gl, baseVertexShader, divergenceShader);
         this.curlProgram                = new GLProgram(this.gl, baseVertexShader, curlShader);
         this.vorticityProgram           = new GLProgram(this.gl, baseVertexShader, vorticityShader);
         this.pressureProgram            = new GLProgram(this.gl, baseVertexShader, pressureShader);
-        this.gradientSubtractProgram     = new GLProgram(this.gl, baseVertexShader, gradientSubtractShader);
+        this.gradientSubtractProgram    = new GLProgram(this.gl, baseVertexShader, gradientSubtractShader);
 
         // init framebuffers
         this.initFrameBuffers();
     }
 
     private initFrameBuffers() {
-        let simRes = this.getResolution(this.config.SIM_RESOLUTION);
-        let dyeRes = this.getResolution(this.config.DYE_RESOLUTION);
+        const simRes = this.getResolution(this.config.SIM_RESOLUTION);
+        const dyeRes = this.getResolution(this.config.DYE_RESOLUTION);
 
         this.simWidth  = simRes.width;
         this.simHeight = simRes.height;
@@ -246,29 +188,6 @@ class FluidRender {
         this.divergence = this.createFBO      (this.simWidth, this.simHeight, r.internalFormat, r.format, texType, this.gl.NEAREST);
         this.curl       = this.createFBO      (this.simWidth, this.simHeight, r.internalFormat, r.format, texType, this.gl.NEAREST);
         this.pressure   = this.createDoubleFBO(this.simWidth, this.simHeight, r.internalFormat, r.format, texType, this.gl.NEAREST);
-
-        this.initBloomFramebuffers();
-    }
-
-   private initBloomFramebuffers () {
-        let res = this.getResolution(this.config.BLOOM_RESOLUTION);
-
-        const texType = this.ext.halfFloatTexType;
-        const rgba = this.ext.formatRGBA;
-        const filtering = this.ext.supportLinearFiltering ? this.gl.LINEAR : this.gl.NEAREST;
-
-        this.bloom = this.createFBO(res.width, res.height, rgba.internalFormat, rgba.format, texType, filtering);
-
-        this.bloomFramebuffers = [];
-        for (let i = 0; i < this.config.BLOOM_ITERATIONS; i++) {
-            let width = res.width >> (i + 1);
-            let height = res.height >> (i + 1);
-
-            if (width < 2 || height < 2) break;
-
-            let fbo = this.createFBO(width, height, rgba.internalFormat, rgba.format, texType, filtering);
-            this.bloomFramebuffers.push(fbo);
-        }
     }
 
     private getResolution (resolution) {
@@ -423,9 +342,6 @@ class FluidRender {
     }
 
     private render (target) {
-        if (this.config.BLOOM)
-            this.applyBloom(this.density.read, this.bloom);
-
         if (target == null || !this.config.TRANSPARENT) {
             this.gl.blendFunc(this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA);
             this.gl.enable(this.gl.BLEND);
@@ -453,79 +369,18 @@ class FluidRender {
         }
 
         if (this.config.SHADING) {
-            let program = this.config.BLOOM ? this.displayBloomShadingProgram : this.displayShadingProgram;
+            let program = this.displayShadingProgram;
             program.bind(this.gl);
             this.gl.uniform2f(program.uniforms.texelSize, 1.0 / width, 1.0 / height);
             this.gl.uniform1i(program.uniforms.uTexture, this.density.read.attach(0));
-            if (this.config.BLOOM) {
-                this.gl.uniform1i(program.uniforms.uBloom, this.bloom.attach(1));
-                this.gl.uniform1i(program.uniforms.uDithering, this.ditheringTexture.attach(2));
-                let scale = FluidRender.getTextureScale(this.ditheringTexture, width, height);
-                this.gl.uniform2f(program.uniforms.ditherScale, scale.x, scale.y);
-            }
         }
         else {
-            let program = this.config.BLOOM ? this.displayBloomProgram : this.displayProgram;
+            const program = this.displayProgram;
             program.bind(this.gl);
             this.gl.uniform1i(program.uniforms.uTexture, this.density.read.attach(0));
-            if (this.config.BLOOM) {
-                this.gl.uniform1i(program.uniforms.uBloom, this.bloom.attach(1));
-                this.gl.uniform1i(program.uniforms.uDithering, this.ditheringTexture.attach(2));
-                let scale = FluidRender.getTextureScale(this.ditheringTexture, width, height);
-                this.gl.uniform2f(program.uniforms.ditherScale, scale.x, scale.y);
-            }
         }
 
         this.blit(target);
-    }
-
-    private applyBloom (source, destination) {
-        if (this.bloomFramebuffers.length < 2)
-            return;
-
-        let last = destination;
-
-        this.gl.disable(this.gl.BLEND);
-        this.bloomPrefilterProgram.bind(this.gl);
-        let knee = this.config.BLOOM_THRESHOLD * this.config.BLOOM_SOFT_KNEE + 0.0001;
-        let curve0 = this.config.BLOOM_THRESHOLD - knee;
-        let curve1 = knee * 2;
-        let curve2 = 0.25 / knee;
-        this.gl.uniform3f(this.bloomPrefilterProgram.uniforms.curve, curve0, curve1, curve2);
-        this.gl.uniform1f(this.bloomPrefilterProgram.uniforms.threshold, this.config.BLOOM_THRESHOLD);
-        this.gl.uniform1i(this.bloomPrefilterProgram.uniforms.uTexture, source.attach(0));
-        this.gl.viewport(0, 0, last.width, last.height);
-        this.blit(last.fbo);
-
-        this.bloomBlurProgram.bind(this.gl);
-        for (let i = 0; i < this.bloomFramebuffers.length; i++) {
-            let dest = this.bloomFramebuffers[i];
-            this.gl.uniform2f(this.bloomBlurProgram.uniforms.texelSize, 1.0 / last.width, 1.0 / last.height);
-            this.gl.uniform1i(this.bloomBlurProgram.uniforms.uTexture, last.attach(0));
-            this.gl.viewport(0, 0, dest.width, dest.height);
-            this.blit(dest.fbo);
-            last = dest;
-        }
-
-        this.gl.blendFunc(this.gl.ONE, this.gl.ONE);
-        this.gl.enable(this.gl.BLEND);
-
-        for (let i = this.bloomFramebuffers.length - 2; i >= 0; i--) {
-            let baseTex = this.bloomFramebuffers[i];
-            this.gl.uniform2f(this.bloomBlurProgram.uniforms.texelSize, 1.0 / last.width, 1.0 / last.height);
-            this.gl.uniform1i(this.bloomBlurProgram.uniforms.uTexture, last.attach(0));
-            this.gl.viewport(0, 0, baseTex.width, baseTex.height);
-            this.blit(baseTex.fbo);
-            last = baseTex;
-        }
-
-        this.gl.disable(this.gl.BLEND);
-        this.bloomFinalProgram.bind(this.gl);
-        this.gl.uniform2f(this.bloomFinalProgram.uniforms.texelSize, 1.0 / last.width, 1.0 / last.height);
-        this.gl.uniform1i(this.bloomFinalProgram.uniforms.uTexture, last.attach(0));
-        this.gl.uniform1f(this.bloomFinalProgram.uniforms.intensity, this.config.BLOOM_INTENSITY);
-        this.gl.viewport(0, 0, destination.width, destination.height);
-        this.blit(destination.fbo);
     }
 
     private checkResizeCanvas () {
@@ -534,13 +389,6 @@ class FluidRender {
             this.canvas.height = this.canvas.clientHeight;
             this.initFrameBuffers();
         }
-    }
-
-    private static getTextureScale (texture, width, height) {
-        return {
-            x: width / texture.width,
-            y: height / texture.height
-        };
     }
 
     private static getWebGLContext (canvas: HTMLCanvasElement): { gl: WebGL2RenderingContext, ext: IGLExtentsions } {
@@ -672,8 +520,7 @@ class FluidRender {
     }
 
     update(dt: number) {
-        if (this.ditheringTexture.width === 1) console.log("Attempted to render when image is not loaded!");
-        else if (!this.paused) {
+        if (!this.paused) {
             // update animations
             this.splatVectorStates = this.splatVectorStates.filter((s) => {
                 const next_splat = s.next_splat();

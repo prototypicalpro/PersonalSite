@@ -5,7 +5,6 @@ export default class SplatVector {
     private static readonly DEFUALT_SPAT_DENSITY = 20;
     private static readonly DEFUALT_SIZE = 0.5;
 
-
     readonly step_size: [number, number];
     readonly num_steps: number;
     readonly speed: [number, number];

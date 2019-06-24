@@ -5,7 +5,6 @@ import FluidRender from "./Fluid/FluidRender";
 import HSVTools from "./Fluid/HSVTools";
 import useInsideViewport from "./useInsideViewport";
 import SplatVector from "./Fluid/FluidDraw";
-const DitherImage = require("./img/LDR_RGB1_0.png");
 
 /**
  * Port of stable fluid simulation using WebGL
@@ -37,7 +36,8 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvaswidth: number
             const SIZE = 0.5;
             const MAGNITUDE = 300;
             const APPROACH_RADIUS = 250;
-            const ANGLE_TOL = 45;
+            const ANGLE_TOL = 30;
+            const APPROACH_ANGLE_TOL = 45;
             const COLOR_TOL = 0.25;
             const X_MID = Math.round(canvas_ref.current.width / 2);
             const Y_MID = Math.round(canvas_ref.current.height / 2);
@@ -58,7 +58,7 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvaswidth: number
                 // draw the splat vector!
                 const rad = next_angle * (Math.PI / 180.0);
                 fluid_ref.current.addVector(new SplatVector(
-                    next_angle + 180.0,
+                    (next_angle + 180.0) + (Math.random() - 0.5) * APPROACH_ANGLE_TOL,
                     MAGNITUDE,
                     [Math.cos(rad) * APPROACH_RADIUS + X_MID, Math.sin(rad) * APPROACH_RADIUS + Y_MID],
                     HSVTools.HSVtoRGB({ h: next_hue, s: 1.0, v: 1.0 }), SIZE));
@@ -72,15 +72,14 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvaswidth: number
         if (canvas_ref.current) {
             // get a config object for the fluid renderer
             const config = FluidRender.getDefaultConfig();
-            config.BLOOM = false;
-            config.SHADING = false;
+            config.SHADING = true;
             config.DENSITY_DISSIPATION = 0.99;
             config.SIM_RESOLUTION = 512;
             config.DYE_RESOLUTION = 1024;
             // set some options
             // TODO
             // setup the fluid renderer
-            fluid_ref.current = new FluidRender(canvas_ref.current, config, DitherImage);
+            fluid_ref.current = new FluidRender(canvas_ref.current, config);
             console.log("Reconstuct!");
             // start it!
             animationCallback();
