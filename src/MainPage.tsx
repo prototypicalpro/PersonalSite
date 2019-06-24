@@ -2,6 +2,7 @@ import * as React from "react";
 import styled, { ThemeProvider, css, createGlobalStyle } from "styled-components";
 import styledTS from "styled-components-ts";
 import FluidFull from "./FluidGL";
+import Particles from "./Particles";
 import useEventListener from "@use-it/event-listener";
 const reactLogo = require("./img/react_logo.svg");
 const stockPhoto = require("./img/image.PNG");
@@ -20,14 +21,14 @@ const main_theme = {
         // light_background: "#ECECEC",
         // dark_background: "#AEAEAE",
         // logo_background: "#C4C4C4",
-        light_background: "#385170",
+        light_background: "black",
         dark_background: "#142d4c",
         logo_background: "#9fd3c7",
         logo_text: "#919191",
     },
     font: {
         size: {
-            xlarge: "19vh",
+            xlarge: "17vh",
             xlarge_num: 175,
             large: "5.6vh",
             large_num: 56,
@@ -107,6 +108,8 @@ const MainText = styledTS<{ theme: typeof main_theme }>(styled.div)`
     font-family: ${ props => props.theme.font.type.content };
     font-weight: bold;
     font-size: ${ props => props.theme.font.size.xlarge };
+    color: #EFEFEF;
+    z-index: 999;
 `;
 
 const ResumeText = styledTS<{ theme: typeof main_theme }>(styled.div)`
@@ -142,6 +145,7 @@ const TextElement = styledTS<{ size: string, type: string, align?: string, text_
     color: ${ props => props.theme.font.color[props.type] };
     text-align: ${ props => props.text_align ? props.text_align : "center" };
     align-self: ${ props => props.align ? props.align : "unset" };
+    font-weight: 300;
     white-space: nowrap;
 `;
 
@@ -193,15 +197,12 @@ const MainPage: React.FunctionComponent = () => {
                 <ContentContainer height="80vh" color="light_background">
                     <FluidFull className="full" canvaswidth={dimension} canvasheight={dimension} ></FluidFull>
                     <MaskImage className="full" image={protoMask}></MaskImage>
-                    <PerfectCenter className="content">
-                        <MainText>Prototypical {"{"}P{"}"}ro</MainText>
-                    </PerfectCenter>
                     <div className="content" style={{ zIndex: 100 }}>
                         <HeaderFooterGrid>
                             {/*<LogoElement x={1} y={1} spany={3} imgname="main" size="small"></LogoElement>*/}
-                            <TextElement x={2} y={2} type="header_footer" size="small">RESUME</TextElement>
-                            <TextElement x={3} y={2} type="header_footer" size="small">GITHUB</TextElement>
-                            <TextElement x={4} y={2} type="header_footer" size="small">CONTACT</TextElement>
+                            <TextElement x={2} y={2} type="header_footer" size="small">Resume</TextElement>
+                            <TextElement x={3} y={2} type="header_footer" size="small">Github</TextElement>
+                            <TextElement x={4} y={2} type="header_footer" size="small">Contact</TextElement>
                         </HeaderFooterGrid>
                     </div>
                 </ContentContainer>
@@ -217,7 +218,8 @@ const MainPage: React.FunctionComponent = () => {
                     </BodyGrid>
                 </ContentContainer>
                 <ContentContainer height="65vh" color="light_background">
-                    <div className="full" style={ { backgroundImage: `url(${main_theme.logo.url.stock})`, backgroundPosition: "center", backgroundSize: "cover" } }></div>
+                    <div className="full">
+                    </div>
                     <BodyGrid className="content"
                         col_count={2}
                         col_gap={110}
