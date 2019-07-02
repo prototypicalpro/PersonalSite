@@ -4,8 +4,7 @@ import FluidFull from "./FluidGL";
 import useEventListener from "@use-it/event-listener";
 import main_theme from "./Theme";
 import { ThemeProvider } from "styled-components";
-import { ReactComponent as CloudLogo } from "./img/cloud.svg";
-const protoMask = require("./img/proto.png");
+import protoMask from "./img/proto.png";
 
 
 /**
@@ -48,7 +47,6 @@ const MainPage: React.FunctionComponent = () => {
                         <Style.SVGCSS x={5} y={2} spany={6} imgname="embedded" size="large" as={main_theme.logo.svg["embedded"]} fill={main_theme.color.logo_background} title="Embedded"></Style.SVGCSS>
                         <Style.TextElement x={5} y={7} type="content" size="medium" align="end">Embedded</Style.TextElement>
                         <Style.SVGCSS x={7} y={2} spany={6} imgname="web" size="large" as={main_theme.logo.svg["web"]} fill={main_theme.color.logo_background} title="Web"></Style.SVGCSS>
-                        <CloudLogo  />
                         <Style.TextElement x={7} y={7} type="content" size="medium" align="end">Web</Style.TextElement>
                     </Style.BodyGrid>
                 </Style.ContentContainer>
@@ -101,6 +99,6 @@ const MainPage: React.FunctionComponent = () => {
             </div>
         </ThemeProvider>
     );
-}
+};
 
 export default MainPage;
