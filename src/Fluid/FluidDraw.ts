@@ -27,7 +27,7 @@ export default class SplatVector {
         this.speed = [Math.floor(speed * cos), Math.floor(speed * sin)];
         // calculate pixel step and number of steps from splat_density
         splat_density = splat_density || SplatVector.DEFUALT_SPAT_DENSITY;
-        this.num_steps = magnitude / splat_density + 1;
+        this.num_steps = Math.floor(magnitude / splat_density) + 1;
         this.step_size = [Math.floor(dist[0] / this.num_steps), Math.floor(dist[1] / this.num_steps)];
     }
 

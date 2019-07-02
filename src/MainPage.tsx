@@ -4,7 +4,6 @@ import FluidFull from "./FluidGL";
 import useEventListener from "@use-it/event-listener";
 import main_theme from "./Theme";
 import { ThemeProvider } from "styled-components";
-import protoMask from "./img/proto.png";
 
 
 /**
@@ -17,10 +16,10 @@ import protoMask from "./img/proto.png";
 
 const MainPage: React.FunctionComponent = () => {
     // TODO: Set to however the size of the image is being calculated
-    const [dimension, setDimension] = React.useState<number>(Math.min(window.innerWidth, window.innerHeight * 0.8));
+    const [dimension, setDimension] = React.useState<number>(Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8));
     // check for window resize to update our canvas
     useEventListener("resize", () => {
-        setDimension(Math.min(window.innerWidth, window.innerHeight * 0.8));
+        setDimension(Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8));
     });
 
     return (
@@ -28,8 +27,10 @@ const MainPage: React.FunctionComponent = () => {
             <div>
                 <Style.GlobalStyle />
                 <Style.ContentContainer height="100vh" color="light_background">
-                    <FluidFull className="full" canvaswidth={dimension} canvasheight={dimension} ></FluidFull>
-                    <Style.MaskImage className="full" image={protoMask}></Style.MaskImage>
+                    <FluidFull className="full" canvasdimension={dimension}></FluidFull>
+                    <Style.MaskGrid className="full" style={{ zIndex: 100 }}>
+                        <Style.MaskSVG as={main_theme.logo.svg.mask} className="mask"></Style.MaskSVG>
+                    </Style.MaskGrid>
                     <div className="content" style={{ zIndex: 100 }}>
                         <Style.HeaderFooterGrid>
                             <Style.TextElement x={1} y={2} type="wordmark" size="small"><b>Prototypical Pro</b></Style.TextElement>
@@ -41,12 +42,12 @@ const MainPage: React.FunctionComponent = () => {
                 </Style.ContentContainer>
                 <Style.ContentContainer height="60vh" color="dark_background">
                     <Style.BodyGrid className="content" col_count={3} col_gap={150} col_min={main_theme.logo.size.medium} col_max={main_theme.logo.size.large}>
-                        <Style.TextElement x={3} y={1} spanx={5} spany={2} type="content" size="medium" align="center">My name is <Style.Mark>Noah Koontz</Style.Mark> <br></br> and I build stuff</Style.TextElement>
-                        <Style.SVGCSS x={3} y={2} spany={6} imgname="cloud" size="large" as={main_theme.logo.svg["cloud"]} fill={main_theme.color.logo_background} strokeWidth="100" title="Cloud"></Style.SVGCSS>
+                        <Style.TextElement x={3} y={1} spanx={5} spany={2} type="content" size="medium" align="center">My name is <Style.Mark>Noah Koontz</Style.Mark><br></br>and I build stuff</Style.TextElement>
+                        <Style.SVGCSS x={3} y={2} spany={6} size="large" as={main_theme.logo.svg["cloud"]} fill={main_theme.color.logo_background} title="Cloud"></Style.SVGCSS>
                         <Style.TextElement x={3} y={7} type="content" size="medium" align="end">Cloud</Style.TextElement>
-                        <Style.SVGCSS x={5} y={2} spany={6} imgname="embedded" size="large" as={main_theme.logo.svg["embedded"]} fill={main_theme.color.logo_background} title="Embedded"></Style.SVGCSS>
+                        <Style.SVGCSS x={5} y={2} spany={6} size="large" as={main_theme.logo.svg["embedded"]} fill={main_theme.color.logo_background} title="Embedded"></Style.SVGCSS>
                         <Style.TextElement x={5} y={7} type="content" size="medium" align="end">Embedded</Style.TextElement>
-                        <Style.SVGCSS x={7} y={2} spany={6} imgname="web" size="large" as={main_theme.logo.svg["web"]} fill={main_theme.color.logo_background} title="Web"></Style.SVGCSS>
+                        <Style.SVGCSS x={7} y={2} spany={6} size="large" as={main_theme.logo.svg["web"]} fill={main_theme.color.logo_background} title="Web"></Style.SVGCSS>
                         <Style.TextElement x={7} y={7} type="content" size="medium" align="end">Web</Style.TextElement>
                     </Style.BodyGrid>
                 </Style.ContentContainer>
@@ -92,7 +93,7 @@ const MainPage: React.FunctionComponent = () => {
                     <div className="content">
                         <Style.HeaderFooterGrid>
                             <Style.LogoElement x={1} y={1} spany={3} imgname="main" size="small"></Style.LogoElement>
-                            <Style.TextElement x={2} y={2} type="header_footer" size="xsmall">©2019 Noah Koontz. Web logo created by Logan, embedded and cloud logo created by counloucon, from Noun Project licenced under Creative Commons CCBY. </Style.TextElement>
+                            <Style.TextElement x={2} y={2} type="header_footer" size="xsmall">©2019 Noah Koontz. Roboto Slab font by Christian Robertson from Google Fonts, licenced under Apache 2.0 (TODO link). Web logo created by Logan, embedded and cloud logo created by counloucon, from Noun Project licenced under Creative Commons CCBY. Fluid simulation by PavelDoGreat, modified by Noah Koontz, licenced under MIT</Style.TextElement>
                         </Style.HeaderFooterGrid>
                     </div>
                 </Style.ContentContainer>

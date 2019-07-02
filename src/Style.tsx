@@ -5,7 +5,7 @@
  */
 
 import * as React from "react";
-import styled, { css, createGlobalStyle, ThemeContext } from "styled-components";
+import styled, { css, createGlobalStyle } from "styled-components";
 import styledTS from "styled-components-ts";
 import main_theme from "./Theme";
 
@@ -101,9 +101,8 @@ export const HeaderFooterGrid = styledTS<{ theme: typeof main_theme }>(styled(Bo
     display: grid;
     height: ${ props => props.theme.screen.header_footer };
     grid-template-rows: [contentY] 1fr [contentY] max-content [contentY] 1fr [contentY];
-    grid-template-columns: [contentX] min-content [contentX]
-        repeat(3, min-content [contentX]);
-    grid-column-gap: 50px;
+    grid-template-columns: [contentX] min-content 70px [contentX]
+        repeat(3, min-content 50px [contentX]);
     align-items: center;
 `;
 
@@ -130,16 +129,46 @@ export const MaskImage = styledTS<{ theme: typeof main_theme, image: string }>(s
     z-index: 99;
 `;
 
-export const SVGCSS = styledTS<{ theme: typeof main_theme, image: string }>(styled(BodyElem))`
+const MaskGridBase: React.FunctionComponent<{ className?: string, children?: any }> = ({ className, children }) => {
+    return (
+        <div className={ className }>
+            <div className="pack span"></div>
+            <div className="pack"></div>
+            <div className="pack"></div>
+            <div className="pack span"></div>
+            { children }
+        </div>
+    );
+};
+
+export const MaskGrid = styledTS<{ theme: typeof main_theme }>(styled(MaskGridBase))`
+    display: grid;
+    grid-template-rows: 1fr [top_content] min-content [bot_content] 1fr;
+    grid-template-columns: 1fr [left_content] 55vmin [right_content] 1fr;
+    z-index: 100;
+
+    & > .mask {
+        grid-row: top_content / bot_content;
+        grid-column: left_content / right_content;
+    }
+
+    & > .pack {
+        background-color: ${ props => props.theme.color.title_background };
+    }
+
+    & > .pack.span {
+        grid-column-start: span 3;
+    }
+`;
+
+export const MaskSVG = styledTS<{ theme: typeof main_theme }>(styled.div)`
+    // TODO: something here
+    // width: 50vmin;
+    align-self: center;
+`;
+
+export const SVGCSS = styledTS<{ theme: typeof main_theme }>(styled(BodyElem))`
     max-width: ${ props => props.theme.logo.size[props.size] };
     height: ${ props => props.theme.logo.size[props.size] };
     align-self: center;
 `;
-
-export const SVGLogo: React.FunctionComponent<{ imgname: string }> = ({ imgname }) => {
-    const themeCtx: typeof main_theme = React.useContext(ThemeContext);
-
-    return (
-        <SVGCSS as={themeCtx.logo.svg[imgname]} fill={themeCtx.color.logo_background}></SVGCSS>
-    );
-};

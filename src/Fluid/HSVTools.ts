@@ -1,10 +1,11 @@
 import HSVTypes from "./HSVTypes";
 
 /*eslint no-unused-expressions: "off"*/
+/*eslint no-sequences: "off"*/
 export default class HSVTools {
-    static HSVtoRGB (c: HSVTypes.HSVColor) {
+    static HSVtoRGB (c: HSVTypes.HSVColor): HSVTypes.RGBColor {
         const {h, s, v} = c;
-        let r, g, b, i, f, p, q, t;
+        let i, f, p, q, t;
         i = Math.floor(h * 6);
         f = h * 6 - i;
         p = v * (1 - s);
@@ -12,19 +13,14 @@ export default class HSVTools {
         t = v * (1 - (1 - f) * s);
 
         switch (i % 6) {
-            case 0: r = v, g = t, b = p; break;
-            case 1: r = q, g = v, b = p; break;
-            case 2: r = p, g = v, b = t; break;
-            case 3: r = p, g = q, b = v; break;
-            case 4: r = t, g = p, b = v; break;
-            case 5: r = v, g = p, b = q; break;
+            case 0: return { r: v, g: t, b: p };
+            case 1: return { r: q, g: v, b: p };
+            case 2: return { r: p, g: v, b: t };
+            case 3: return { r: p, g: q, b: v };
+            case 4: return { r: t, g: p, b: v };
+            case 5: return { r: v, g: p, b: q };
+            default: return { r: 0, g: 0, b: 0 };
         }
-
-        return {
-            r,
-            g,
-            b
-        };
     }
 
     static generateColor (): HSVTypes.RGBColor {

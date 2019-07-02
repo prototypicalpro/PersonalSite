@@ -1,6 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
-import styledTS from "styled-components-ts";
+import { PerfectCenter } from "./Style";
 import FluidRender from "./Fluid/FluidRender";
 import HSVTools from "./Fluid/HSVTools";
 import useInsideViewport from "./useInsideViewport";
@@ -11,15 +10,7 @@ import SplatVector from "./Fluid/FluidDraw";
  * From this project: https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
  */
 
-/** Container to center the canvas and make sure it stays square */
-const PerfectCenter = styledTS(styled.div)`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-`;
-
-const FluidGL: React.FunctionComponent<{ className?: string, canvaswidth: number, canvasheight: number }> = ({ className = "", canvaswidth = 600, canvasheight = 600}) => {
+const FluidGL: React.FunctionComponent<{ className?: string, canvasdimension: number }> = ({ className = "", canvasdimension = 600 }) => {
     const canvas_ref = React.useRef<HTMLCanvasElement | null>(null);
     const fluid_ref = React.useRef<FluidRender | null>(null);
     const animation_ref = React.useRef<number | null>(null);
@@ -39,13 +30,12 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvaswidth: number
             if (frame_count.current % 50 === 0) {
                 // set a bunch of useful constants
                 const SIZE = 0.5;
-                const MAGNITUDE = 300;
-                const APPROACH_RADIUS = 250;
+                const MAGNITUDE = Math.round(canvasdimension * 0.35);
+                const APPROACH_RADIUS = MAGNITUDE;
                 const ANGLE_TOL = 30;
                 const APPROACH_ANGLE_TOL = 45;
-                const COLOR_TOL = 0.5;
-                const X_MID = Math.round(canvas_ref.current.width / 2);
-                const Y_MID = Math.round(canvas_ref.current.height / 2);
+                const COLOR_TOL = 0.4;
+                const MID = Math.round(canvasdimension * 0.5);
                 // caLculate the next splats!
                 let next_angle: number;
                 // generate a new splat vector, angle, but make sure it's not too close to the last splat vector angle
@@ -64,13 +54,13 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvaswidth: number
                 fluid_ref.current.addVector(new SplatVector(
                     (next_angle + 180.0) + (Math.random() - 0.5) * APPROACH_ANGLE_TOL,
                     MAGNITUDE,
-                    [Math.cos(rad) * APPROACH_RADIUS + X_MID, Math.sin(rad) * APPROACH_RADIUS + Y_MID],
+                    [Math.cos(rad) * APPROACH_RADIUS + MID, Math.sin(rad) * APPROACH_RADIUS + MID],
                     HSVTools.HSVtoRGB({ h: next_hue, s: 1.0, v: 1.0 }), SIZE));
             }
             // next animation frame
             animation_ref.current = requestAnimationFrame(animationCallback);
         }
-    }, [canvas_ref, fluid_ref, animation_ref, frame_count, last_angle, last_hue]);
+    }, [canvas_ref, fluid_ref, animation_ref, frame_count, last_angle, last_hue, canvasdimension]);
 
     // setup the fluid object and shaders, and bind it to the canvas
     React.useEffect(() => {
@@ -106,7 +96,7 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvaswidth: number
 
     return (
         <PerfectCenter className={className || undefined}>
-            <canvas ref={canvas_ref} width={canvaswidth} height={canvasheight}></canvas>
+            <canvas ref={canvas_ref} width={canvasdimension} height={canvasdimension}></canvas>
         </PerfectCenter>
     );
 };

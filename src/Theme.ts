@@ -5,6 +5,7 @@
 import { ReactComponent as WebLogo } from "./img/web.svg";
 import { ReactComponent as EmbedLogo } from "./img/embedded.svg";
 import { ReactComponent as CloudLogo } from "./img/cloud.svg";
+import { ReactComponent as ProtoMask } from "./img/proto.svg";
 import ReactLogo from "./img/react_logo.svg";
 import StockImage from "./img/image.png";
 
@@ -13,6 +14,7 @@ const main_theme = {
         // light_background: "#ECECEC",
         // dark_background: "#AEAEAE",
         // logo_background: "#C4C4C4",
+        title_background: "#EEEEEE",
         light_background: "#222831",
         dark_background: "#393e46",
         logo_background: "#00adb5",
@@ -28,7 +30,7 @@ const main_theme = {
             small: "3vh",
         },
         type: {
-            header_footer: "'Open Sans', sans-serif",
+            header_footer: "'Roboto Slab', serif",
             wordmark: "'Roboto Slab', serif",
             content: "'Roboto Slab', serif"
         },
@@ -53,6 +55,7 @@ const main_theme = {
             embedded: EmbedLogo,
             web: WebLogo,
             social: ReactLogo,
+            mask: ProtoMask,
         }
     },
     screen: {
