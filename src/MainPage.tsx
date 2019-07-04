@@ -1,10 +1,11 @@
 import * as React from "react";
 import * as Style from "./Style";
 import FluidFull from "./FluidGL";
+import CountOnEnter from "./PersonalAPI/CountOnEnter";
 import useEventListener from "@use-it/event-listener";
 import main_theme from "./Theme";
 import { ThemeProvider } from "styled-components";
-
+import { useAPI, IGithubRet } from "./PersonalAPI/useAPI";
 
 /**
  * My personal website!
@@ -12,16 +13,20 @@ import { ThemeProvider } from "styled-components";
  * its own container.
  */
 
-
+ // the API result as of 7/3/2019
+ const BACKUP_COMMIT_COUNT = 1150;
+ const BACKUP_HOURS_COUNT = 4319;
 
 const MainPage: React.FunctionComponent = () => {
-    // TODO: Set to however the size of the image is being calculated
     const [dimension, setDimension] = React.useState<number>(Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8));
+    const [stats, setStats] = React.useState<IGithubRet | null>();
     // check for window resize to update our canvas
     useEventListener("resize", () => {
         setDimension(Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8));
     });
-
+    // query my personal API for my impressive numbers
+    useAPI("githubcount", React.useCallback((data) => setStats(data), [stats]));
+    // build the website
     return (
         <ThemeProvider theme={main_theme}>
             <div>
@@ -60,10 +65,14 @@ const MainPage: React.FunctionComponent = () => {
                         col_min={(main_theme.font.size.large_num * 4).toString() + "px"}
                         col_max={(main_theme.font.size.xlarge_num * 4).toString() + "px"}>
 
-                        <Style.TextElement x={3} y={3} spany={3} type="content" align="center" size="xlarge">1212</Style.TextElement>
+                        <Style.TextElement x={3} y={3} spany={3} type="content" align="center" size="xlarge">
+                            <CountOnEnter end={stats ? stats.totalCommitsByMe : BACKUP_COMMIT_COUNT}></CountOnEnter>
+                        </Style.TextElement>
                         <Style.TextElement x={3} y={6} type="content" align="center" size="medium">Git Commits</Style.TextElement>
-                        <Style.TextElement x={5} y={3} spany={3} type="content" align="center" size="xlarge">12123</Style.TextElement>
-                        <Style.TextElement x={5} y={6} type="content" align="center" size="medium">Lines of Code</Style.TextElement>
+                        <Style.TextElement x={5} y={3} spany={3} type="content" align="center" size="xlarge">
+                            <CountOnEnter end={stats ? stats.totalHoursByMe : BACKUP_HOURS_COUNT}></CountOnEnter>
+                        </Style.TextElement>
+                        <Style.TextElement x={5} y={6} type="content" align="center" size="medium">Estimated Hours</Style.TextElement>
                     </Style.BodyGrid>
                 </Style.ContentContainer>
                 <Style.ContentContainer height="60vh" color="dark_background">
