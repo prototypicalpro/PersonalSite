@@ -12,6 +12,7 @@
     "countup.js": "^2.0.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-intersection-observer": "^8.23.0",
     "react-scripts": "3.0.1",
     "styled-components": "^5.0.0-beta.6-ej4",
     "styled-components-ts": "0.0.15",

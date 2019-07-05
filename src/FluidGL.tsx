@@ -2,7 +2,7 @@ import * as React from "react";
 import { PerfectCenter } from "./Style";
 import FluidRender from "./Fluid/FluidRender";
 import HSVTools from "./Fluid/HSVTools";
-import useInsideViewport from "./useInsideViewport";
+import { useInView } from "react-intersection-observer";
 import SplatVector from "./Fluid/FluidDraw";
 
 /**
@@ -76,27 +76,32 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasdimension: nu
             console.log("Reconstuct!");
             // let react know we gotta clean up the fluid ref
             return () => {
+                if (animation_ref.current) {
+                    cancelAnimationFrame(animation_ref.current);
+                    animation_ref.current = null;
+                }
                 fluid_ref.current = null;
             };
         }
     }, [canvas_ref, fluid_ref]);
 
+    const [view_ref, inView] = useInView();
     // make sure we only are updating the fluid when we need to
-    useInsideViewport(canvas_ref, () => {
-        // start the animation
-        animationCallback();
-        // tell react we gotta cancel the the animation callback
-        return () => {
-            if (animation_ref.current) {
-                cancelAnimationFrame(animation_ref.current);
-                animation_ref.current = null;
-            }
-        };
-    });
+    React.useEffect(() => {
+        if (inView && !animation_ref.current) {
+            // start the animation
+            animationCallback();
+        }
+        else if (!inView && animation_ref.current) {
+            // cancel the animation callback
+            cancelAnimationFrame(animation_ref.current);
+            animation_ref.current = null;
+        }
+    }, [inView, animationCallback]);
 
     return (
         <PerfectCenter className={className || undefined}>
-            <canvas ref={canvas_ref} width={canvasdimension} height={canvasdimension}></canvas>
+            <canvas ref={(c) => { canvas_ref.current = c; view_ref(c); }} width={canvasdimension} height={canvasdimension}></canvas>
         </PerfectCenter>
     );
 };

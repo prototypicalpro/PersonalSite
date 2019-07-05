@@ -16,6 +16,7 @@ body {
 `;
 
 export const ContentContainer = styledTS<{ height: string, color: string, theme: typeof main_theme }>(styled.div)`
+    overflow: hidden;
     display: grid;
     grid-template:
         [top_edge] ". . ." ${ props => props.theme.screen.top_bot_pad }
@@ -95,6 +96,7 @@ export const TextElement = styledTS<{ size: string, type: string, align?: string
     align-self: ${ props => props.align ? props.align : "unset" };
     font-weight: 300;
     white-space: nowrap;
+    z-index: 100;
 `;
 
 export const HeaderFooterGrid = styledTS<{ theme: typeof main_theme }>(styled(BodyElem))`

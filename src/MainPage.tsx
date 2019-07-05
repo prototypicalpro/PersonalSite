@@ -33,9 +33,9 @@ const MainPage: React.FunctionComponent = () => {
             <div>
                 <Style.GlobalStyle />
                 <Style.ContentContainer height="100vh" color="light_background">
-                    <FluidFull className="full" canvasdimension={dimension}></FluidFull>
+                    <FluidFull className="full" canvasdimension={dimension} />
                     <Style.MaskGrid className="full" style={{ zIndex: 100 }}>
-                        <Style.MaskSVG as={main_theme.logo.svg.mask} className="mask"></Style.MaskSVG>
+                        <Style.MaskSVG as={main_theme.logo.svg.mask} className="mask" />
                     </Style.MaskGrid>
                     <div className="content" style={{ zIndex: 100 }}>
                         <Style.HeaderFooterGrid>
@@ -49,16 +49,16 @@ const MainPage: React.FunctionComponent = () => {
                 <Style.ContentContainer height="60vh" color="dark_background">
                     <Style.BodyGrid className="content" col_count={3} col_gap={150} col_min={main_theme.logo.size.medium} col_max={main_theme.logo.size.large}>
                         <Style.TextElement x={3} y={1} spanx={5} spany={2} type="content" size="medium" align="center">My name is <Style.Mark>Noah Koontz</Style.Mark><br></br>and I build stuff</Style.TextElement>
-                        <Style.SVGCSS x={3} y={2} spany={6} size="large" as={main_theme.logo.svg["cloud"]} fill={main_theme.color.logo_background} title="Cloud"></Style.SVGCSS>
+                        <Style.SVGCSS x={3} y={2} spany={6} size="large" as={main_theme.logo.svg["cloud"]} fill={main_theme.color.logo_background} title="Cloud" />
                         <Style.TextElement x={3} y={7} type="content" size="medium" align="end">Cloud</Style.TextElement>
-                        <Style.SVGCSS x={5} y={2} spany={6} size="large" as={main_theme.logo.svg["embedded"]} fill={main_theme.color.logo_background} title="Embedded"></Style.SVGCSS>
+                        <Style.SVGCSS x={5} y={2} spany={6} size="large" as={main_theme.logo.svg["embedded"]} fill={main_theme.color.logo_background} title="Embedded" />
                         <Style.TextElement x={5} y={7} type="content" size="medium" align="end">Embedded</Style.TextElement>
-                        <Style.SVGCSS x={7} y={2} spany={6} size="large" as={main_theme.logo.svg["web"]} fill={main_theme.color.logo_background} title="Web"></Style.SVGCSS>
+                        <Style.SVGCSS x={7} y={2} spany={6} size="large" as={main_theme.logo.svg["web"]} fill={main_theme.color.logo_background} title="Web" />
                         <Style.TextElement x={7} y={7} type="content" size="medium" align="end">Web</Style.TextElement>
                     </Style.BodyGrid>
                 </Style.ContentContainer>
-                <Style.ContentContainer height="70vh" color="light_background">
-                    <BackgroundVideo className="full" videoSrc={main_theme.video.middle.vid} videoPoster={main_theme.video.middle.thumb} overlayColor={main_theme.color.light_overlay}></BackgroundVideo>
+                <Style.ContentContainer height="70vh" color="none">
+                    <BackgroundVideo className="full" videoSrc={window.innerWidth > 720 ? main_theme.video.middle.vid : main_theme.video.middle.small_vid} videoPoster={main_theme.video.middle.thumb} overlayColor={main_theme.color.light_overlay} />
                     <Style.BodyGrid className="content"
                         col_count={2}
                         col_gap={110}
@@ -66,11 +66,11 @@ const MainPage: React.FunctionComponent = () => {
                         col_max={(main_theme.font.size.xlarge_num * 4).toString() + "px"}>
 
                         <Style.TextElement x={3} y={3} spany={3} type="content" align="center" size="xlarge">
-                            <CountOnEnter end={stats ? stats.totalCommitsByMe : BACKUP_COMMIT_COUNT}></CountOnEnter>
+                            <CountOnEnter end={stats ? stats.totalCommitsByMe : BACKUP_COMMIT_COUNT} />
                         </Style.TextElement>
                         <Style.TextElement x={3} y={6} type="content" align="center" size="medium">Git Commits</Style.TextElement>
                         <Style.TextElement x={5} y={3} spany={3} type="content" align="center" size="xlarge">
-                            <CountOnEnter end={stats ? stats.totalHoursByMe : BACKUP_HOURS_COUNT}></CountOnEnter>
+                            <CountOnEnter end={stats ? stats.totalHoursByMe : BACKUP_HOURS_COUNT} />
                         </Style.TextElement>
                         <Style.TextElement x={5} y={6} type="content" align="center" size="medium">Hours</Style.TextElement>
                     </Style.BodyGrid>
@@ -91,17 +91,17 @@ const MainPage: React.FunctionComponent = () => {
                         col_count={4} col_gap={20} col_min={main_theme.logo.size.small} col_max={main_theme.logo.size.small}>
 
                         <Style.TextElement x={3} y={2} spanx={7} spany={2} type="content" align="center" size="small">Get In Touch</Style.TextElement>
-                        <Style.LogoElement x={3} y={4} spany={4} imgname="web" size="small"></Style.LogoElement>
-                        <Style.LogoElement x={5} y={4} spany={4} imgname="web" size="small"></Style.LogoElement>
-                        <Style.LogoElement x={7} y={4} spany={4} imgname="web" size="small"></Style.LogoElement>
-                        <Style.LogoElement x={9} y={4} spany={4} imgname="web" size="small"></Style.LogoElement>
+                        <Style.LogoElement x={3} y={4} spany={4} imgname="web" size="small" />
+                        <Style.LogoElement x={5} y={4} spany={4} imgname="web" size="small" />
+                        <Style.LogoElement x={7} y={4} spany={4} imgname="web" size="small" />
+                        <Style.LogoElement x={9} y={4} spany={4} imgname="web" size="small" />
                     </Style.BodyGrid>
                 </Style.BodyGrid>
                 </Style.ContentContainer>
                 <Style.ContentContainer height={main_theme.screen.header_footer} color="header_footer">
                     <div className="content">
                         <Style.HeaderFooterGrid>
-                            <Style.LogoElement x={1} y={1} spany={3} imgname="main" size="small"></Style.LogoElement>
+                            <Style.LogoElement x={1} y={1} spany={3} imgname="main" size="small" />
                             <Style.TextElement x={2} y={2} type="header_footer" size="xsmall">©2019 Noah Koontz. Roboto Slab font by Christian Robertson from Google Fonts, licenced under Apache 2.0 (TODO link). Web logo created by Logan, embedded and cloud logo created by counloucon, from Noun Project licenced under Creative Commons CCBY. Fluid simulation by PavelDoGreat, modified by Noah Koontz, licenced under MIT</Style.TextElement>
                         </Style.HeaderFooterGrid>
                     </div>
