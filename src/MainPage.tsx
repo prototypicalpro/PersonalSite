@@ -6,6 +6,7 @@ import useEventListener from "@use-it/event-listener";
 import main_theme from "./Theme";
 import { ThemeProvider } from "styled-components";
 import { useAPI, IGithubRet } from "./PersonalAPI/useAPI";
+import BackgroundVideo from "./BackgroundVideo";
 
 /**
  * My personal website!
@@ -14,7 +15,7 @@ import { useAPI, IGithubRet } from "./PersonalAPI/useAPI";
  */
 
  // the API result as of 7/3/2019
- const BACKUP_COMMIT_COUNT = 1150;
+ const BACKUP_COMMIT_COUNT = 919;
  const BACKUP_HOURS_COUNT = 4319;
 
 const MainPage: React.FunctionComponent = () => {
@@ -25,7 +26,7 @@ const MainPage: React.FunctionComponent = () => {
         setDimension(Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8));
     });
     // query my personal API for my impressive numbers
-    useAPI("githubcount", React.useCallback((data) => setStats(data), [stats]));
+    useAPI("githubcount", React.useCallback((data) => setStats(data), [setStats]));
     // build the website
     return (
         <ThemeProvider theme={main_theme}>
@@ -57,8 +58,7 @@ const MainPage: React.FunctionComponent = () => {
                     </Style.BodyGrid>
                 </Style.ContentContainer>
                 <Style.ContentContainer height="70vh" color="light_background">
-                    <div className="full">
-                    </div>
+                    <BackgroundVideo className="full" videoSrc={main_theme.video.middle.vid} videoPoster={main_theme.video.middle.thumb} overlayColor={main_theme.color.light_overlay}></BackgroundVideo>
                     <Style.BodyGrid className="content"
                         col_count={2}
                         col_gap={110}
@@ -72,7 +72,7 @@ const MainPage: React.FunctionComponent = () => {
                         <Style.TextElement x={5} y={3} spany={3} type="content" align="center" size="xlarge">
                             <CountOnEnter end={stats ? stats.totalHoursByMe : BACKUP_HOURS_COUNT}></CountOnEnter>
                         </Style.TextElement>
-                        <Style.TextElement x={5} y={6} type="content" align="center" size="medium">Estimated Hours</Style.TextElement>
+                        <Style.TextElement x={5} y={6} type="content" align="center" size="medium">Hours</Style.TextElement>
                     </Style.BodyGrid>
                 </Style.ContentContainer>
                 <Style.ContentContainer height="60vh" color="dark_background">

@@ -27,3 +27,6 @@ yarn-error.log*
 
 # my not very secret secrets
 secrets.json
+
+# video editing stuff
+video

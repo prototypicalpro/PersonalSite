@@ -12,7 +12,7 @@ import useInsideViewport from "../useInsideViewport";
 
     React.useEffect(() => {
         if (selfRef.current) countupRef.current = new CountUp(selfRef.current, 0, {
-                duration: 3,
+                duration: 2,
                 // more options
             });
     }, [selfRef, countupRef]);

@@ -26,11 +26,11 @@ export const ContentContainer = styledTS<{ height: string, color: string, theme:
         [right_content] minmax(${ props => props.theme.screen.side_pad }, 1fr) [right_edge];
 
     width: 100%;
+    height: ${ props => props.height };
     background-color: ${ props => props.color ? props.theme.color[props.color] : props.theme.color.light_background };
 
     & > .content {
         grid-area: content;
-        height: ${ props => props.height };
     }
 
     & > .full {

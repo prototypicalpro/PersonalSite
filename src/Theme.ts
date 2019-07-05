@@ -8,6 +8,8 @@ import { ReactComponent as CloudLogo } from "./img/cloud.svg";
 import { ReactComponent as ProtoMask } from "./img/proto.svg";
 import ReactLogo from "./img/react_logo.svg";
 import StockImage from "./img/image.png";
+import BackVideo from "./video/backvid.mp4";
+import BackThumb from "./video/backthumb.png";
 
 const main_theme = {
     color: {
@@ -16,6 +18,7 @@ const main_theme = {
         // logo_background: "#C4C4C4",
         title_background: "#EEEEEE",
         light_background: "#222831",
+        light_overlay: "rgba(34, 40, 49, 0.5)",
         dark_background: "#393e46",
         logo_background: "#00adb5",
         logo_text: "#919191",
@@ -63,6 +66,12 @@ const main_theme = {
         side_pad: "50px",
         top_bot_pad: "15px",
         header_footer: "12vh",
+    },
+    video: {
+        middle: {
+            vid: BackVideo,
+            thumb: BackThumb
+        }
     }
 };
 
