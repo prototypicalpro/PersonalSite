@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Style from "./Style";
-import FluidFull from "./FluidGL";
+import FluidGL from "./FluidGL";
 import CountOnEnter from "./PersonalAPI/CountOnEnter";
 import useEventListener from "@use-it/event-listener";
 import main_theme from "./Theme";
@@ -19,12 +19,17 @@ import BackgroundVideo from "./BackgroundVideo";
  const BACKUP_HOURS_COUNT = 4319;
 
 const MainPage: React.FunctionComponent = () => {
-    const [dimension, setDimension] = React.useState<number>(Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8));
+    const [dimension, setDimension] = React.useState<number>(0);
     const [stats, setStats] = React.useState<IGithubRet | null>();
-    // check for window resize to update our canvas
-    useEventListener("resize", () => {
+
+    // create a callback for the event listener
+    const dim_callback = React.useCallback(() => {
         setDimension(Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8));
-    });
+    }, [setDimension]);
+    // check for window resize to update our canvas
+    useEventListener("resize", dim_callback);
+    // and run it once on startup jsut to be safe
+    React.useEffect(dim_callback, [dim_callback]);
     // query my personal API for my impressive numbers
     useAPI("githubcount", React.useCallback((data) => setStats(data), [setStats]));
     // build the website
@@ -33,7 +38,7 @@ const MainPage: React.FunctionComponent = () => {
             <div>
                 <Style.GlobalStyle />
                 <Style.ContentContainer height="100vh" color="light_background">
-                    <FluidFull className="full" canvasdimension={dimension} />
+                    <FluidGL className="full" canvasres={dimension} canvassize="80vmin" />
                     <Style.MaskGrid className="full" style={{ zIndex: 100 }}>
                         <Style.MaskSVG as={main_theme.logo.svg.mask} className="mask" />
                     </Style.MaskGrid>
@@ -46,9 +51,9 @@ const MainPage: React.FunctionComponent = () => {
                         </Style.HeaderFooterGrid>
                     </div>
                 </Style.ContentContainer>
-                <Style.ContentContainer height="60vh" color="dark_background">
+                <Style.ContentContainer height="70vh" color="dark_background">
                     <Style.BodyGrid className="content" col_count={3} col_gap={150} col_min={main_theme.logo.size.medium} col_max={main_theme.logo.size.large}>
-                        <Style.TextElement x={3} y={1} spanx={5} spany={2} type="content" size="medium" align="center">My name is <Style.Mark>Noah Koontz</Style.Mark><br></br>and I build stuff</Style.TextElement>
+                        <Style.TextElement x={3} y={1} spanx={5} spany={2} type="content" size="medium" align="center">My name is <Style.Mark>Noah Koontz</Style.Mark><br></br> and I build stuff.</Style.TextElement>
                         <Style.SVGCSS x={3} y={2} spany={6} size="large" as={main_theme.logo.svg["cloud"]} fill={main_theme.color.logo_background} title="Cloud" />
                         <Style.TextElement x={3} y={7} type="content" size="medium" align="end">Cloud</Style.TextElement>
                         <Style.SVGCSS x={5} y={2} spany={6} size="large" as={main_theme.logo.svg["embedded"]} fill={main_theme.color.logo_background} title="Embedded" />
@@ -57,7 +62,7 @@ const MainPage: React.FunctionComponent = () => {
                         <Style.TextElement x={7} y={7} type="content" size="medium" align="end">Web</Style.TextElement>
                     </Style.BodyGrid>
                 </Style.ContentContainer>
-                <Style.ContentContainer height="70vh" color="none">
+                <Style.ContentContainer height="80vh" color="none">
                     <BackgroundVideo className="full" videoSrc={window.innerWidth > 720 ? main_theme.video.middle.vid : main_theme.video.middle.small_vid} videoPoster={main_theme.video.middle.thumb} overlayColor={main_theme.color.light_overlay} />
                     <Style.BodyGrid className="content"
                         col_count={2}
@@ -75,7 +80,7 @@ const MainPage: React.FunctionComponent = () => {
                         <Style.TextElement x={5} y={6} type="content" align="center" size="medium">Hours</Style.TextElement>
                     </Style.BodyGrid>
                 </Style.ContentContainer>
-                <Style.ContentContainer height="60vh" color="dark_background">
+                <Style.ContentContainer height="70vh" color="dark_background">
                     <Style.PerfectCenter className="content">
                         <Style.ResumeText>
                             I am a <Style.Mark>maker</Style.Mark> who enjoys the creative
@@ -85,9 +90,9 @@ const MainPage: React.FunctionComponent = () => {
                             I have a track record of rapidly applying new concepts.</Style.ResumeText>
                     </Style.PerfectCenter>
                 </Style.ContentContainer>
-                <Style.ContentContainer height="70vh" color="light_background">
-                <Style.BodyGrid className="content" col_count={1} col_gap={0} col_min="110px" col_max="500px" style={{ backgroundImage: `url(${main_theme.logo.url.stock})`, backgroundPosition: "center", backgroundSize: "cover" }}>
-                    <Style.BodyGrid style={{ backgroundColor: main_theme.color.dark_background }} x={3} y={3} spany={3}
+                <Style.ContentContainer height="60vh" color="light_background">
+                <Style.BodyGrid className="content" col_count={1} col_gap={0} col_min="110px" col_max="500px" >
+                    <Style.BodyGrid x={3} y={3} spany={3}
                         col_count={4} col_gap={20} col_min={main_theme.logo.size.small} col_max={main_theme.logo.size.small}>
 
                         <Style.TextElement x={3} y={2} spanx={7} spany={2} type="content" align="center" size="small">Get In Touch</Style.TextElement>

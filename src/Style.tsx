@@ -60,7 +60,7 @@ export const ResumeText = styledTS<{ theme: typeof main_theme }>(styled.div)`
     font-weight: 100;
     font-size: ${ props => props.theme.font.size.large };
     color: ${ props => props.theme.font.color.content };
-    line-height: 7.6vh;
+    line-height: 8vh;
     text-align: left;
     max-width: 22em;
 `;

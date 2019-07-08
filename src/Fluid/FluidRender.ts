@@ -160,7 +160,7 @@ class FluidRender {
         this.initFrameBuffers();
     }
 
-    private initFrameBuffers() {
+    initFrameBuffers() {
         const simRes = this.getResolution(this.config.SIM_RESOLUTION);
         const dyeRes = this.getResolution(this.config.DYE_RESOLUTION);
 

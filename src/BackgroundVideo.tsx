@@ -36,19 +36,20 @@ const BackgroundVideo: React.FunctionComponent<{ videoSrc: string, videoPoster: 
 
     React.useEffect(() => {
         if (videoRef.current) {
-            if (inView && videoRef.current) videoRef.current.play();
+            if (inView && videoRef.current) {
+                videoRef.current.muted = true;
+                videoRef.current.play();
+            }
             else videoRef.current.pause();
         }
     }, [videoRef, inView, videoSrc]);
 
     return (
         <ContainerDiv ref={containerRef} className={className}>
-            <VideoStyle ref={(v) => { videoRef.current = v; view_ref(v); }} loop={true} muted={true} preload="auto" playsInline={true} src={videoSrc} poster={videoPoster}/>
+            <VideoStyle ref={(v) => { videoRef.current = v; view_ref(v); }} loop muted={1} preload="auto" playsInline src={videoSrc} poster={videoPoster}/>
             <OverlayDiv color={overlayColor}></OverlayDiv>
         </ContainerDiv>
     );
 });
-
-(BackgroundVideo as any).whyDidYouRender = true;
 
 export default BackgroundVideo;

@@ -18,9 +18,13 @@
     "styled-components-ts": "0.0.15",
     "typescript": "3.5.2"
   },
+  "reactSnap": {
+    "headless": false
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "react-snap",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
@@ -41,9 +45,10 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://db-dropdatabase.github.io/PrototypicalPro",
+  "homepage_old": "https://db-dropdatabase.github.io/PrototypicalPro",
   "devDependencies": {
     "gh-pages": "^2.0.1",
+    "react-snap": "^1.23.0",
     "tslint": "^5.18.0"
   }
 }
