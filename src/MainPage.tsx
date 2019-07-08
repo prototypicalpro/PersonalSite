@@ -20,10 +20,12 @@ import BackgroundVideo from "./BackgroundVideo";
 
 const MainPage: React.FunctionComponent = () => {
     const [dimension, setDimension] = React.useState<number>(0);
+    const [width, setWidth] = React.useState<number>(0);
     const [stats, setStats] = React.useState<IGithubRet | null>();
 
     // create a callback for the event listener
     const dim_callback = React.useCallback(() => {
+        setWidth(window.innerWidth);
         setDimension(Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8));
     }, [setDimension]);
     // check for window resize to update our canvas
@@ -63,7 +65,7 @@ const MainPage: React.FunctionComponent = () => {
                     </Style.BodyGrid>
                 </Style.ContentContainer>
                 <Style.ContentContainer height="80vh" color="none">
-                    <BackgroundVideo className="full" videoSrc={window.innerWidth > 720 ? main_theme.video.middle.vid : main_theme.video.middle.small_vid} videoPoster={main_theme.video.middle.thumb} overlayColor={main_theme.color.light_overlay} />
+                    <BackgroundVideo className="full" videoSrc={width > 720 ? main_theme.video.middle.vid : main_theme.video.middle.small_vid} videoPoster={main_theme.video.middle.thumb} overlayColor={main_theme.color.light_overlay} />
                     <Style.BodyGrid className="content"
                         col_count={2}
                         col_gap={110}
