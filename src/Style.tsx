@@ -109,6 +109,7 @@ export const HeaderFooterGrid = styledTS<{ theme: typeof main_theme }>(styled(Bo
     align-items: center;
 `;
 
+
 export const BodyGrid = styledTS<{ theme: typeof main_theme, col_count: number, col_gap: number, col_max: string, col_min: string }>(styled(BodyElem))`
     display: grid;
     grid-template-rows: [contentY] repeat(7, 1fr [contentY]) 1fr [contentY];
@@ -123,13 +124,6 @@ export const BodyGrid = styledTS<{ theme: typeof main_theme, col_count: number, 
         [contentX] minmax(${ props => props.col_min }, ${ props => props.col_max })
         [contentX] minmax(0, ${ props => props.col_gap / 2 }px)
         [contentX] 1fr [contentX];
-`;
-
-export const MaskImage = styledTS<{ theme: typeof main_theme, image: string }>(styled.div)`
-    background-image: url(${ props => props.image});
-    background-size: cover;
-    background-position: center;
-    z-index: 99;
 `;
 
 const MaskGridBase: React.FunctionComponent<{ className?: string, children?: any }> = ({ className, children }) => {
@@ -172,6 +166,7 @@ export const MaskSVG = styledTS<{ theme: typeof main_theme }>(styled.div)`
 
 export const SVGCSS = styledTS<{ theme: typeof main_theme }>(styled(BodyElem))`
     max-width: ${ props => props.theme.logo.size[props.size] };
-    height: ${ props => props.theme.logo.size[props.size] };
+    max-height: ${ props => props.theme.logo.size[props.size] };
     align-self: center;
+    z-index: 100;
 `;

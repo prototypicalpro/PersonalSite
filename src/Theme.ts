@@ -9,6 +9,7 @@ import { ReactComponent as ProtoMask } from "./img/proto.svg";
 import { ReactComponent as EmailLogo } from "./img/email.svg";
 import { ReactComponent as GithubLogo } from "./img/github.svg";
 import { ReactComponent as LinkedinLogo } from "./img/linkedin.svg";
+import { ReactComponent as DownLogo } from "./img/down.svg";
 import ReactLogo from "./img/react_logo.svg";
 import StockImage from "./img/image.png";
 import BackVideo from "./video/backvid.mp4";
@@ -50,6 +51,7 @@ const main_theme = {
     },
     logo: {
         size: {
+            xsmall: "5vh",
             small: "10vh",
             medium: "12.5vh",
             large: "27.5vh",
@@ -67,6 +69,7 @@ const main_theme = {
             mail: EmailLogo,
             github: GithubLogo,
             linkedin: LinkedinLogo,
+            down: DownLogo,
         }
     },
     screen: {
