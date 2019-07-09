@@ -31,7 +31,7 @@ export const ContentContainer = styledTS<{ height: string, color: string, theme:
     background-color: ${ props => props.color ? props.theme.color[props.color] : null };
 
     & > .content {
-        grid-area: content;
+        grid-area: top_content / left_content / bot_content / right_content;
     }
 
     & > .full {
@@ -109,21 +109,20 @@ export const HeaderFooterGrid = styledTS<{ theme: typeof main_theme }>(styled(Bo
     align-items: center;
 `;
 
-
+// repeat(${ props => props.col_count - 1 },
 export const BodyGrid = styledTS<{ theme: typeof main_theme, col_count: number, col_gap: number, col_max: string, col_min: string }>(styled(BodyElem))`
     display: grid;
-    grid-template-rows: [contentY] repeat(7, 1fr [contentY]) 1fr [contentY];
+    grid-template-rows: [contentY] repeat(8, 1fr [contentY]);
     grid-template-columns:
-        [contentX] 1fr [contentX]
+        1fr
         minmax(0, ${ props => props.col_gap / 2 }px)
         ${props => props.col_count > 1 && css`
             repeat(${ props => props.col_count - 1 },
             [contentX] minmax(${ props => props.col_min }, ${ props => props.col_max })
-            [contentX] minmax(0, ${ props => props.col_gap }px))
+            minmax(0, ${ props => props.col_gap }px))
         `}
         [contentX] minmax(${ props => props.col_min }, ${ props => props.col_max })
-        [contentX] minmax(0, ${ props => props.col_gap / 2 }px)
-        [contentX] 1fr [contentX];
+        minmax(0, ${ props => props.col_gap / 2 }px) 1fr;
 `;
 
 const MaskGridBase: React.FunctionComponent<{ className?: string, children?: any }> = ({ className, children }) => {
