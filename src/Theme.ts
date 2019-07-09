@@ -6,11 +6,14 @@ import { ReactComponent as WebLogo } from "./img/web.svg";
 import { ReactComponent as EmbedLogo } from "./img/embedded.svg";
 import { ReactComponent as CloudLogo } from "./img/cloud.svg";
 import { ReactComponent as ProtoMask } from "./img/proto.svg";
+import { ReactComponent as EmailLogo } from "./img/email.svg";
+import { ReactComponent as GithubLogo } from "./img/github.svg";
+import { ReactComponent as LinkedinLogo } from "./img/linkedin.svg";
 import ReactLogo from "./img/react_logo.svg";
 import StockImage from "./img/image.png";
 import BackVideo from "./video/backvid.mp4";
 import BackVideoSmall from "./video/backvidlq.mp4";
-import BackThumb from "./video/backthumb.jpg";
+import BackThumb from "./img/backthumb.jpg";
 
 const main_theme = {
     color: {
@@ -61,6 +64,9 @@ const main_theme = {
             web: WebLogo,
             social: ReactLogo,
             mask: ProtoMask,
+            mail: EmailLogo,
+            github: GithubLogo,
+            linkedin: LinkedinLogo,
         }
     },
     screen: {

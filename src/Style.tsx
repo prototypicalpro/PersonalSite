@@ -28,7 +28,7 @@ export const ContentContainer = styledTS<{ height: string, color: string, theme:
 
     width: 100%;
     height: ${ props => props.height };
-    background-color: ${ props => props.color ? props.theme.color[props.color] : props.theme.color.light_background };
+    background-color: ${ props => props.color ? props.theme.color[props.color] : null };
 
     & > .content {
         grid-area: content;
@@ -97,6 +97,7 @@ export const TextElement = styledTS<{ size: string, type: string, align?: string
     font-weight: 300;
     white-space: nowrap;
     z-index: 100;
+    text-decoration: none;
 `;
 
 export const HeaderFooterGrid = styledTS<{ theme: typeof main_theme }>(styled(BodyElem))`

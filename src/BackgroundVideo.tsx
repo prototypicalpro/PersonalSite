@@ -37,7 +37,7 @@ const BackgroundVideo: React.FunctionComponent<{ videoSrc: string, videoPoster: 
     React.useEffect(() => {
         if (videoRef.current) {
             if (inView && videoRef.current) {
-                videoRef.current.muted = true;
+                if (!videoRef.current.muted) videoRef.current.muted = true;
                 videoRef.current.play();
             }
             else videoRef.current.pause();
