@@ -63,15 +63,19 @@ const MainPage: React.FunctionComponent = () => {
                     </Style.BodyGrid>
                 </Style.ContentContainer>
                 <Style.ContentContainer id="intro" height="70vh" color="dark_background">
-                    <Style.BodyGrid className="content" col_count={3} col_gap={150} col_min={main_theme.logo.size.medium} col_max={main_theme.logo.size.large}>
-                        <Style.TextElement x={1} y={1} spanx={5} spany={2} type="content" size="medium" align="center">My name is <Style.Mark>Noah Koontz</Style.Mark><br></br> and I build stuff.</Style.TextElement>
-                        <Style.SVGCSS x={1} y={2} spany={6} size="large" as={main_theme.logo.svg["cloud"]} fill={main_theme.color.logo_background} title="Cloud" />
-                        <Style.TextElement x={1} y={7} type="content" size="medium" align="end">Cloud</Style.TextElement>
-                        <Style.SVGCSS x={2} y={2} spany={6} size="large" as={main_theme.logo.svg["embedded"]} fill={main_theme.color.logo_background} title="Embedded" />
-                        <Style.TextElement x={2} y={7} type="content" size="medium" align="end">Embedded</Style.TextElement>
-                        <Style.SVGCSS x={3} y={2} spany={6} size="large" as={main_theme.logo.svg["web"]} fill={main_theme.color.logo_background} title="Web" />
-                        <Style.TextElement x={3} y={7} type="content" size="medium" align="end">Web</Style.TextElement>
-                    </Style.BodyGrid>
+                    <Style.FlexCol className="content">
+                        <Style.TextElement type="content" size="medium" align="center">
+                            My name is <Style.Mark>Noah Koontz</Style.Mark><br></br> and I build stuff.
+                        </Style.TextElement>
+                        <Style.BodyGrid col_count={3} col_gap={150} col_min={main_theme.logo.size.medium} col_max={main_theme.logo.size.large}>
+                            <Style.SVGCSS size="large" as={main_theme.logo.svg["cloud"]} fill={main_theme.color.logo_background} title="Cloud" />
+                            <Style.TextElement type="content" size="medium" align="end">Cloud</Style.TextElement>
+                            <Style.SVGCSS size="large" as={main_theme.logo.svg["embedded"]} fill={main_theme.color.logo_background} title="Embedded" />
+                            <Style.TextElement type="content" size="medium" align="end">Embedded</Style.TextElement>
+                            <Style.SVGCSS size="large" as={main_theme.logo.svg["web"]} fill={main_theme.color.logo_background} title="Web" />
+                            <Style.TextElement type="content" size="medium" align="end">Web</Style.TextElement>
+                        </Style.BodyGrid>
+                    </Style.FlexCol>
                 </Style.ContentContainer>
                 <Style.ContentContainer id="numbers" height="80vh">
                     <BackgroundVideo className="full" videoSrc={width > 720 ? main_theme.video.middle.vid : main_theme.video.middle.small_vid} videoPoster={main_theme.video.middle.thumb} overlayColor={main_theme.color.light_overlay} />

@@ -19,9 +19,9 @@ export const ContentContainer = styledTS<{ height: string, color: string, theme:
     overflow: hidden;
     display: grid;
     grid-template:
-        [top_edge] ". . ." ${ props => props.theme.screen.top_bot_pad }
-        [top_content] ". content ." auto
-        [bot_content] ". . ." ${ props => props.theme.screen.top_bot_pad } [bot_edge]
+        [top_edge] ${ props => props.theme.screen.top_bot_pad }
+        [top_content] auto
+        [bot_content] ${ props => props.theme.screen.top_bot_pad } [bot_edge]
         / [left_edge] minmax(${ props => props.theme.screen.side_pad }, 1fr)
         [left_content] minmax(auto, ${ props => props.theme.screen.content_width })
         [right_content] minmax(${ props => props.theme.screen.side_pad }, 1fr) [right_edge];
@@ -77,6 +77,30 @@ export const BodyElem = styledTS<{ theme: typeof main_theme, x?: number, y?: num
     ${ props => props.y ? css`grid-column: contentX ${ props => props.x } / span ${ props => props.spanx ? props.spanx : 1 };` : css``}
 `;
 
+// repeat(${ props => props.col_count - 1 },
+export const BodyGrid = styledTS<{ theme: typeof main_theme, col_count: number, col_gap: number, col_max: string, col_min: string }>(styled(BodyElem))`
+    display: grid;
+    grid-template-rows: repeat(2, min-content);
+    grid-template-columns: repeat(${ props => props.col_count }, minmax(${ props => props.col_min }, ${ props => props.col_max }));
+    grid-auto-flow: column;
+    row-gap: 50px;
+    // column-gap: ${ props => props.col_gap }px; TODO FIX
+    column-gap: 5vmin; // TODO: rethink?
+
+    @media (max-width: ${ props => props.theme.screen.grid_collapse_width }) {
+        grid-template-rows: repeat(${ props => props.col_count * 2 }, min-content);
+        grid-template-columns: minmax(${ props => props.col_min }, ${ props => props.col_max });
+    }
+`;
+
+export const FlexCol = styledTS<{ theme: typeof main_theme }>(styled(BodyElem))`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+`;
+
+
 export const LogoElement = styledTS<{ imgname: string, size: string, theme: typeof main_theme }>(styled(BodyElem))`
     max-width: ${ props => props.theme.logo.size[props.size] };
     height: ${ props => props.theme.logo.size[props.size] };
@@ -107,22 +131,12 @@ export const HeaderFooterGrid = styledTS<{ theme: typeof main_theme }>(styled(Bo
     grid-template-columns: [contentX] min-content 70px [contentX]
         repeat(3, min-content 50px [contentX]);
     align-items: center;
-`;
 
-// repeat(${ props => props.col_count - 1 },
-export const BodyGrid = styledTS<{ theme: typeof main_theme, col_count: number, col_gap: number, col_max: string, col_min: string }>(styled(BodyElem))`
-    display: grid;
-    grid-template-rows: [contentY] repeat(8, 1fr [contentY]);
-    grid-template-columns:
-        1fr
-        minmax(0, ${ props => props.col_gap / 2 }px)
-        ${props => props.col_count > 1 && css`
-            repeat(${ props => props.col_count - 1 },
-            [contentX] minmax(${ props => props.col_min }, ${ props => props.col_max })
-            minmax(0, ${ props => props.col_gap }px))
-        `}
-        [contentX] minmax(${ props => props.col_min }, ${ props => props.col_max })
-        minmax(0, ${ props => props.col_gap / 2 }px) 1fr;
+    @media (max-width: ${ props => props.theme.screen.grid_collapse_width }) {
+        & :not(:first-child){
+            display: none;
+        }
+    }
 `;
 
 const MaskGridBase: React.FunctionComponent<{ className?: string, children?: any }> = ({ className, children }) => {

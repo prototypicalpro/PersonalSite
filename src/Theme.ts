@@ -74,9 +74,10 @@ const main_theme = {
     },
     screen: {
         content_width: "1200px",
-        side_pad: "50px",
+        side_pad: "10vmin",
         top_bot_pad: "15px",
-        header_footer: "12vh",
+        header_footer: "10vmin",
+        grid_collapse_width: "100vh"
     },
     video: {
         middle: {
