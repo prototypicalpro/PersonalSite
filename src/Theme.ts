@@ -70,7 +70,7 @@ const main_theme = {
         content_width: "1200px",
         side_pad: "7vmin",
         top_bot_pad: "20px",
-        header_footer: "12vh",
+        header_footer: "13%",
         grid_collapse_width: "100vh"
     },
     video: {

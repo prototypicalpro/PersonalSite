@@ -14,6 +14,7 @@ import styled from "styled-components";
 const StyledCanvas = styled.canvas`
     width: ${ props => props.canvassize };
     height: ${ props => props.canvassize };
+    background-color: black;
 `;
 
 const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, canvassize: string }> = ({ className = "", canvasres, canvassize }) => {

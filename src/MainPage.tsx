@@ -38,9 +38,9 @@ const MainPage: React.FunctionComponent = () => {
     // build the website
     return (
         <ThemeProvider theme={main_theme}>
-            <div>
+            <div style={{ height: "100%" }}>
                 <Style.GlobalStyle />
-                <Style.ContentContainer id="landing" height="100vh">
+                <Style.ContentContainer id="landing" height="100%">
                     <FluidGL className="full" canvasres={dimension} canvassize="90vmin" />
                     <Style.MaskGrid className="full">
                         <main_theme.logo.svg.mask className="mask" />
@@ -59,7 +59,7 @@ const MainPage: React.FunctionComponent = () => {
                         </Style.FlexCol>
                     </Style.FlexCol>
                 </Style.ContentContainer>
-                <Style.ContentContainer id="intro" height="70vh" mobile_height="140vh" color="dark_background">
+                <Style.ContentContainer id="intro" height="70%" mobile_height="152.5vh" color="dark_background">
                     <Style.PerfectCenter className="content">
                         <Style.SimpleGrid rows={2} cols={1} row_gap="7vmin">
                             <Style.TextElement type="content" size="medium" align="center">
@@ -76,7 +76,7 @@ const MainPage: React.FunctionComponent = () => {
                         </Style.SimpleGrid>
                     </Style.PerfectCenter>
                 </Style.ContentContainer>
-                <Style.ContentContainer id="numbers" height="80vh" mobile_height="120vh">
+                <Style.ContentContainer id="numbers" height="80%" mobile_height="152.5vh">
                     <BackgroundVideo className="full" videoSrc={width > 720 ? main_theme.video.middle.vid : main_theme.video.middle.small_vid} videoPoster={main_theme.video.middle.thumb} overlayColor={main_theme.color.light_overlay} />
                     <Style.PerfectCenter className="content">
                         <Style.BodyGrid
@@ -97,7 +97,7 @@ const MainPage: React.FunctionComponent = () => {
                         </Style.BodyGrid>
                     </Style.PerfectCenter>
                 </Style.ContentContainer>
-                <Style.ContentContainer id="text" height="70vh" mobile_height="140vh" color="dark_background">
+                <Style.ContentContainer id="text" height="70%" mobile_height="152.5vh" color="dark_background">
                     <Style.PerfectCenter className="content">
                         <Style.ResumeText>
                             I am a <Style.Mark>maker</Style.Mark> who enjoys the creative
@@ -108,7 +108,7 @@ const MainPage: React.FunctionComponent = () => {
                         </Style.ResumeText>
                     </Style.PerfectCenter>
                 </Style.ContentContainer>
-                <Style.ContentContainer id="contact" height="60vh" color="light_background">
+                <Style.ContentContainer id="contact" height="60%" color="light_background">
                     <Style.PerfectCenter className="content" >
                         <Style.SimpleGrid rows={2} cols={3} col_gap="20px" row_gap="15px">
                             <Style.TextElement x={1} y={1} spanx={3} type="content" align="center" size="medium">Get In Touch</Style.TextElement>
@@ -124,7 +124,7 @@ const MainPage: React.FunctionComponent = () => {
                         </Style.SimpleGrid>
                     </Style.PerfectCenter>
                 </Style.ContentContainer>
-                <Style.ContentContainer height={main_theme.screen.header_footer} color="dark_background">
+                <Style.ContentContainer height={main_theme.screen.header_footer} mobile_height="16%" color="dark_background">
                     <Style.FlexCol className="content" direction="row" justify="flex-start">
                         <Style.TextElement allow_wrap text_align="left" type="content" size="xsmall">
                             <Style.CreditLink href="https://fonts.google.com/specimen/Roboto+Slab">Roboto Slab font by Christian Robertson</Style.CreditLink> from Google Fonts,

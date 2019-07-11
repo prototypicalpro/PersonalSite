@@ -10,7 +10,17 @@ import styledTS from "styled-components-ts";
 import main_theme from "./Theme";
 
 export const GlobalStyle = createGlobalStyle`
+html {
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+    height: 100%
+}
+
 body {
+  height: 100%;
   margin: 0;
   font-family: 'Roboto Slab', serif;
   font-size: ${ props => props.theme.font.size.base };
