@@ -4,7 +4,7 @@ import { ThemeProvider } from "styled-components";
 import useEventListener from "@use-it/event-listener";
 import * as Style from "./Style";
 import FluidGL from "./FluidGL";
-import CountOnEnter from "./PersonalAPI/CountOnEnter";
+import CountOnEnter from "./CountOnEnter";
 import main_theme from "./Theme";
 import { useAPI, IGithubRet } from "./PersonalAPI/useAPI";
 import BackgroundVideo from "./BackgroundVideo";
@@ -76,7 +76,7 @@ const MainPage: React.FunctionComponent = () => {
                         </Style.SimpleGrid>
                     </Style.PerfectCenter>
                 </Style.ContentContainer>
-                <Style.ContentContainer id="numbers" height="80%" mobile_height="152.5vh">
+                <Style.ContentContainer id="numbers" height="80%" mobile_height="120vh">
                     <BackgroundVideo className="full" videoSrc={width > 720 ? main_theme.video.middle.vid : main_theme.video.middle.small_vid} videoPoster={main_theme.video.middle.thumb} overlayColor={main_theme.color.light_overlay} />
                     <Style.PerfectCenter className="content">
                         <Style.BodyGrid
@@ -100,7 +100,7 @@ const MainPage: React.FunctionComponent = () => {
                 <Style.ContentContainer id="text" height="70%" mobile_height="152.5vh" color="dark_background">
                     <Style.PerfectCenter className="content">
                         <Style.ResumeText>
-                            I am a <Style.Mark>maker</Style.Mark> who enjoys the creative
+                            I am <Style.Mark>maker</Style.Mark> who enjoys the creative
                             application of technology. I am a <Style.Mark>hard worker</Style.Mark> with
                             an ability to turn ideas into
                             reality. <Style.Mark>Resourceful</Style.Mark> and <Style.Mark>motivated</Style.Mark>,
