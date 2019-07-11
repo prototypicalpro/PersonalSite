@@ -32,17 +32,22 @@ const VideoStyle = styled.video`
 const BackgroundVideo: React.FunctionComponent<{ videoSrc: string, videoPoster: string, className: string, overlayColor?: string }> = React.memo(({videoSrc, videoPoster, className, overlayColor = "rgba(0,0,0,0)"}) => {
     const videoRef = React.useRef<HTMLVideoElement | null>(null);
     const containerRef = React.useRef<HTMLDivElement | null>(null);
+    const lastPromise = React.useRef<Promise<any> | null>(null);
     const [view_ref, inView] = useInView();
 
     React.useEffect(() => {
         if (videoRef.current) {
             if (inView && videoRef.current) {
                 if (!videoRef.current.muted) videoRef.current.muted = true;
-                videoRef.current.play();
+                if (lastPromise.current) lastPromise.current.then(() => videoRef.current && videoRef.current.play() && undefined);
+                else lastPromise.current = videoRef.current.play();
             }
-            else videoRef.current.pause();
+            else {
+                if (lastPromise.current) lastPromise.current.then(() => videoRef.current && videoRef.current.pause() && undefined);
+                else videoRef.current.pause();
+            }
         }
-    }, [videoRef, inView, videoSrc]);
+    }, [videoRef, inView, videoSrc, lastPromise]);
 
     return (
         <ContainerDiv ref={containerRef} className={className}>

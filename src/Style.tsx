@@ -12,10 +12,16 @@ import main_theme from "./Theme";
 export const GlobalStyle = createGlobalStyle`
 body {
   margin: 0;
+  font-family: 'Roboto Slab', serif;
+  font-size: ${ props => props.theme.font.size.base };
+
+  @media (max-width: ${ props => props.theme.screen.grid_collapse_width }) {
+      font-size: ${ props => props.theme.font.size.base_mobile }
+  }
 }
 `;
 
-export const ContentContainer = styledTS<{ height: string, color: string, theme: typeof main_theme }>(styled.div)`
+export const ContentContainer = styledTS<{ height: string, color: string, mobile_height?: string, theme: typeof main_theme }>(styled.div)`
     overflow: hidden;
     display: grid;
     grid-template:
@@ -29,6 +35,10 @@ export const ContentContainer = styledTS<{ height: string, color: string, theme:
     width: 100%;
     height: ${ props => props.height };
     background-color: ${ props => props.color ? props.theme.color[props.color] : null };
+
+    @media (max-width: ${ props => props.theme.screen.grid_collapse_width }) {
+        height: ${ props => props.mobile_height };
+    }
 
     & > .content {
         grid-area: top_content / left_content / bot_content / right_content;
@@ -48,7 +58,6 @@ export const PerfectCenter = styledTS<{ theme: typeof main_theme }>(styled.div)`
 `;
 
 export const MainText = styledTS<{ theme: typeof main_theme }>(styled.div)`
-    font-family: ${ props => props.theme.font.type.content };
     font-weight: bold;
     font-size: ${ props => props.theme.font.size.xlarge };
     color: #EFEFEF;
@@ -56,11 +65,10 @@ export const MainText = styledTS<{ theme: typeof main_theme }>(styled.div)`
 `;
 
 export const ResumeText = styledTS<{ theme: typeof main_theme }>(styled.div)`
-    font-family: ${ props => props.theme.font.type.content };
     font-weight: 100;
     font-size: ${ props => props.theme.font.size.large };
     color: ${ props => props.theme.font.color.content };
-    line-height: 8vh;
+    line-height: 1.35em;
     text-align: left;
     max-width: 22em;
 `;
@@ -78,28 +86,32 @@ export const BodyElem = styledTS<{ theme: typeof main_theme, x?: number, y?: num
 `;
 
 // repeat(${ props => props.col_count - 1 },
-export const BodyGrid = styledTS<{ theme: typeof main_theme, col_count: number, col_gap: number, col_max: string, col_min: string }>(styled(BodyElem))`
+export const BodyGrid = styledTS<{ theme: typeof main_theme, col_count: number, col_gap: string, col_max: string }>(styled(BodyElem))`
     display: grid;
     grid-template-rows: repeat(2, min-content);
-    grid-template-columns: repeat(${ props => props.col_count }, minmax(${ props => props.col_min }, ${ props => props.col_max }));
+    grid-template-columns: repeat(${ props => props.col_count }, minmax(min-content, ${ props => props.col_max }));
     grid-auto-flow: column;
-    row-gap: 50px;
-    // column-gap: ${ props => props.col_gap }px; TODO FIX
-    column-gap: 5vmin; // TODO: rethink?
+    row-gap: 7vmin;
+    column-gap: ${ props => props.col_gap };
 
     @media (max-width: ${ props => props.theme.screen.grid_collapse_width }) {
+        column-gap: 0;
         grid-template-rows: repeat(${ props => props.col_count * 2 }, min-content);
-        grid-template-columns: minmax(${ props => props.col_min }, ${ props => props.col_max });
+        grid-template-columns: minmax(min-content, ${ props => props.col_max });
     }
 `;
 
-export const FlexCol = styledTS<{ theme: typeof main_theme }>(styled(BodyElem))`
+export const FlexCol = styledTS<{ theme: typeof main_theme, justify?: string, direction?: string, align?: string }>(styled(BodyElem))`
     display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-`;
+    flex-direction: ${ props => props.direction || "column" };
+    justify-content: ${ props => props.justify || "space-evenly" };
+    align-items: ${ props => props.align || "center" };
+    width: 100%;
 
+    & > .grow {
+        flex-grow: 1;
+    }
+`;
 
 export const LogoElement = styledTS<{ imgname: string, size: string, theme: typeof main_theme }>(styled(BodyElem))`
     max-width: ${ props => props.theme.logo.size[props.size] };
@@ -112,19 +124,19 @@ export const LogoElement = styledTS<{ imgname: string, size: string, theme: type
     align-self: center;
 `;
 
-export const TextElement = styledTS<{ size: string, type: string, align?: string, text_align?: string, theme: typeof main_theme }>(styled(BodyElem))`
-    font-family: ${ props => props.theme.font.type[props.type] };
+export const TextElement = styledTS<{ size: string, type: string, align?: string, text_align?: string, allow_wrap?: boolean, theme: typeof main_theme }>(styled(BodyElem))`
     font-size: ${ props => props.theme.font.size[props.size] };
     color: ${ props => props.theme.font.color[props.type] };
     text-align: ${ props => props.text_align ? props.text_align : "center" };
     align-self: ${ props => props.align ? props.align : "unset" };
     font-weight: 300;
-    white-space: nowrap;
+    white-space: ${ props => props.allow_wrap ? "wrap" : "nowrap" };
     z-index: 100;
     text-decoration: none;
 `;
 
 export const HeaderFooterGrid = styledTS<{ theme: typeof main_theme }>(styled(BodyElem))`
+    align-self: flex-start;
     display: grid;
     height: ${ props => props.theme.screen.header_footer };
     grid-template-rows: [contentY] 1fr [contentY] max-content [contentY] 1fr [contentY];
@@ -133,6 +145,9 @@ export const HeaderFooterGrid = styledTS<{ theme: typeof main_theme }>(styled(Bo
     align-items: center;
 
     @media (max-width: ${ props => props.theme.screen.grid_collapse_width }) {
+        grid-template-columns: [contentX] min-content [contentX];
+        height: initial;
+
         & :not(:first-child){
             display: none;
         }
@@ -154,7 +169,7 @@ const MaskGridBase: React.FunctionComponent<{ className?: string, children?: any
 export const MaskGrid = styledTS<{ theme: typeof main_theme }>(styled(MaskGridBase))`
     display: grid;
     grid-template-rows: 1fr [top_content] min-content [bot_content] 1fr;
-    grid-template-columns: 1fr [left_content] 55vmin [right_content] 1fr;
+    grid-template-columns: 1fr [left_content] 60vmin [right_content] 1fr;
     z-index: 100;
 
     & > .mask {
@@ -171,15 +186,30 @@ export const MaskGrid = styledTS<{ theme: typeof main_theme }>(styled(MaskGridBa
     }
 `;
 
-export const MaskSVG = styledTS<{ theme: typeof main_theme }>(styled.div)`
-    // TODO: something here
-    // width: 50vmin;
-    align-self: center;
-`;
-
-export const SVGCSS = styledTS<{ theme: typeof main_theme }>(styled(BodyElem))`
-    max-width: ${ props => props.theme.logo.size[props.size] };
-    max-height: ${ props => props.theme.logo.size[props.size] };
+export const SVGCSS = styledTS<{ theme: typeof main_theme, fixed_size: boolean }>(styled(BodyElem))`
+    ${ props => props.fixed_size ? css`
+        width: ${ props => props.theme.logo.size[props.size] };
+        height: ${ props => props.theme.logo.size[props.size] };
+    ` : css`
+        max-width: ${ props => props.theme.logo.size[props.size] };
+        max-height: ${ props => props.theme.logo.size[props.size] };
+    `}
     align-self: center;
     z-index: 100;
+`;
+
+export const SimpleGrid = styledTS<{ theme: typeof main_theme, rows: number, cols: number, row_gap?: string, col_gap?: string }>(styled.div)`
+    display: grid;
+    justify-items: center;
+    grid-template-rows: repeat(${ props => props.rows }, [contentY] max-content);
+    grid-template-columns: repeat(${ props => props.cols }, [contentX] max-content);
+    column-gap: ${ props => props.col_gap || 0 };
+    row-gap: ${ props => props.row_gap || 0 }
+`;
+
+export const CreditLink = styledTS<{ theme: typeof main_theme }>(styled.a.attrs(props => ({
+    rel: "noopener noreferrer",
+    target: "_blank"
+})))`
+    color: ${ props => props.theme.color.logo_background };
 `;

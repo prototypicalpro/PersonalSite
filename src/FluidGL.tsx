@@ -39,6 +39,7 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, 
                     // set a bunch of useful constants
                     const SIZE = 0.5;
                     const MAGNITUDE = Math.round(canvasres * 0.35);
+                    const SPLATS_PER_SPLAT = 16;
                     const APPROACH_RADIUS = MAGNITUDE;
                     const ANGLE_TOL = 30;
                     const APPROACH_ANGLE_TOL = 45;
@@ -63,7 +64,10 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, 
                         (next_angle + 180.0) + (Math.random() - 0.5) * APPROACH_ANGLE_TOL,
                         MAGNITUDE,
                         [Math.cos(rad) * APPROACH_RADIUS + MID, Math.sin(rad) * APPROACH_RADIUS + MID],
-                        HSVTools.HSVtoRGB({ h: next_hue, s: 1.0, v: 1.0 }), SIZE));
+                        HSVTools.HSVtoRGB({ h: next_hue, s: 1.0, v: 1.0 }),
+                        SIZE,
+                        SplatVector.DEFAULT_SPEED,
+                        SPLATS_PER_SPLAT));
                 }
                 // next animation frame
                 if (animation_callback_ref.current)
@@ -74,7 +78,11 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, 
     React.useEffect(() => { animation_callback_ref.current = animation_callback; }, [animation_callback_ref, animation_callback]);
     // add a resize handler to re-initialize the canvas when needed
     React.useEffect(() => {
-        if (fluid_ref.current) fluid_ref.current.initFrameBuffers();
+        if (fluid_ref.current && canvas_ref.current) {
+            canvas_ref.current.width = canvas_ref.current.clientWidth;
+            canvas_ref.current.height = canvas_ref.current.clientHeight;
+            fluid_ref.current.initFrameBuffers();
+        }
     }, [canvasres]);
     // setup the fluid object and shaders, and bind it to the canvas
     React.useEffect(() => {

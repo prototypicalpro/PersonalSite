@@ -27,7 +27,7 @@ const MainPage: React.FunctionComponent = () => {
     // create a callback for the event listener
     const dim_callback = React.useCallback(() => {
         setWidth(window.innerWidth);
-        setDimension(Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8));
+        setDimension(Math.min(window.innerWidth * 0.9, window.innerHeight * 0.9));
     }, [setDimension]);
     // check for window resize to update our canvas
     useEventListener("resize", dim_callback);
@@ -41,95 +41,97 @@ const MainPage: React.FunctionComponent = () => {
             <div>
                 <Style.GlobalStyle />
                 <Style.ContentContainer id="landing" height="100vh">
-                    <FluidGL className="full" canvasres={dimension} canvassize="80vmin" />
+                    <FluidGL className="full" canvasres={dimension} canvassize="90vmin" />
                     <Style.MaskGrid className="full">
-                        <Style.MaskSVG as={main_theme.logo.svg.mask} className="mask" />
+                        <main_theme.logo.svg.mask className="mask" />
                     </Style.MaskGrid>
-                    <Style.BodyGrid className="content"
-                        col_count={1}
-                        col_gap={0}
-                        col_min={main_theme.logo.size.xsmall}
-                        col_max={main_theme.logo.size.xsmall} >
-
-                        <Style.HeaderFooterGrid x={-4} y={1} spanx={4}>
-                            <Style.TextElement x={1} y={2} type="wordmark" size="small"><b>Prototypical Pro</b></Style.TextElement>
-                            <Style.TextElement as={"a"} rel="noopener noreferrer" target="_blank" x={2} y={2} type="header_footer" size="small">Resume</Style.TextElement>
-                            <Style.TextElement as={"a"} rel="noopener noreferrer" target="_blank" href="https://github.com/prototypicalpro" x={3} y={2} type="header_footer" size="small">Github</Style.TextElement>
-                            <Style.TextElement as={AnchorLink} href="#contact" x={4} y={2} type="header_footer" size="small">Contact</Style.TextElement>
-                        </Style.HeaderFooterGrid>
-                        <Style.SVGCSS as={AnchorLink} href="#intro" offset={() => Math.round(window.innerHeight * 0.15)} x={1} y={8} size="xsmall">
-                            <main_theme.logo.svg.down fill={main_theme.color.dark_background} />
-                        </Style.SVGCSS>
-                    </Style.BodyGrid>
-                </Style.ContentContainer>
-                <Style.ContentContainer id="intro" height="70vh" color="dark_background">
                     <Style.FlexCol className="content">
-                        <Style.TextElement type="content" size="medium" align="center">
-                            My name is <Style.Mark>Noah Koontz</Style.Mark><br></br> and I build stuff.
-                        </Style.TextElement>
-                        <Style.BodyGrid col_count={3} col_gap={150} col_min={main_theme.logo.size.medium} col_max={main_theme.logo.size.large}>
-                            <Style.SVGCSS size="large" as={main_theme.logo.svg["cloud"]} fill={main_theme.color.logo_background} title="Cloud" />
-                            <Style.TextElement type="content" size="medium" align="end">Cloud</Style.TextElement>
-                            <Style.SVGCSS size="large" as={main_theme.logo.svg["embedded"]} fill={main_theme.color.logo_background} title="Embedded" />
-                            <Style.TextElement type="content" size="medium" align="end">Embedded</Style.TextElement>
-                            <Style.SVGCSS size="large" as={main_theme.logo.svg["web"]} fill={main_theme.color.logo_background} title="Web" />
-                            <Style.TextElement type="content" size="medium" align="end">Web</Style.TextElement>
-                        </Style.BodyGrid>
+                        <Style.HeaderFooterGrid>
+                            <Style.TextElement x={1} y={2} type="wordmark" size="small"><b>Prototypical Pro</b></Style.TextElement>
+                            <Style.TextElement as={"a"} rel="noopener noreferrer" target="_blank" x={2} y={2} type="header" size="small">Resume</Style.TextElement>
+                            <Style.TextElement as={"a"} rel="noopener noreferrer" target="_blank" href="https://github.com/prototypicalpro" x={3} y={2} type="header" size="small">Github</Style.TextElement>
+                            <Style.TextElement as={AnchorLink} href="#contact" x={4} y={2} type="header" size="small">Contact</Style.TextElement>
+                        </Style.HeaderFooterGrid>
+                        <Style.FlexCol className="grow" justify="flex-end">
+                            <Style.SVGCSS fixed_size="true" as={AnchorLink} href="#intro" offset={() => Math.round(window.innerWidth > window.innerHeight ? window.innerHeight * 0.15 : 0)} size="xsmall">
+                                <main_theme.logo.svg.down fill={main_theme.color.dark_background} />
+                            </Style.SVGCSS>
+                        </Style.FlexCol>
                     </Style.FlexCol>
                 </Style.ContentContainer>
-                <Style.ContentContainer id="numbers" height="80vh">
-                    <BackgroundVideo className="full" videoSrc={width > 720 ? main_theme.video.middle.vid : main_theme.video.middle.small_vid} videoPoster={main_theme.video.middle.thumb} overlayColor={main_theme.color.light_overlay} />
-                    <Style.BodyGrid className="content"
-                        col_count={2}
-                        col_gap={110}
-                        col_min={(main_theme.font.size.large_num * 4).toString() + "px"}
-                        col_max={(main_theme.font.size.xlarge_num * 4).toString() + "px"}>
-
-                        <Style.TextElement x={1} y={3} spany={3} type="content" align="center" size="xlarge">
-                            <CountOnEnter end={stats ? stats.totalCommitsByMe : BACKUP_COMMIT_COUNT} />
-                        </Style.TextElement>
-                        <Style.TextElement x={1} y={6} type="content" align="center" size="medium">Git Commits</Style.TextElement>
-                        <Style.TextElement x={2} y={3} spany={3} type="content" align="center" size="xlarge">
-                            <CountOnEnter end={stats ? stats.totalHoursByMe : BACKUP_HOURS_COUNT} />
-                        </Style.TextElement>
-                        <Style.TextElement x={2} y={6} type="content" align="center" size="medium">Hours</Style.TextElement>
-                    </Style.BodyGrid>
+                <Style.ContentContainer id="intro" height="70vh" mobile_height="140vh" color="dark_background">
+                    <Style.PerfectCenter className="content">
+                        <Style.SimpleGrid rows={2} cols={1} row_gap="7vmin">
+                            <Style.TextElement type="content" size="medium" align="center">
+                                My name is <Style.Mark>Noah Koontz</Style.Mark><br></br> and I build stuff.
+                            </Style.TextElement>
+                            <Style.BodyGrid col_count={3} col_gap="5vmin" col_max={main_theme.logo.size.large}>
+                                <Style.SVGCSS size="large" as={main_theme.logo.svg["cloud"]} fill={main_theme.color.logo_background} title="Cloud" />
+                                <Style.TextElement type="content" size="medium" align="end">Cloud</Style.TextElement>
+                                <Style.SVGCSS size="large" as={main_theme.logo.svg["embedded"]} fill={main_theme.color.logo_background} title="Embedded" />
+                                <Style.TextElement type="content" size="medium" align="end">Embedded</Style.TextElement>
+                                <Style.SVGCSS size="large" as={main_theme.logo.svg["web"]} fill={main_theme.color.logo_background} title="Web" />
+                                <Style.TextElement type="content" size="medium" align="end">Web</Style.TextElement>
+                            </Style.BodyGrid>
+                        </Style.SimpleGrid>
+                    </Style.PerfectCenter>
                 </Style.ContentContainer>
-                <Style.ContentContainer id="text" height="70vh" color="dark_background">
+                <Style.ContentContainer id="numbers" height="80vh" mobile_height="120vh">
+                    <BackgroundVideo className="full" videoSrc={width > 720 ? main_theme.video.middle.vid : main_theme.video.middle.small_vid} videoPoster={main_theme.video.middle.thumb} overlayColor={main_theme.color.light_overlay} />
+                    <Style.PerfectCenter className="content">
+                        <Style.BodyGrid
+                            col_count={3}
+                            col_gap="0"
+                            col_max={(main_theme.font.size.xlarge_num * 4).toString() + "px"}>
+
+                            <Style.TextElement type="content" align="center" size="xlarge">
+                                <CountOnEnter end={stats ? stats.totalCommitsByMe : BACKUP_COMMIT_COUNT} />
+                            </Style.TextElement>
+                            <Style.TextElement type="content" align="center" size="medium">Git Commits</Style.TextElement>
+                            <div></div>
+                            <div></div>
+                            <Style.TextElement type="content" align="center" size="xlarge">
+                                <CountOnEnter end={stats ? stats.totalHoursByMe : BACKUP_HOURS_COUNT} />
+                            </Style.TextElement>
+                            <Style.TextElement type="content" align="center" size="medium">Hours</Style.TextElement>
+                        </Style.BodyGrid>
+                    </Style.PerfectCenter>
+                </Style.ContentContainer>
+                <Style.ContentContainer id="text" height="70vh" mobile_height="140vh" color="dark_background">
                     <Style.PerfectCenter className="content">
                         <Style.ResumeText>
                             I am a <Style.Mark>maker</Style.Mark> who enjoys the creative
                             application of technology. I am a <Style.Mark>hard worker</Style.Mark> with
                             an ability to turn ideas into
                             reality. <Style.Mark>Resourceful</Style.Mark> and <Style.Mark>motivated</Style.Mark>,
-                            I have a track record of rapidly applying new concepts.</Style.ResumeText>
+                            I have a track record of rapidly applying new concepts.
+                        </Style.ResumeText>
                     </Style.PerfectCenter>
                 </Style.ContentContainer>
                 <Style.ContentContainer id="contact" height="60vh" color="light_background">
-                    <Style.BodyGrid className="content" col_count={1} col_gap={0} col_min="110px" col_max="500px" >
-                        <Style.BodyGrid x={1} y={3} spany={3}
-                            col_count={3} col_gap={20} col_min={main_theme.logo.size.small} col_max={main_theme.logo.size.small}>
-
-                            <Style.TextElement x={1} y={1} spanx={5} spany={2} type="content" align="center" size="medium">Get In Touch</Style.TextElement>
-                            <Style.SVGCSS as={"a"} href="mailto:noah@koontzs.com" rel="noopener noreferrer" x={1} y={3} spany={5} size="small">
+                    <Style.PerfectCenter className="content" >
+                        <Style.SimpleGrid rows={2} cols={3} col_gap="20px" row_gap="15px">
+                            <Style.TextElement x={1} y={1} spanx={3} type="content" align="center" size="medium">Get In Touch</Style.TextElement>
+                            <Style.SVGCSS fixed_size as={"a"} href="mailto:noah@koontzs.com" rel="noopener noreferrer" size="small">
                                 <main_theme.logo.svg.mail fill={main_theme.color.logo_background} />
                             </Style.SVGCSS>
-                            <Style.SVGCSS as={"a"} href="https://www.linkedin.com/in/prototypicalpro" rel="noopener noreferrer" target="_blank" x={2} y={3} spany={5} size="small">
+                            <Style.SVGCSS fixed_size as={"a"} href="https://www.linkedin.com/in/prototypicalpro" rel="noopener noreferrer" target="_blank" size="small">
                                 <main_theme.logo.svg.linkedin fill={main_theme.color.logo_background} />
                             </Style.SVGCSS>
-                            <Style.SVGCSS as={"a"} href="https://github.com/prototypicalpro" rel="noopener noreferrer" target="_blank" x={3} y={3} spany={5} size="small">
+                            <Style.SVGCSS fixed_size as={"a"} href="https://github.com/prototypicalpro" rel="noopener noreferrer" target="_blank" size="small">
                                 <main_theme.logo.svg.github fill={main_theme.color.logo_background} />
                             </Style.SVGCSS>
-                        </Style.BodyGrid>
-                    </Style.BodyGrid>
+                        </Style.SimpleGrid>
+                    </Style.PerfectCenter>
                 </Style.ContentContainer>
                 <Style.ContentContainer height={main_theme.screen.header_footer} color="dark_background">
-                    <div className="content">
-                        <Style.HeaderFooterGrid>
-                            <Style.LogoElement x={1} y={1} spany={3} imgname="main" size="small" />
-                            <Style.TextElement x={2} y={2} type="header_footer" size="xsmall">©2019 Noah Koontz. Roboto Slab font by Christian Robertson from Google Fonts, licenced under Apache 2.0 (TODO link). Web logo created by Logan, embedded and cloud logo created by counloucon, from Noun Project licenced under Creative Commons CCBY. Fluid simulation by PavelDoGreat, modified by Noah Koontz, licenced under MIT</Style.TextElement>
-                        </Style.HeaderFooterGrid>
-                    </div>
+                    <Style.FlexCol className="content" direction="row" justify="flex-start">
+                        <Style.TextElement allow_wrap text_align="left" type="content" size="xsmall">
+                            <Style.CreditLink href="https://fonts.google.com/specimen/Roboto+Slab">Roboto Slab font by Christian Robertson</Style.CreditLink> from Google Fonts,
+                            licenced under <Style.CreditLink href="http://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</Style.CreditLink>. <Style.CreditLink href="https://thenounproject.com/jagaviranane/">Web logo by Logan</Style.CreditLink>, <Style.CreditLink href="https://thenounproject.com/counloucon/">embedded and cloud logo by counloucon</Style.CreditLink>, from Noun Project licenced
+                            under <Style.CreditLink href="https://creativecommons.org/licenses/by/3.0/us/legalcode">Creative Commons CCBY.</Style.CreditLink> <Style.CreditLink href="https://github.com/PavelDoGreat/WebGL-Fluid-Simulation">Fluid simulation by PavelDoGreat</Style.CreditLink>, modified by Noah Koontz, licenced under MIT.
+                        </Style.TextElement>
+                    </Style.FlexCol>
                 </Style.ContentContainer>
             </div>
         </ThemeProvider>
