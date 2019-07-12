@@ -19,7 +19,7 @@ import BackgroundVideo from "./BackgroundVideo";
  const BACKUP_COMMIT_COUNT = 919;
  const BACKUP_HOURS_COUNT = 4319;
 
-const MainPage: React.FunctionComponent = () => {
+ const MainPage: React.FunctionComponent = () => {
     const [dimension, setDimension] = React.useState<number>(0);
     const [width, setWidth] = React.useState<number>(0);
     const [stats, setStats] = React.useState<IGithubRet | null>();
@@ -37,53 +37,63 @@ const MainPage: React.FunctionComponent = () => {
     useAPI("githubcount", React.useCallback((data) => setStats(data), [setStats]));
     // build the website
     return (
-        <ThemeProvider theme={main_theme}>
+        <ThemeProvider theme={ main_theme }>
             <div style={{ height: "100%" }}>
                 <Style.GlobalStyle />
                 <Style.ContentContainer id="landing" height="100%">
-                    <FluidGL className="full" canvasres={dimension} canvassize="90vmin" />
+                    <FluidGL className="full" canvasres={ dimension } canvassize="90vmin" />
                     <Style.MaskGrid className="full">
                         <main_theme.logo.svg.mask className="mask" />
                     </Style.MaskGrid>
                     <Style.FlexCol className="content">
                         <Style.HeaderFooterGrid>
-                            <Style.TextElement x={1} y={2} type="wordmark" size="small"><b>Prototypical Pro</b></Style.TextElement>
-                            <Style.TextElement as={"a"} rel="noopener noreferrer" target="_blank" x={2} y={2} type="header" size="small">Resume</Style.TextElement>
-                            <Style.TextElement as={"a"} rel="noopener noreferrer" target="_blank" href="https://github.com/prototypicalpro" x={3} y={2} type="header" size="small">Github</Style.TextElement>
-                            <Style.TextElement as={AnchorLink} href="#contact" x={4} y={2} type="header" size="small">Contact</Style.TextElement>
+                            <Style.TextElement x={1} y={2} type="wordmark" size="small">
+                                <b>Prototypical Pro</b>
+                            </Style.TextElement>
+                            <Style.TextElement as={"a"} rel="noopener noreferrer" target="_blank"
+                                x={2} y={2} type="header" size="small">Resume</Style.TextElement>
+                            <Style.TextElement as={"a"} rel="noopener noreferrer" target="_blank"
+                                href="https://github.com/prototypicalpro"
+                                x={3} y={2} type="header" size="small">Github</Style.TextElement>
+                            <Style.TextElement as={ AnchorLink } href="#contact"
+                                x={4} y={2} type="header" size="small">Contact</Style.TextElement>
                         </Style.HeaderFooterGrid>
                         <Style.FlexCol className="grow" justify="flex-end">
-                            <Style.SVGCSS fixed_size="true" as={AnchorLink} href="#intro" offset={() => Math.round(window.innerWidth > window.innerHeight ? window.innerHeight * 0.15 : 0)} size="xsmall">
-                                <main_theme.logo.svg.down fill={main_theme.color.dark_background} />
+                            <Style.SVGCSS fixed_size="true" as={ AnchorLink } href="#intro"
+                                offset={ () => Math.round(window.innerWidth > window.innerHeight ? window.innerHeight * 0.15 : 0) }
+                                size="xsmall">
+                                <main_theme.logo.svg.down fill={ main_theme.color.dark } />
                             </Style.SVGCSS>
                         </Style.FlexCol>
                     </Style.FlexCol>
                 </Style.ContentContainer>
-                <Style.ContentContainer id="intro" height="70%" mobile_height="152.5vh" color="dark_background">
+                <Style.ContentContainer id="intro" height="70%" mobile_height="152.5vh" color="medium">
                     <Style.PerfectCenter className="content">
                         <Style.SimpleGrid rows={2} cols={1} row_gap="7vmin">
                             <Style.TextElement type="content" size="medium" align="center">
                                 My name is <Style.Mark>Noah Koontz</Style.Mark><br></br> and I build stuff.
                             </Style.TextElement>
                             <Style.BodyGrid col_count={3} col_gap="5vmin" col_max={main_theme.logo.size.large}>
-                                <Style.SVGCSS size="large" as={main_theme.logo.svg["cloud"]} fill={main_theme.color.logo_background} title="Cloud" />
+                                <Style.SVGCSS size="large"
+                                    as={ main_theme.logo.svg["cloud"] } fill={ main_theme.color.accent } title="Cloud" />
                                 <Style.TextElement type="content" size="medium" align="end">Cloud</Style.TextElement>
-                                <Style.SVGCSS size="large" as={main_theme.logo.svg["embedded"]} fill={main_theme.color.logo_background} title="Embedded" />
+                                <Style.SVGCSS size="large"
+                                    as={ main_theme.logo.svg["embedded"] } fill={ main_theme.color.accent } title="Embedded" />
                                 <Style.TextElement type="content" size="medium" align="end">Embedded</Style.TextElement>
-                                <Style.SVGCSS size="large" as={main_theme.logo.svg["web"]} fill={main_theme.color.logo_background} title="Web" />
+                                <Style.SVGCSS size="large"
+                                    as={ main_theme.logo.svg["web"] } fill={ main_theme.color.accent } title="Web" />
                                 <Style.TextElement type="content" size="medium" align="end">Web</Style.TextElement>
                             </Style.BodyGrid>
                         </Style.SimpleGrid>
                     </Style.PerfectCenter>
                 </Style.ContentContainer>
                 <Style.ContentContainer id="numbers" height="80%" mobile_height="120vh">
-                    <BackgroundVideo className="full" videoSrc={width > 720 ? main_theme.video.middle.vid : main_theme.video.middle.small_vid} videoPoster={main_theme.video.middle.thumb} overlayColor={main_theme.color.light_overlay} />
+                    <BackgroundVideo className="full"
+                        videoSrc={ width > 720 ? main_theme.video.middle.vid : main_theme.video.middle.small_vid }
+                        videoPoster={ main_theme.video.middle.thumb } overlayColor={ main_theme.color.dark } />
                     <Style.PerfectCenter className="content">
-                        <Style.BodyGrid
-                            col_count={3}
-                            col_gap="0"
-                            col_max={(main_theme.font.size.xlarge_num * 4).toString() + "px"}>
-
+                        <Style.BodyGrid col_count={3} col_gap="0"
+                            col_max={ (main_theme.font.size.xlarge_num * 4).toString() + "px" }>
                             <Style.TextElement type="content" align="center" size="xlarge">
                                 <CountOnEnter end={stats ? stats.totalCommitsByMe : BACKUP_COMMIT_COUNT} />
                             </Style.TextElement>
@@ -97,7 +107,7 @@ const MainPage: React.FunctionComponent = () => {
                         </Style.BodyGrid>
                     </Style.PerfectCenter>
                 </Style.ContentContainer>
-                <Style.ContentContainer id="text" height="70%" mobile_height="152.5vh" color="dark_background">
+                <Style.ContentContainer id="text" height="70%" mobile_height="152.5vh" color="medium">
                     <Style.PerfectCenter className="content">
                         <Style.ResumeText>
                             I am <Style.Mark>maker</Style.Mark> who enjoys the creative
@@ -108,28 +118,48 @@ const MainPage: React.FunctionComponent = () => {
                         </Style.ResumeText>
                     </Style.PerfectCenter>
                 </Style.ContentContainer>
-                <Style.ContentContainer id="contact" height="60%" color="light_background">
+                <Style.ContentContainer id="contact" height="60%" color="dark">
                     <Style.PerfectCenter className="content" >
                         <Style.SimpleGrid rows={2} cols={3} col_gap="20px" row_gap="15px">
-                            <Style.TextElement x={1} y={1} spanx={3} type="content" align="center" size="medium">Get In Touch</Style.TextElement>
-                            <Style.SVGCSS fixed_size as={"a"} href="mailto:noah@koontzs.com" rel="noopener noreferrer" size="small">
-                                <main_theme.logo.svg.mail fill={main_theme.color.logo_background} />
+                            <Style.TextElement x={1} y={1} spanx={3} type="content" align="center" size="medium">
+                                Get In Touch
+                            </Style.TextElement>
+                            <Style.SVGCSS size="small" fixed_size
+                                as={"a"} href="mailto:noah@koontzs.com" rel="noopener noreferrer" >
+                                <main_theme.logo.svg.mail fill={ main_theme.color.accent } />
                             </Style.SVGCSS>
-                            <Style.SVGCSS fixed_size as={"a"} href="https://www.linkedin.com/in/prototypicalpro" rel="noopener noreferrer" target="_blank" size="small">
-                                <main_theme.logo.svg.linkedin fill={main_theme.color.logo_background} />
+                            <Style.SVGCSS size="small" fixed_size
+                                as={"a"} href="https://www.linkedin.com/in/prototypicalpro" rel="noopener noreferrer" target="_blank">
+                                <main_theme.logo.svg.linkedin fill={ main_theme.color.accent } />
                             </Style.SVGCSS>
-                            <Style.SVGCSS fixed_size as={"a"} href="https://github.com/prototypicalpro" rel="noopener noreferrer" target="_blank" size="small">
-                                <main_theme.logo.svg.github fill={main_theme.color.logo_background} />
+                            <Style.SVGCSS size="small" fixed_size
+                                as={"a"} href="https://github.com/prototypicalpro" rel="noopener noreferrer" target="_blank" >
+                                <main_theme.logo.svg.github fill={ main_theme.color.accent } />
                             </Style.SVGCSS>
                         </Style.SimpleGrid>
                     </Style.PerfectCenter>
                 </Style.ContentContainer>
-                <Style.ContentContainer height={main_theme.screen.header_footer} mobile_height="16%" color="dark_background">
+                <Style.ContentContainer height={ main_theme.screen.header_footer } mobile_height="16%" color="medium">
                     <Style.FlexCol className="content" direction="row" justify="flex-start">
                         <Style.TextElement allow_wrap text_align="left" type="content" size="xsmall">
-                            <Style.CreditLink href="https://fonts.google.com/specimen/Roboto+Slab">Roboto Slab font by Christian Robertson</Style.CreditLink> from Google Fonts,
-                            licenced under <Style.CreditLink href="http://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</Style.CreditLink>. <Style.CreditLink href="https://thenounproject.com/jagaviranane/">Web logo by Logan</Style.CreditLink>, <Style.CreditLink href="https://thenounproject.com/counloucon/">embedded and cloud logo by counloucon</Style.CreditLink>, from Noun Project licenced
-                            under <Style.CreditLink href="https://creativecommons.org/licenses/by/3.0/us/legalcode">Creative Commons CCBY.</Style.CreditLink> <Style.CreditLink href="https://github.com/PavelDoGreat/WebGL-Fluid-Simulation">Fluid simulation by PavelDoGreat</Style.CreditLink>, modified by Noah Koontz, licenced under MIT.
+                            <Style.CreditLink href="https://fonts.google.com/specimen/Roboto+Slab">
+                                Roboto Slab font by Christian Robertson
+                            </Style.CreditLink> from Google Fonts, licenced under&nbsp;
+                            <Style.CreditLink href="http://www.apache.org/licenses/LICENSE-2.0">
+                                Apache 2.0
+                            </Style.CreditLink>.&nbsp;
+                            <Style.CreditLink href="https://thenounproject.com/jagaviranane/">
+                                Web logo by Logan
+                            </Style.CreditLink>,&nbsp;
+                            <Style.CreditLink href="https://thenounproject.com/counloucon/">
+                                embedded and cloud logo by counloucon
+                            </Style.CreditLink>, from Noun Project licenced under&nbsp;
+                            <Style.CreditLink href="https://creativecommons.org/licenses/by/3.0/us/legalcode">
+                                Creative Commons CCBY.
+                            </Style.CreditLink>&nbsp;
+                            <Style.CreditLink href="https://github.com/PavelDoGreat/WebGL-Fluid-Simulation">
+                                Fluid simulation by PavelDoGreat
+                            </Style.CreditLink>, modified by Noah Koontz, licenced under MIT.
                         </Style.TextElement>
                     </Style.FlexCol>
                 </Style.ContentContainer>

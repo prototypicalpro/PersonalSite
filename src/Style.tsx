@@ -1,13 +1,17 @@
-/**
- * This file contains all the CSS components for my one-page site.
- * This will eventually be converted to static CSS as styled-components seems
- * to garner me less benifit that I had hoped.
- */
-
 import * as React from "react";
 import styled, { css, createGlobalStyle } from "styled-components";
 import styledTS from "styled-components-ts";
 import main_theme from "./Theme";
+
+/**
+ * A collection of my styled used in MainPage.tsx
+ *
+ * All of these components depend on a theme provider, and the theme provided
+ * by main_theme. This helped me quite a bit as the color and sizing of elements
+ * is much more consistent. Most of these are implemented in terms of CSS Grid, and are a bit verbose as
+ * a result.
+ */
+
 
 export const GlobalStyle = createGlobalStyle`
 html {
@@ -84,7 +88,7 @@ export const ResumeText = styledTS<{ theme: typeof main_theme }>(styled.div)`
 `;
 
 export const Mark = styledTS<{ theme: typeof main_theme }>(styled.mark)`
-    background-color: ${ props => props.theme.color.logo_background };
+    background-color: ${ props => props.theme.font.color.accent };
     color: ${ props => props.theme.font.color.content };
     font-weight: bold;
     padding: 0 0.15em 0 0.15em;
@@ -95,7 +99,6 @@ export const BodyElem = styledTS<{ theme: typeof main_theme, x?: number, y?: num
     ${ props => props.y ? css`grid-column: contentX ${ props => props.x } / span ${ props => props.spanx ? props.spanx : 1 };` : css``}
 `;
 
-// repeat(${ props => props.col_count - 1 },
 export const BodyGrid = styledTS<{ theme: typeof main_theme, col_count: number, col_gap: string, col_max: string }>(styled(BodyElem))`
     display: grid;
     grid-template-rows: repeat(2, min-content);
@@ -127,7 +130,6 @@ export const LogoElement = styledTS<{ imgname: string, size: string, theme: type
     max-width: ${ props => props.theme.logo.size[props.size] };
     height: ${ props => props.theme.logo.size[props.size] };
     background-image: url(${ props => props.theme.logo.url[props.imgname] });
-    // background-color: ${ props => props.theme.color.logo_background };
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
@@ -188,7 +190,7 @@ export const MaskGrid = styledTS<{ theme: typeof main_theme }>(styled(MaskGridBa
     }
 
     & > .pack {
-        background-color: ${ props => props.theme.color.title_background };
+        background-color: ${ props => props.theme.color.light };
     }
 
     & > .pack.span {
@@ -221,5 +223,5 @@ export const CreditLink = styledTS<{ theme: typeof main_theme }>(styled.a.attrs(
     rel: "noopener noreferrer",
     target: "_blank"
 })))`
-    color: ${ props => props.theme.color.logo_background };
+    color: ${ props => props.theme.color.accent };
 `;

@@ -2,10 +2,12 @@ import * as React from "react";
 import { CountUp } from "countup.js";
 import { useInView } from "react-intersection-observer";
 
-/**
- * Simple react component to access and display numbers from my API!
- */
 
+/**
+ * Simple react component to display a counting number when
+ * the number enters the view of the user.
+ * @param end The number to count to
+ */
  const CountOnEnter: React.FunctionComponent<{ end: number }> = ({ end }) => {
     const selfRef = React.useRef<HTMLDivElement | null>(null);
     const countupRef = React.useRef<CountUp | null>(null);

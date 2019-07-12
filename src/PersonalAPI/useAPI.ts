@@ -3,6 +3,7 @@ import * as React from "react";
 
 /**
  * Simple hook to create an effect that fetches data from my API.
+ * Source code for my API can be found here: https://github.com/prototypicalpro/LambdaWorkspace/tree/master/PersonalSite
  */
 
 /** interface specifying repository information, to be used below */
@@ -29,6 +30,11 @@ export interface IGithubRet {
 
  const API_URL = "https://api.prototypical.pro/";
 
+ /**
+  * Collect data on my git commit history, courtesy of AWS lambda.
+  * @param endpoint URI collect data from (e.x. "/githubcount")
+  * @param callback A callback to call when the data is collected
+  */
  export const useAPI = (endpoint: string, callback: (data: IGithubRet | null) => void) => {
     React.useEffect(() => {
         fetch(API_URL + endpoint, {

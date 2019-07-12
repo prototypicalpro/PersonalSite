@@ -1,3 +1,5 @@
+/** All of the shaders used by FluidRender */
+
 
 function compileShader (gl: WebGL2RenderingContext, type: number, source: string): WebGLShader {
     const shader = gl.createShader(type) as WebGLShader;

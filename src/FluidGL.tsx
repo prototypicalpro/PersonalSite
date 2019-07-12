@@ -4,19 +4,54 @@ import FluidRender from "./Fluid/FluidRender";
 import HSVTools from "./Fluid/HSVTools";
 import { useInView } from "react-intersection-observer";
 import SplatVector from "./Fluid/FluidDraw";
-import styled from "styled-components";
 
 /**
- * Port of stable fluid simulation using WebGL
- * From this project: https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
+ * @brief The fluid demonstration present in the landing page of my website.
+ *
+ * This component controls the rendering and random fluid distortions of the
+ * fluid simulation at the front of my website. The main bulk of the code
+ * simply generates random SplatVectors based on some constants, and the rest
+ * ensures that the fluid is operating correctly and only when it needs to be.
+ *
+ * SplatVectors are randomly generated in a radius around the center of the canvas,
+ * pointed towards the center of the canvas. The color, angle approaching the center,
+ * and position approaching the center are all random.
  */
 
-const StyledCanvas = styled.canvas`
-    width: ${ props => props.canvassize };
-    height: ${ props => props.canvassize };
-    background-color: black;
-`;
+/**
+ * Contstant defining how long the splat vector should be proportional to the resolution of the canvas.
+ * This value also defines the radius of the circle splat vectors approach from.
+ */
+const MAGNITUDE_FACTOR = 0.35;
+/** Fixed size of every individual splat */
+const SIZE = 0.5;
+/** Number of splats to put down for a single splat vector */
+const SPLATS_PER_VECTOR = 16;
+/**
+ * Watching two splat vectors come in from the same position is kinda boring, so this constant
+ * ensures that the next splat vector is always ANGLE_TOL degrees away from the last splat.
+ * This ensures that plenty of splat crossing always takes place. (Degrees).
+ */
+const ANGLE_TOL = 30;
+/**
+ * This is the maxiumum variation of angle approaching the center that a splat vector can have.
+ * Too much and the splat shoots offscreen, too little and there's no variation (Degrees).
+ */
+const APPROACH_ANGLE_TOL = 45;
+/**
+ * The maximum variation on the Hue wheel in HSV that a splat vector can have from it's next splat vector.
+ * This value ensures that the colors always create visually pleasing combinations, but still have an element
+ * of randomness. (0-1).
+ */
+const COLOR_TOL = 0.4;
+/** How often to generate a new splat vector, in frames */
+const FRAME_COUNT = 50;
 
+/**
+ * @brief A fluid demonstration for my website
+ * @param canvasres The width and height of the internal rendering canvas in pixels
+ * @param canvassize The width and height of the displayed canvas in CSS values
+ */
 const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, canvassize: string }> = ({ className = "", canvasres, canvassize }) => {
     const canvas_ref = React.useRef<HTMLCanvasElement | null>(null);
     const fluid_ref = React.useRef<FluidRender | null>(null);
@@ -26,26 +61,17 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, 
     const last_angle = React.useRef<number | null>(null);
     const last_hue = React.useRef<number | null>(null);
 
-    // generate an animation callback
+    /** Generate the next splat */
     const animation_callback = React.useCallback(() => {
             if (fluid_ref.current && canvas_ref.current) {
                 // time step the fluid
                 fluid_ref.current.update(0.008);
-                // update the frame counter
-                if (++frame_count.current === 200) {
-                    frame_count.current = 0;
-                }
                 // every fifty frames
-                if (frame_count.current % 50 === 0) {
+                if (++frame_count.current === FRAME_COUNT) {
                     // set a bunch of useful constants
-                    const SIZE = 0.5;
-                    const MAGNITUDE = Math.round(canvasres * 0.35);
-                    const SPLATS_PER_SPLAT = 16;
-                    const APPROACH_RADIUS = MAGNITUDE;
-                    const ANGLE_TOL = 30;
-                    const APPROACH_ANGLE_TOL = 45;
-                    const COLOR_TOL = 0.4;
+                    const MAGNITUDE = Math.round(canvasres * MAGNITUDE_FACTOR);
                     const MID = Math.round(canvasres * 0.5);
+                    const APPROACH_RADIUS = MAGNITUDE;
                     // caLculate the next splats!
                     let next_angle: number;
                     // generate a new splat vector, angle, but make sure it's not too close to the last splat vector angle
@@ -68,7 +94,9 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, 
                         HSVTools.HSVtoRGB({ h: next_hue, s: 1.0, v: 1.0 }),
                         SIZE,
                         SplatVector.DEFAULT_SPEED,
-                        SPLATS_PER_SPLAT));
+                        SPLATS_PER_VECTOR));
+                    // reset frame counter
+                    frame_count.current = 0;
                 }
                 // next animation frame
                 if (animation_callback_ref.current)
@@ -124,7 +152,8 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, 
 
     return (
         <PerfectCenter className={className || undefined}>
-            <StyledCanvas canvassize={canvassize} ref={ c => { canvas_ref.current = c; view_ref(c); } } width={canvasres} height={canvasres} />
+            <canvas ref={ c => { canvas_ref.current = c; view_ref(c); } } width={canvasres} height={canvasres}
+                style={{ width: canvassize, height: canvassize, backgroundColor: "black" }}/>
         </PerfectCenter>
     );
 };

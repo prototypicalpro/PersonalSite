@@ -1,7 +1,3 @@
-/**
- * Some constants denotiating uniform aspects of this website,
- * such as font size, color, etc.
- */
 import { ReactComponent as WebLogo } from "./img/web.svg";
 import { ReactComponent as EmbedLogo } from "./img/embedded.svg";
 import { ReactComponent as CloudLogo } from "./img/cloud.svg";
@@ -10,21 +6,27 @@ import { ReactComponent as EmailLogo } from "./img/email.svg";
 import { ReactComponent as GithubLogo } from "./img/github.svg";
 import { ReactComponent as LinkedinLogo } from "./img/linkedin.svg";
 import { ReactComponent as DownLogo } from "./img/down.svg";
-import ReactLogo from "./img/react_logo.svg";
-import StockImage from "./img/image.png";
 import BackVideo from "./video/backvid.mp4";
 import BackVideoSmall from "./video/backvidlq.mp4";
 import BackThumb from "./img/backthumb.jpg";
 
-const main_theme = {
+/**
+ * This file stores some important constants dictating universal constants
+ * for my personal website. This includes font sizes, side margins, colors,
+ * logo sizes, etc.
+ *
+ * Some constants (row margins in some cases) have been left in Style.tsx
+ * as CSS constants. If you are adjusting constants in here and not getting
+ * the results you need, check that the CSS is not defined in it's own
+ * component rather than this theme.
+ */
+
+const MainTheme = {
     color: {
-        title_background: "#EEEEEE",
-        light_background: "#222831",
-        light_overlay: "rgba(34, 40, 49, 0.75)",
-        dark_background: "#393e46",
-        logo_background: "#00adb5",
-        logo_text: "#919191",
-        none: "rgba(0,0,0,0)"
+        dark: "#222831",
+        medium: "#393e46",
+        light: "#EEEEEE",
+        accent: "#00adb5",
     },
     font: {
         size: {
@@ -41,6 +43,7 @@ const main_theme = {
             header: "#222831",
             wordmark: "#222831",
             content: "#EEEEEE",
+            accent: "#00adb5"
         }
     },
     logo: {
@@ -50,15 +53,10 @@ const main_theme = {
             medium: "12.5vh",
             large: "27.5vh",
         },
-        url: {
-            main: ReactLogo,
-            stock: StockImage
-        },
         svg: {
             cloud: CloudLogo,
             embedded: EmbedLogo,
             web: WebLogo,
-            social: ReactLogo,
             mask: ProtoMask,
             mail: EmailLogo,
             github: GithubLogo,
@@ -82,4 +80,4 @@ const main_theme = {
     }
 };
 
-export default main_theme;
+export default MainTheme;

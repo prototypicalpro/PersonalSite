@@ -5,10 +5,28 @@ import HSVTools from "./HSVTools";
 /*eslint no-unused-expressions: "off"*/
 
 /**
- * Port of stable fluid simulation using WebGL
- * From this project: https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
+ * @brief Port of stable fluid simulation using WebGL From this project:
+ * https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
+ *
+ * This component modularizes the fluid simulation mechanics from the project
+ * above. PavelDoGreat created an awesome demonstration using his fluid simulation
+ * and user input, I wanted to do something similar with an automatic fluid display.
+ * Changes I have made:
+ *  * Removed all global objects, restructuring the code to be contained in a class
+ * (I probably added a few KB in "this." prefixes). Added some strict typing.
+ *  * Removed bloom shaders and framebuffers, as I didn't need the functionality
+ *  * Moved all shaders to FluidShaders.ts, to reduce the file size (it was a behemoth).
+ *  * Removed user input detection and response, replaced with a magnitude and direction
+ * based interface called SplatVector (see FluidDraw.ts).
+ *  * Removed canvas autoresizing. Resizing is done manually now by calling initFrameBuffers
+ * after changing the canvas dimensions.
+ *  * Added comments where I could.
+ *
+ * I was originally planning on publishing this code as an NPM module, but I don't have a good
+ * unterstanding of the WebGL functionality or the code using it, and as a result would be
+ * unable to mantain it very well. Instead, this module will live in my website, hopefully
+ * drawing a few visitors who are brave enough to dig into the source.
  */
-
 interface IGLExtentsions {
     formatRGBA;
     formatRG;
@@ -101,6 +119,11 @@ class FluidRender {
         return Object.assign({}, FluidRender.DEFAULT_CONF);
     }
 
+    /**
+     * Compile shaders, init framebuffers, and start rendering the fluid on the next step() call.
+     * @param canvas A HTMLCanvasElement to render the fluid to.
+     * @param config Configuration elements for the fluid, you can get a defualt config from FluidRender.getDefaultConfig()
+     */
     constructor(canvas: HTMLCanvasElement, config: typeof FluidRender.DEFAULT_CONF) {
         this.canvas = canvas;
         // get the GL context from the canvas, and read support information
@@ -160,6 +183,7 @@ class FluidRender {
         this.initFrameBuffers();
     }
 
+    /** Reset some buffers used by the fluid renderer, call every time the canvase is resized */
     initFrameBuffers() {
         const simRes = this.getResolution(this.config.SIM_RESOLUTION);
         const dyeRes = this.getResolution(this.config.DYE_RESOLUTION);
@@ -483,6 +507,7 @@ class FluidRender {
         return true;
     }
 
+    /** create a fluid distortion at a given position with a given speed */
     splat (x: number, y: number, dx: number, dy: number, color: { r: number, g: number, b: number }, radius?: number) {
         this.gl.viewport(0, 0, this.simWidth, this.simHeight);
         this.splatProgram.bind(this.gl);
@@ -515,10 +540,17 @@ class FluidRender {
         }
     }
 
+    /** add a continuos chain of splats described by a splat vector */
     addVector(vector: SplatVector) {
         this.splatVectorStates.push(vector);
     }
 
+    /**
+     * Step the fluid through a certain amount of time. This function
+     * will add splats as directed, simulate the fluid, and then render
+     * the fluid in that order.
+     * @param dt A time step (0.008 works for me).
+     */
     update(dt: number) {
         if (!this.paused) {
             // update animations
