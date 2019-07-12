@@ -24,12 +24,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "postbuild": "react-snap",
+    "postbuild": "react-snap && npm run generate-sw",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "generate-sw": "workbox generateSW --root=build scripts/sw-precache-config.js",
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -46,7 +47,7 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://prototypicalpro.github.io/PrototypicalPro/",
+  "homepage": "https://prototypical.pro",
   "devDependencies": {
     "gh-pages": "^2.0.1",
     "react-snap": "^1.23.0",

@@ -51,6 +51,7 @@ import BackgroundVideo from "./BackgroundVideo";
                                 <b>Prototypical Pro</b>
                             </Style.TextElement>
                             <Style.TextElement as={"a"} rel="noopener noreferrer" target="_blank"
+                                href="https://bit.ly/2JIwz2g"
                                 x={2} y={2} type="header" size="small">Resume</Style.TextElement>
                             <Style.TextElement as={"a"} rel="noopener noreferrer" target="_blank"
                                 href="https://github.com/prototypicalpro"
