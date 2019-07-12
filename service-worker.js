@@ -13,27 +13,46 @@
 
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
-importScripts(
-  "/PrototypicalPro/precache-manifest.01c8a00086d5e68fc945b6edb11dc591.js"
-);
-
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
 });
 
-workbox.core.clientsClaim();
-
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to
  * requests for URLs in the manifest.
  * See https://goo.gl/S9QRab
  */
-self.__precacheManifest = [].concat(self.__precacheManifest || []);
+self.__precacheManifest = [
+  {
+    "url": "/static/js/2.07be2f4f.chunk.js"
+  },
+  {
+    "url": "/static/js/main.aac794c3.chunk.js"
+  },
+  {
+    "url": "/static/js/runtime~main.a8a9905a.js"
+  },
+  {
+    "url": "/200.html",
+    "revision": "e9ebbc0ea72b21909d1c0306bcf2ff74"
+  },
+  {
+    "url": "/index.html",
+    "revision": "dcab23ccf86e88d13a91201f0261aeee"
+  },
+  {
+    "url": "/static/media/backthumb.a99c0b3c.jpg"
+  }
+].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("/PrototypicalPro/index.html"), {
+workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("/200.html"), {
+  whitelist: [/^(?!\/__).*/],
   
-  blacklist: [/^\/_/,/\/[^\/]+\.[^\/]+$/],
 });
+
+workbox.routing.registerRoute(/^https:\/\/fonts\.googleapis\.com/, new workbox.strategies.StaleWhileRevalidate({ "cacheName":"google-fonts-initial", plugins: [] }), 'GET');
+workbox.routing.registerRoute(/^https:\/\/fonts\.gstatic\.com/, new workbox.strategies.StaleWhileRevalidate({ "cacheName":"google-fonts-webfonts", plugins: [] }), 'GET');
+workbox.routing.registerRoute(/^https:\/\/api\.prototypical\.pro/, new workbox.strategies.NetworkFirst({ "cacheName":"api-cache", plugins: [] }), 'GET');
