@@ -26,21 +26,21 @@ self.addEventListener('message', (event) => {
  */
 self.__precacheManifest = [
   {
-    "url": "/static/js/2.2e39d27b.chunk.js"
+    "url": "/static/js/2.4ea03617.chunk.js"
   },
   {
-    "url": "/static/js/main.384f4783.chunk.js"
+    "url": "/static/js/main.1b407689.chunk.js"
   },
   {
     "url": "/static/js/runtime~main.a8a9905a.js"
   },
   {
     "url": "/200.html",
-    "revision": "374d7f008608358266c66e7b633463f4"
+    "revision": "6bcaa8bf963504f7d48d83aeba3b2c8f"
   },
   {
     "url": "/index.html",
-    "revision": "3c18049b1b8f63e3bcb9571dd55cb1ea"
+    "revision": "038e8c396abbcdd730ee2c28f3045b9d"
   },
   {
     "url": "/static/media/backthumb.a99c0b3c.jpg"
