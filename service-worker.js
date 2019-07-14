@@ -36,11 +36,11 @@ self.__precacheManifest = [
   },
   {
     "url": "/200.html",
-    "revision": "f5321dddd87b99a42ac290555626b9fb"
+    "revision": "374d7f008608358266c66e7b633463f4"
   },
   {
     "url": "/index.html",
-    "revision": "7caa3abbc21a7c425edffd9a1a624075"
+    "revision": "3c18049b1b8f63e3bcb9571dd55cb1ea"
   },
   {
     "url": "/static/media/backthumb.a99c0b3c.jpg"
@@ -50,7 +50,7 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("/200.html"), {
   whitelist: [/^(?!\/__).*/],
-  
+  blacklist: [/^\/sharethumb\.png/],
 });
 
 workbox.routing.registerRoute(/^https:\/\/fonts\.googleapis\.com/, new workbox.strategies.StaleWhileRevalidate({ "cacheName":"google-fonts-initial", plugins: [] }), 'GET');
