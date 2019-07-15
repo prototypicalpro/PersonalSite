@@ -12,8 +12,8 @@ module.exports = {
     modifyURLPrefix: {
         "build": ""
     },
-    // there is "reactSnap.include": ["/shell.html"] in package.json
-    navigateFallback: "/200.html",
+    // Ignores a facebook thumbnail
+    navigateFallbackBlacklist: [/^\/sharethumb\.png/],
     // Ignores URLs starting from /__ (useful for Firebase):
     // https://github.com/facebookincubator/create-react-app/issues/2237#issuecomment-302693219
     navigateFallbackWhitelist: [/^(?!\/__).*/],

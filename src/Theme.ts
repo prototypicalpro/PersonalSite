@@ -6,8 +6,8 @@ import { ReactComponent as EmailLogo } from "./img/email.svg";
 import { ReactComponent as GithubLogo } from "./img/github.svg";
 import { ReactComponent as LinkedinLogo } from "./img/linkedin.svg";
 import { ReactComponent as DownLogo } from "./img/down.svg";
-import BackVideo from "./video/backvid.mp4";
-import BackVideoSmall from "./video/backvidlq.mp4";
+import BackVideo from "./video/backvid.webm";
+import BackVideoSmall from "./video/backvid.webm";
 import BackThumb from "./img/backthumb.jpg";
 
 /**

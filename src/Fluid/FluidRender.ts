@@ -120,14 +120,23 @@ class FluidRender {
     }
 
     /**
+     * Call the ctor, but first check if WebGL is supported in the first place
+     * @param canvas A HTMLCanvasElement to render the fluid to.
+     * @param config Configuration elements for the fluid, you can get a defualt config from FluidRender.getDefaultConfig()
+     */
+    static Factory(canvas: HTMLCanvasElement, config: typeof FluidRender.DEFAULT_CONF): null | FluidRender {
+        const out = FluidRender.getWebGLContext(canvas);
+        if (!out) return null;
+        else return new FluidRender(out.gl, out.ext, canvas, config);
+    }
+
+    /**
      * Compile shaders, init framebuffers, and start rendering the fluid on the next step() call.
      * @param canvas A HTMLCanvasElement to render the fluid to.
      * @param config Configuration elements for the fluid, you can get a defualt config from FluidRender.getDefaultConfig()
      */
-    constructor(canvas: HTMLCanvasElement, config: typeof FluidRender.DEFAULT_CONF) {
+    private constructor(gl: WebGL2RenderingContext, ext: IGLExtentsions, canvas: HTMLCanvasElement, config: typeof FluidRender.DEFAULT_CONF) {
         this.canvas = canvas;
-        // get the GL context from the canvas, and read support information
-        const { gl, ext } = FluidRender.getWebGLContext(canvas);
         this.gl = gl;
         // set the extensions and config data
         this.ext = ext;
@@ -415,7 +424,7 @@ class FluidRender {
         }
     }
 
-    private static getWebGLContext (canvas: HTMLCanvasElement): { gl: WebGL2RenderingContext, ext: IGLExtentsions } {
+    private static getWebGLContext (canvas: HTMLCanvasElement): { gl: WebGL2RenderingContext, ext: IGLExtentsions } | null {
         const params = { alpha: true, depth: false, stencil: false, antialias: false, preserveDrawingBuffer: false };
 
         let gl: WebGL2RenderingContext = canvas.getContext("webgl2", params) as WebGL2RenderingContext;
@@ -423,51 +432,54 @@ class FluidRender {
         if (!isWebGL2)
             gl = (canvas.getContext("webgl", params) || canvas.getContext("experimental-webgl", params)) as WebGL2RenderingContext;
 
-        let halfFloat;
-        let supportLinearFiltering;
-        if (isWebGL2) {
-            gl.getExtension("EXT_color_buffer_float");
-            supportLinearFiltering = gl.getExtension("OES_texture_float_linear");
-        } else {
-            halfFloat = gl.getExtension("OES_texture_half_float");
-            supportLinearFiltering = gl.getExtension("OES_texture_half_float_linear");
-        }
-
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
-
-        const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat.HALF_FLOAT_OES;
-        let formatRGBA;
-        let formatRG;
-        let formatR;
-
-        if (isWebGL2) {
-            formatRGBA = FluidRender.getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, halfFloatTexType);
-            formatRG = FluidRender.getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType);
-            formatR = FluidRender.getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType);
-        }
-        else {
-            formatRGBA = FluidRender.getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
-            formatRG = FluidRender.getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
-            formatR = FluidRender.getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
-        }
-
-        if (formatRGBA == null)
-            // ga('send', 'event', isWebGL2 ? 'webgl2' : 'webgl', 'not supported');
-            console.log(`${isWebGL2 ? "WsbGL2" : "WebGL"} not supported`);
-        else
-            // ga('send', 'event', isWebGL2 ? 'webgl2' : 'webgl', 'supported');
-            console.log(`${isWebGL2 ? "WsbGL2" : "WebGL"} supported`);
-
-        return {
-            gl,
-            ext: {
-                formatRGBA,
-                formatRG,
-                formatR,
-                halfFloatTexType,
-                supportLinearFiltering
+        if (gl) {
+            let halfFloat;
+            let supportLinearFiltering;
+            if (isWebGL2) {
+                gl.getExtension("EXT_color_buffer_float");
+                supportLinearFiltering = gl.getExtension("OES_texture_float_linear");
+            } else {
+                halfFloat = gl.getExtension("OES_texture_half_float");
+                supportLinearFiltering = gl.getExtension("OES_texture_half_float_linear");
             }
-        };
+
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+
+            const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat.HALF_FLOAT_OES;
+            let formatRGBA;
+            let formatRG;
+            let formatR;
+
+            if (isWebGL2) {
+                formatRGBA = FluidRender.getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, halfFloatTexType);
+                formatRG = FluidRender.getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType);
+                formatR = FluidRender.getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType);
+            }
+            else {
+                formatRGBA = FluidRender.getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
+                formatRG = FluidRender.getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
+                formatR = FluidRender.getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
+            }
+
+            if (formatRGBA == null)
+                // ga('send', 'event', isWebGL2 ? 'webgl2' : 'webgl', 'not supported');
+                console.log(`${isWebGL2 ? "WsbGL2" : "WebGL"} not supported`);
+            else
+                // ga('send', 'event', isWebGL2 ? 'webgl2' : 'webgl', 'supported');
+                console.log(`${isWebGL2 ? "WsbGL2" : "WebGL"} supported`);
+
+            return {
+                gl,
+                ext: {
+                    formatRGBA,
+                    formatRG,
+                    formatR,
+                    halfFloatTexType,
+                    supportLinearFiltering
+                }
+            };
+        }
+        return null;
     }
 
     private static getSupportedFormat (gl, internalFormat, format, type) {

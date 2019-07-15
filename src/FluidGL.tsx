@@ -123,7 +123,7 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, 
             config.SIM_RESOLUTION = 512;
             config.DYE_RESOLUTION = 1024;
             // setup the fluid renderer
-            fluid_ref.current = new FluidRender(canvas_ref.current, config);
+            fluid_ref.current = FluidRender.Factory(canvas_ref.current, config);
             console.log("Reconstuct!");
             // let react know we gotta clean up the fluid ref
             return () => {

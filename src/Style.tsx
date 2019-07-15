@@ -105,6 +105,7 @@ export const BodyGrid = styledTS<{ theme: typeof main_theme, col_count: number, 
     grid-template-columns: repeat(${ props => props.col_count }, minmax(min-content, ${ props => props.col_max }));
     grid-auto-flow: column;
     row-gap: 7vmin;
+    z-index: 100;
     column-gap: ${ props => props.col_gap };
 
     @media (max-width: ${ props => props.theme.screen.grid_collapse_width }) {
@@ -155,6 +156,7 @@ export const HeaderFooterGrid = styledTS<{ theme: typeof main_theme }>(styled(Bo
     grid-template-columns: [contentX] min-content 70px [contentX]
         repeat(3, min-content 50px [contentX]);
     align-items: center;
+    z-index: 101;
 
     @media (max-width: ${ props => props.theme.screen.grid_collapse_width }) {
         grid-template-columns: [contentX] min-content [contentX];
@@ -196,6 +198,12 @@ export const MaskGrid = styledTS<{ theme: typeof main_theme }>(styled(MaskGridBa
     & > .pack.span {
         grid-column-start: span 3;
     }
+`;
+
+export const MaskSVG = styled.div`
+    box-sizing: border-box;
+    border: 2px solid ${ props => props.theme.color.light };
+    margin: -2px -2px -2px -2px;
 `;
 
 export const SVGCSS = styledTS<{ theme: typeof main_theme, fixed_size: boolean }>(styled(BodyElem))`
