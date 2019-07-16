@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /200.html
+Noindex: /200.html
