@@ -1,23 +1,26 @@
 {
   "files": {
-    "main.js": "/static/js/main.41bf06b4.chunk.js",
-    "main.js.map": "/static/js/main.41bf06b4.chunk.js.map",
+    "main.js": "/static/js/main.706fe9b7.chunk.js",
+    "main.js.map": "/static/js/main.706fe9b7.chunk.js.map",
     "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
     "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
-    "static/js/2.8ab7923b.chunk.js": "/static/js/2.8ab7923b.chunk.js",
-    "static/js/2.8ab7923b.chunk.js.map": "/static/js/2.8ab7923b.chunk.js.map",
+    "static/js/2.9f7fb5c2.chunk.js": "/static/js/2.9f7fb5c2.chunk.js",
+    "static/js/2.9f7fb5c2.chunk.js.map": "/static/js/2.9f7fb5c2.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.a457f2a8faa55a2b0c11ed67591139ca.js": "/precache-manifest.a457f2a8faa55a2b0c11ed67591139ca.js",
+    "precache-manifest.e74e1b04a1b59cf4b9dac6e77099150b.js": "/precache-manifest.e74e1b04a1b59cf4b9dac6e77099150b.js",
     "service-worker.js": "/service-worker.js",
     "static/media/backthumb.jpg": "/static/media/backthumb.a99c0b3c.jpg",
+    "static/media/backvid.mp4": "/static/media/backvid.8a5d67d8.mp4",
     "static/media/backvid.webm": "/static/media/backvid.8b8bbaaf.webm",
+    "static/media/backvidlq.webm": "/static/media/backvidlq.4a4bf758.webm",
+    "static/media/backvidlq.mp4": "/static/media/backvidlq.fa3c23da.mp4",
     "static/media/cloud.2f21dbfc.svg": "/static/media/cloud.2f21dbfc.svg",
     "static/media/down.f486b0eb.svg": "/static/media/down.f486b0eb.svg",
     "static/media/email.0da036c2.svg": "/static/media/email.0da036c2.svg",
     "static/media/embedded.2fee49af.svg": "/static/media/embedded.2fee49af.svg",
     "static/media/github.8a1ba32d.svg": "/static/media/github.8a1ba32d.svg",
     "static/media/linkedin.8dc04bcd.svg": "/static/media/linkedin.8dc04bcd.svg",
-    "static/media/proto.a2192e92.svg": "/static/media/proto.a2192e92.svg",
+    "static/media/proto.f4c8a506.svg": "/static/media/proto.f4c8a506.svg",
     "static/media/web.b252b5a2.svg": "/static/media/web.b252b5a2.svg"
   }
 }
