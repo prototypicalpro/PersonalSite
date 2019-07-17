@@ -95,7 +95,7 @@ import BackgroundVideo from "./BackgroundVideo";
                 </Style.ContentContainer>
                 <Style.ContentContainer id="numbers" height="80%" mobile_height="120vh">
                     <BackgroundVideo className="full"
-                        videoSrc={ width > 720 ? main_theme.video.middle.vid : main_theme.video.middle.small_vid }
+                        videoSrcs={ width > 720 ? main_theme.video.middle.vid_srcs : main_theme.video.middle.small_vid_srcs }
                         videoPoster={ main_theme.video.middle.thumb } overlayColor={ main_theme.color.dark } />
                     <Style.PerfectCenter className="content">
                         <Style.BodyGrid col_count={3} col_gap="0"

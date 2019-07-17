@@ -30,7 +30,7 @@ const VideoStyle = styled.video`
 `;
 
 /** Element to play a video in the background of an element */
-const BackgroundVideo: React.FunctionComponent<{ videoSrc: string, videoPoster: string, className: string, overlayColor?: string }> = React.memo(({videoSrc, videoPoster, className, overlayColor = "rgba(0,0,0,0)"}) => {
+const BackgroundVideo: React.FunctionComponent<{ videoSrcs: Array<{ url: string, mime: string }>, videoPoster: string, className: string, overlayColor?: string }> = React.memo(({videoSrcs, videoPoster, className, overlayColor = "rgba(0,0,0,0)"}) => {
     const videoRef = React.useRef<HTMLVideoElement | null>(null);
     const containerRef = React.useRef<HTMLDivElement | null>(null);
     const lastPromise = React.useRef<Promise<any> | null>(null);
@@ -48,11 +48,13 @@ const BackgroundVideo: React.FunctionComponent<{ videoSrc: string, videoPoster: 
                 else videoRef.current.pause();
             }
         }
-    }, [videoRef, inView, videoSrc, lastPromise]);
+    }, [videoRef, inView, videoSrcs, lastPromise]);
 
     return (
         <ContainerDiv ref={containerRef} className={className}>
-            <VideoStyle ref={(v) => { videoRef.current = v; view_ref(v); }} loop muted={1} preload="auto" playsInline src={videoSrc} poster={videoPoster}/>
+            <VideoStyle ref={(v) => { videoRef.current = v; view_ref(v); }} loop muted={1} preload="auto" playsInline poster={videoPoster}>
+                { videoSrcs.map((src, ind) => <source key={ind} src={src.url} type={src.mime} />) }
+            </VideoStyle>
             <OverlayDiv color={overlayColor}></OverlayDiv>
         </ContainerDiv>
     );

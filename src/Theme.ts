@@ -6,8 +6,10 @@ import { ReactComponent as EmailLogo } from "./img/email.svg";
 import { ReactComponent as GithubLogo } from "./img/github.svg";
 import { ReactComponent as LinkedinLogo } from "./img/linkedin.svg";
 import { ReactComponent as DownLogo } from "./img/down.svg";
-import BackVideo from "./video/backvid.webm";
-import BackVideoSmall from "./video/backvid.webm";
+import BackVideoMp4 from "./video/backvid.mp4";
+import BackVideoWebm from "./video/backvid.webm";
+import BackVideoSmallMp4 from "./video/backvidlq.mp4";
+import BackVideoSmallWebm from "./video/backvidlq.webm";
 import BackThumb from "./img/backthumb.jpg";
 
 /**
@@ -73,8 +75,26 @@ const MainTheme = {
     },
     video: {
         middle: {
-            vid: BackVideo,
-            small_vid: BackVideoSmall,
+            vid_srcs: [
+                {
+                    url: BackVideoMp4,
+                    mime: "video/mp4"
+                },
+                {
+                    url: BackVideoWebm,
+                    mime: "video/webm"
+                }
+            ],
+            small_vid_srcs: [
+                {
+                    url: BackVideoSmallMp4,
+                    mime: "video/mp4"
+                },
+                {
+                    url: BackVideoSmallWebm,
+                    mime: "video/webm"
+                }
+            ],
             thumb: BackThumb
         }
     }
