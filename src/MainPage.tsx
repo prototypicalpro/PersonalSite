@@ -43,7 +43,9 @@ import BackgroundVideo from "./BackgroundVideo";
                 <Style.ContentContainer id="landing" height="100%">
                     <FluidGL className="full" canvasres={ dimension } canvassize="90vmin" />
                     <Style.MaskGrid className="full">
-                        <Style.MaskSVG className="mask"><main_theme.logo.svg.mask /></Style.MaskSVG>
+                        <Style.MaskSVG className="mask">
+                            <main_theme.logo.svg.mask />
+                        </Style.MaskSVG>
                     </Style.MaskGrid>
                     <Style.FlexCol className="content">
                         <Style.HeaderFooterGrid>

@@ -218,6 +218,8 @@ export const MaskGrid = styledTS<{ theme: typeof main_theme }>(styled(MaskGridBa
 
 export const MaskSVG = styled.object`
     padding-top: 76.64%;
+    outline: 5px solid ${ props => props.theme.color.light };
+    outline-offset: -5px;
 `;
 
 export const SVGCSS = styledTS<{ theme: typeof main_theme, fixed_size: boolean }>(styled(BodyElem))`
