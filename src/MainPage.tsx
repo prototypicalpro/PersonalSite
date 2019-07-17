@@ -43,7 +43,7 @@ import BackgroundVideo from "./BackgroundVideo";
                 <Style.ContentContainer id="landing" height="100%">
                     <FluidGL className="full" canvasres={ dimension } canvassize="90vmin" />
                     <Style.MaskGrid className="full">
-                            <Style.MaskSVG as={ main_theme.logo.svg.mask } className="mask" />
+                        <Style.MaskSVG className="mask"><main_theme.logo.svg.mask /></Style.MaskSVG>
                     </Style.MaskGrid>
                     <Style.FlexCol className="content">
                         <Style.HeaderFooterGrid>
@@ -63,7 +63,7 @@ import BackgroundVideo from "./BackgroundVideo";
                             <Style.SVGCSS fixed_size="true" as={ AnchorLink } href="#intro"
                                 offset={ () => Math.round(window.innerWidth > window.innerHeight ? window.innerHeight * 0.15 : 0) }
                                 size="xsmall">
-                                <main_theme.logo.svg.down fill={ main_theme.color.dark } />
+                                <object><main_theme.logo.svg.down fill={ main_theme.color.dark } /></object>
                             </Style.SVGCSS>
                         </Style.FlexCol>
                     </Style.FlexCol>
@@ -75,14 +75,17 @@ import BackgroundVideo from "./BackgroundVideo";
                                 My name is <Style.Mark>Noah Koontz</Style.Mark><br></br> and I build stuff.
                             </Style.TextElement>
                             <Style.BodyGrid col_count={3} col_gap="5vmin" col_max={main_theme.logo.size.large}>
-                                <Style.SVGCSS size="large"
-                                    as={ main_theme.logo.svg["cloud"] } fill={ main_theme.color.accent } title="Cloud" />
+                                <Style.SVGCSS size="large" as="object" title="Cloud">
+                                    <main_theme.logo.svg.cloud fill={ main_theme.color.accent } />
+                                </Style.SVGCSS>
                                 <Style.TextElement type="content" size="medium" align="end">Cloud</Style.TextElement>
-                                <Style.SVGCSS size="large"
-                                    as={ main_theme.logo.svg["embedded"] } fill={ main_theme.color.accent } title="Embedded" />
+                                <Style.SVGCSS size="large" as="object" title="Embedded">
+                                    <main_theme.logo.svg.embedded fill={ main_theme.color.accent } />
+                                </Style.SVGCSS>
                                 <Style.TextElement type="content" size="medium" align="end">Embedded</Style.TextElement>
-                                <Style.SVGCSS size="large"
-                                    as={ main_theme.logo.svg["web"] } fill={ main_theme.color.accent } title="Web" />
+                                <Style.SVGCSS size="large" as="object" title="Web">
+                                    <main_theme.logo.svg.web fill={ main_theme.color.accent } />
+                                </Style.SVGCSS>
                                 <Style.TextElement type="content" size="medium" align="end">Web</Style.TextElement>
                             </Style.BodyGrid>
                         </Style.SimpleGrid>
@@ -127,15 +130,15 @@ import BackgroundVideo from "./BackgroundVideo";
                             </Style.TextElement>
                             <Style.SVGCSS size="small" fixed_size
                                 as={"a"} href="mailto:noah@koontzs.com" rel="noopener noreferrer" >
-                                <main_theme.logo.svg.mail fill={ main_theme.color.accent } />
+                                <object><main_theme.logo.svg.mail fill={ main_theme.color.accent } /></object>
                             </Style.SVGCSS>
                             <Style.SVGCSS size="small" fixed_size
                                 as={"a"} href="https://www.linkedin.com/in/prototypicalpro" rel="noopener noreferrer" target="_blank">
-                                <main_theme.logo.svg.linkedin fill={ main_theme.color.accent } />
+                                <object><main_theme.logo.svg.linkedin fill={ main_theme.color.accent } /></object>
                             </Style.SVGCSS>
                             <Style.SVGCSS size="small" fixed_size
                                 as={"a"} href="https://github.com/prototypicalpro" rel="noopener noreferrer" target="_blank" >
-                                <main_theme.logo.svg.github fill={ main_theme.color.accent } />
+                                <object><main_theme.logo.svg.github fill={ main_theme.color.accent } /></object>
                             </Style.SVGCSS>
                         </Style.SimpleGrid>
                     </Style.PerfectCenter>

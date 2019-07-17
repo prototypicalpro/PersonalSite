@@ -4,6 +4,7 @@ import FluidRender from "./Fluid/FluidRender";
 import HSVTools from "./Fluid/HSVTools";
 import { useInView } from "react-intersection-observer";
 import SplatVector from "./Fluid/FluidDraw";
+import useEventListener from "@use-it/event-listener";
 
 /**
  * @brief The fluid demonstration present in the landing page of my website.
@@ -114,7 +115,8 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, 
         }
     }, [canvasres]);
     // setup the fluid object and shaders, and bind it to the canvas
-    React.useEffect(() => {
+    // do this either when the canvas loads or when webgl crashes
+    const createFluid = React.useCallback(() => {
         if (canvas_ref.current) {
             // get a config object for the fluid renderer
             const config = FluidRender.getDefaultConfig();
@@ -135,6 +137,15 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, 
             };
         }
     }, [canvas_ref, fluid_ref]);
+    React.useEffect(createFluid, [canvas_ref, fluid_ref]);
+    useEventListener("webglcontextrestored", createFluid, canvas_ref.current || undefined);
+    // if the webgl context fails, handle it
+    useEventListener("webglcontextlost", (e) => {
+        console.log("Context loss");
+        debugger;
+        e.preventDefault();
+        fluid_ref.current = null;
+    }, canvas_ref.current || undefined);
 
     const [view_ref, inView] = useInView();
     // make sure we only are updating the fluid when we need to

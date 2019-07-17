@@ -23,6 +23,22 @@ html {
     height: 100%
 }
 
+object {
+	width: 100%;
+	display: block;
+	height: auto;
+	position: relative;
+	padding-top: 100%
+}
+
+svg {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+    left: 0;
+}
+
 body {
   height: 100%;
   margin: 0;
@@ -200,10 +216,8 @@ export const MaskGrid = styledTS<{ theme: typeof main_theme }>(styled(MaskGridBa
     }
 `;
 
-export const MaskSVG = styled.div`
-    box-sizing: border-box;
-    border: 2px solid ${ props => props.theme.color.light };
-    margin: -2px -2px -2px -2px;
+export const MaskSVG = styled.object`
+    padding-top: 76.64%;
 `;
 
 export const SVGCSS = styledTS<{ theme: typeof main_theme, fixed_size: boolean }>(styled(BodyElem))`
