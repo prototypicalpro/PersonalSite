@@ -22,7 +22,11 @@
     "typescript": "3.5.3"
   },
   "reactSnap": {
-    "headless": false
+    "headless": false,
+    "puppeteerArgs": [
+      "--proxy-server=\"direct://\"",
+      "--proxy-bypass-list=*"
+    ]
   },
   "scripts": {
     "start": "react-scripts start",
