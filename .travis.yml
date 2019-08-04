@@ -1,10 +1,25 @@
 language: node_js
 node_js:
   - "stable"
+dist: trusty
+addons:
+  apt:
+    packages:
+      # This is required to run new chrome on old trusty
+      - libnss3
+# allow headful tests
+before_install:
+  # Enable user namespace cloning
+  - "sysctl kernel.unprivileged_userns_clone=1"
+  # Launch XVFB
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+# add yarn
 cache: yarn
 script:
   - yarn run build
-deploy:
+# and gh-pages deployment
+  deploy:
   provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
@@ -13,6 +28,7 @@ deploy:
   fqdn: prototypical.pro
   on:
     branch: master
+# only travis greenkeeper and master
 branches:
   only:
     - master
