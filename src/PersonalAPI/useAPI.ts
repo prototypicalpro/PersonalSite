@@ -1,4 +1,3 @@
-import Secrets from "./secrets.json";
 import * as React from "react";
 
 /**
@@ -37,13 +36,7 @@ export interface IGithubRet {
   */
  export const useAPI = (endpoint: string, callback: (data: IGithubRet | null) => void) => {
     React.useEffect(() => {
-        fetch(API_URL + endpoint, {
-            headers: {
-                "x-api-key": Secrets.apiKey,
-            },
-            // TODO: uncomment when domain is setup
-            // mode: "same-origin",
-        })
+        fetch(API_URL + endpoint, { mode: "cors" })
         .then((res) => {
             if (res.status === 200) return res.json();
             else throw Error(`Bad status code from API: ${res.status}`);
