@@ -29,7 +29,7 @@
     "postbuild": "react-snap",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
+    "predeploy": "yarn run build",
     "deploy": "gh-pages -d build",
     "generate-sw": "workbox generateSW --root=build scripts/sw-precache-config.js",
     "build": "react-scripts build"
