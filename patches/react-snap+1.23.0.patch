@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-snap/src/puppeteer_utils.js b/node_modules/react-snap/src/puppeteer_utils.js
+index c4b7641..f7d2f36 100644
+--- a/node_modules/react-snap/src/puppeteer_utils.js
++++ b/node_modules/react-snap/src/puppeteer_utils.js
+@@ -229,7 +229,7 @@ const crawl = async opt => {
+         await page.setUserAgent(options.userAgent);
+         const tracker = createTracker(page);
+         try {
+-          await page.goto(pageUrl, { waitUntil: "networkidle0" });
++          await page.goto(pageUrl, { waitUntil: "load" });
+         } catch (e) {
+           e.message = augmentTimeoutError(e.message, tracker);
+           throw e;

@@ -1,14 +1,13 @@
 import * as React from "react";
 import { useInView } from "react-intersection-observer";
 import styled from "styled-components";
-import styledTS from "styled-components-ts";
 
 /** some styles to display a video and create a colored overlay */
 const ContainerDiv = styled.div`
     position: relative;
 `;
 
-const OverlayDiv = styledTS<{ color: string }>(styled.div)`
+const OverlayDiv = styled.div<{ color: string }>`
     background-color: ${ props => props.color };
     width: 100%;
     height: 100%;
@@ -52,7 +51,7 @@ const BackgroundVideo: React.FunctionComponent<{ videoSrcs: Array<{ url: string,
 
     return (
         <ContainerDiv ref={containerRef} className={className}>
-            <VideoStyle ref={(v) => { videoRef.current = v; view_ref(v); }} loop muted={1} preload="auto" playsInline poster={videoPoster}>
+            <VideoStyle ref={(v) => { videoRef.current = v; view_ref(v); }} loop muted={true} preload="auto" playsInline poster={videoPoster}>
                 { videoSrcs.map((src, ind) => <source key={ind} src={src.url} type={src.mime} />) }
             </VideoStyle>
             <OverlayDiv color={overlayColor}></OverlayDiv>

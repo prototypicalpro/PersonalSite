@@ -52,17 +52,17 @@ import BackgroundVideo from "./BackgroundVideo";
                             <Style.TextElement x={1} y={2} type="wordmark" size="small">
                                 <b>Prototypical Pro</b>
                             </Style.TextElement>
-                            <Style.TextElement as={"a"} rel="noopener noreferrer" target="_blank"
+                            <Style.TextElement as="a" rel="noopener noreferrer" target="_blank"
                                 href="https://bit.ly/2JIwz2g"
                                 x={2} y={2} type="header" size="small">Resume</Style.TextElement>
-                            <Style.TextElement as={"a"} rel="noopener noreferrer" target="_blank"
+                            <Style.TextElement as="a" rel="noopener noreferrer" target="_blank"
                                 href="https://github.com/prototypicalpro"
                                 x={3} y={2} type="header" size="small">Github</Style.TextElement>
                             <Style.TextElement as={ AnchorLink } href="#contact"
                                 x={4} y={2} type="header" size="small">Contact</Style.TextElement>
                         </Style.HeaderFooterGrid>
                         <Style.FlexCol className="grow" justify="flex-end">
-                            <Style.SVGCSS fixed_size="true" as={ AnchorLink } href="#intro"
+                            <Style.SVGCSS fixed_size={true} as={ AnchorLink } href="#intro"
                                 offset={ () => Math.round(window.innerWidth > window.innerHeight ? window.innerHeight * 0.15 : 0) }
                                 size="xsmall">
                                 <object><main_theme.logo.svg.down fill={ main_theme.color.dark } /></object>
@@ -131,15 +131,15 @@ import BackgroundVideo from "./BackgroundVideo";
                                 Get In Touch
                             </Style.TextElement>
                             <Style.SVGCSS size="small" fixed_size
-                                as={"a"} href="mailto:noah@koontzs.com" rel="noopener noreferrer" >
+                                as="a" href="mailto:noah@koontzs.com" rel="noopener noreferrer" >
                                 <object><main_theme.logo.svg.mail fill={ main_theme.color.accent } /></object>
                             </Style.SVGCSS>
                             <Style.SVGCSS size="small" fixed_size
-                                as={"a"} href="https://www.linkedin.com/in/prototypicalpro" rel="noopener noreferrer" target="_blank">
+                                as="a" href="https://www.linkedin.com/in/prototypicalpro" rel="noopener noreferrer" target="_blank">
                                 <object><main_theme.logo.svg.linkedin fill={ main_theme.color.accent } /></object>
                             </Style.SVGCSS>
                             <Style.SVGCSS size="small" fixed_size
-                                as={"a"} href="https://github.com/prototypicalpro" rel="noopener noreferrer" target="_blank" >
+                                as="a" href="https://github.com/prototypicalpro" rel="noopener noreferrer" target="_blank" >
                                 <object><main_theme.logo.svg.github fill={ main_theme.color.accent } /></object>
                             </Style.SVGCSS>
                         </Style.SimpleGrid>

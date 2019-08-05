@@ -164,7 +164,7 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, 
     return (
         <PerfectCenter className={className || undefined}>
             <canvas ref={ c => { canvas_ref.current = c; view_ref(c); } } width={canvasres} height={canvasres}
-                style={{ width: canvassize, height: canvassize, backgroundColor: "black" }}/>
+                style={{ width: canvassize, height: canvassize, backgroundColor: "#EEEEEE" }}/>
         </PerfectCenter>
     );
 };
