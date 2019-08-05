@@ -1,4 +1,7 @@
 # Prototypical Pro
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/prototypicalpro/PrototypicalPro.svg)](https://greenkeeper.io/)
+
 ![alt text](./docs/landing.png "The landing page, featuring a fluid effect.")
 
 This repository houses the source code for my personal website. I created this website to showcase my technical skills with a creative and visually striking presentation.
