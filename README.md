@@ -1,5 +1,6 @@
 # Prototypical Pro
 
+[![Build Status](https://travis-ci.org/prototypicalpro/PrototypicalPro.svg?branch=master)](https://travis-ci.org/prototypicalpro/PrototypicalPro)
 [![Greenkeeper badge](https://badges.greenkeeper.io/prototypicalpro/PrototypicalPro.svg)](https://greenkeeper.io/)
 
 ![alt text](./docs/landing.png "The landing page, featuring a fluid effect.")
