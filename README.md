@@ -11,4 +11,4 @@ This website is bootstrapped with [create-react-app](https://facebook.github.io/
 
 The fluid effect is a combination of an SVG and some [amazing WebGL shaders](https://github.com/PavelDoGreat/WebGL-Fluid-Simulation) written by PavelDoGreat. I have refactored PavelDoGreat's work into a React component, and created some classes that help move the fluid across the picture.
 
-Finally, the `Git Commits` and `Hours` numbers are calculated daily by a [function hosted on AWS](https://github.com/prototypicalpro/LambdaWorkspace/tree/master/PersonalSite), and will increase periodically.
+Finally, the `Git Commits` and `Hours` numbers are calculated daily by a [function hosted on AWS](https://github.com/prototypicalpro/LambdaWorkspace), and will increase periodically.
