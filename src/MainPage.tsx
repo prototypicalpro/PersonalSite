@@ -53,7 +53,7 @@ import BackgroundVideo from "./BackgroundVideo";
                                 <b>Prototypical Pro</b>
                             </Style.TextElement>
                             <Style.TextElement as="a" rel="noopener noreferrer" target="_blank"
-                                href="https://bit.ly/2JIwz2g"
+                                href="https://drive.google.com/open?id=1YY9tzfAOvMhqCkoZPxiIYY-FjYEXlNs2"
                                 x={2} y={2} type="header" size="small">Resume</Style.TextElement>
                             <Style.TextElement as="a" rel="noopener noreferrer" target="_blank"
                                 href="https://github.com/prototypicalpro"
