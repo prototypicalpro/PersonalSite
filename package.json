@@ -56,7 +56,7 @@
   "homepage": "https://prototypical.pro",
   "devDependencies": {
     "gh-pages": "~2.1.0",
-    "patch-package": "~6.1.2",
+    "patch-package": "~6.2.0",
     "postinstall-postinstall": "~2.0.0",
     "react-snap": "~1.23.0",
     "tslint": "~5.18.0"
