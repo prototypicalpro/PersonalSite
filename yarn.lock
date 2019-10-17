@@ -5495,7 +5495,7 @@ intersection-observer@~0.7.0:
   resolved "https://registry.yarnpkg.com/intersection-observer/-/intersection-observer-0.7.0.tgz#ee16bee978db53516ead2f0a8154b09b400bbdc9"
   integrity sha512-Id0Fij0HsB/vKWGeBe9PxeY45ttRiBmhFyyt/geBdDHBYNctMRTE3dC1U3ujzz3lap+hVXlEcVaB56kZP/eEUg==
 
-invariant@^2.0.0, invariant@^2.2.2, invariant@^2.2.4:
+invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -8896,13 +8896,12 @@ react-error-overlay@^6.0.3:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.3.tgz#c378c4b0a21e88b2e159a3e62b2f531fd63bf60d"
   integrity sha512-bOUvMWFQVk5oz8Ded9Xb7WVdEi3QGLC8tH7HmYP0Fdp4Bn3qw0tRFmr5TW6mvahzvmrK4a6bqWGfCevBflP+Xw==
 
-react-intersection-observer@~8.24.2:
-  version "8.24.2"
-  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-8.24.2.tgz#e4c2474aed39b0962fcde68ba3c12c3c05d28988"
-  integrity sha512-1l3eS/vZ3ScS6xawgeysl2z5hCtzJ2o4eYyQu4VdrbaahcWJccphPmZmQvFRsHA1tyKpMYV+KCrKfhuN5w8Erw==
+react-intersection-observer@~8.25.0:
+  version "8.25.1"
+  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-8.25.1.tgz#26049fbbd9fbed10121552d220c5b433b041fd60"
+  integrity sha512-JKCQ1R4Ch/dnuwkOwKpfgz5oDy4jLdJBC2Vp2dbqm/PIhKV8aKfgvrCT3fL9CvKzo2pXWh2R/oA1yspIYN9kcg==
   dependencies:
-    "@babel/runtime" "^7.0.0"
-    invariant "^2.0.0"
+    tiny-invariant "^1.0.6"
 
 react-is@^16.8.1, react-is@^16.8.4:
   version "16.9.0"
@@ -10331,6 +10330,11 @@ timsort@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
   integrity sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=
+
+tiny-invariant@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.0.6.tgz#b3f9b38835e36a41c843a3b0907a5a7b3755de73"
+  integrity sha512-FOyLWWVjG+aC0UqG76V53yAWdXfH8bO6FNmyZOuUrzDzK8DI3/JRY25UD7+g49JWM1LXwymsKERB+DzI0dTEQA==
 
 tmp@^0.0.33:
   version "0.0.33"
