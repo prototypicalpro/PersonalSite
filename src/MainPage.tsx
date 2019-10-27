@@ -44,7 +44,7 @@ import BackgroundVideo from "./BackgroundVideo";
                     <FluidGL className="full" canvasres={ dimension } canvassize="90vmin" />
                     <Style.MaskGrid className="full">
                         <Style.MaskSVG className="mask">
-                            <main_theme.logo.svg.mask />
+                            <main_theme.logo.svg.mask aria-label="{P}"/>
                         </Style.MaskSVG>
                     </Style.MaskGrid>
                     <Style.FlexCol className="content">
@@ -54,15 +54,19 @@ import BackgroundVideo from "./BackgroundVideo";
                             </Style.TextElement>
                             <Style.TextElement as="a" rel="noopener noreferrer" target="_blank"
                                 href="https://drive.google.com/open?id=1YY9tzfAOvMhqCkoZPxiIYY-FjYEXlNs2"
+                                aria-label="Download a copy of my resume"
                                 x={2} y={2} type="header" size="small">Resume</Style.TextElement>
                             <Style.TextElement as="a" rel="noopener noreferrer" target="_blank"
                                 href="https://github.com/prototypicalpro"
+                                aria-label="View projects I have worked with on GitHub"
                                 x={3} y={2} type="header" size="small">Github</Style.TextElement>
                             <Style.TextElement as={ AnchorLink } href="#contact"
+                                aria-label="Scroll down to links with my contact information"
                                 x={4} y={2} type="header" size="small">Contact</Style.TextElement>
                         </Style.HeaderFooterGrid>
                         <Style.FlexCol className="grow" justify="flex-end">
                             <Style.SVGCSS fixed_size="true" as={ AnchorLink } href="#intro"
+                                aria-label="Scroll to the next section"
                                 offset={ () => Math.round(window.innerWidth > window.innerHeight ? window.innerHeight * 0.15 : 0) }
                                 size="xsmall">
                                 <object><main_theme.logo.svg.down fill={ main_theme.color.dark } /></object>
@@ -131,15 +135,18 @@ import BackgroundVideo from "./BackgroundVideo";
                                 Get In Touch
                             </Style.TextElement>
                             <Style.SVGCSS size="small" fixed_size="true"
-                                as="a" href="mailto:noah@koontzs.com" rel="noopener noreferrer" >
+                                as="a" href="mailto:noah@koontzs.com" rel="noopener noreferrer"
+                                aria-label="Send me an email" >
                                 <object><main_theme.logo.svg.mail fill={ main_theme.color.accent } /></object>
                             </Style.SVGCSS>
                             <Style.SVGCSS size="small" fixed_size="true"
-                                as="a" href="https://www.linkedin.com/in/prototypicalpro" rel="noopener noreferrer" target="_blank">
+                                as="a" href="https://www.linkedin.com/in/prototypicalpro" rel="noopener noreferrer" target="_blank"
+                                aria-label="Follow me on LinkedIn">
                                 <object><main_theme.logo.svg.linkedin fill={ main_theme.color.accent } /></object>
                             </Style.SVGCSS>
                             <Style.SVGCSS size="small" fixed_size="true"
-                                as="a" href="https://github.com/prototypicalpro" rel="noopener noreferrer" target="_blank" >
+                                as="a" href="https://github.com/prototypicalpro" rel="noopener noreferrer" target="_blank" 
+                                aria-label="Check out projects I have worked with on GitHub">
                                 <object><main_theme.logo.svg.github fill={ main_theme.color.accent } /></object>
                             </Style.SVGCSS>
                         </Style.SimpleGrid>
