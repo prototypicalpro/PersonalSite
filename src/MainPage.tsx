@@ -52,14 +52,14 @@ import BackgroundVideo from "./BackgroundVideo";
                             <Style.TextElement x={1} y={2} type="wordmark" size="small">
                                 <b>Prototypical Pro</b>
                             </Style.TextElement>
-                            <Style.TextElement as="a" rel="noopener noreferrer" target="_blank"
-                                href="https://drive.google.com/open?id=1YY9tzfAOvMhqCkoZPxiIYY-FjYEXlNs2"
-                                aria-label="Download a copy of my resume"
-                                x={2} y={2} type="header" size="small">Resume</Style.TextElement>
-                            <Style.TextElement as="a" rel="noopener noreferrer" target="_blank"
+                            <Style.TextElement as="a" rel="noopener" target="_blank"
                                 href="https://github.com/prototypicalpro"
                                 aria-label="View projects I have worked with on GitHub"
-                                x={3} y={2} type="header" size="small">Github</Style.TextElement>
+                                x={2} y={2} type="header" size="small">Projects</Style.TextElement>
+                            <Style.TextElement as="a" rel="noopener" target="_blank"
+                                href="https://drive.google.com/open?id=1qtI_LOuLn_JGNal-EaxP9C_GBVO2S0ZA"
+                                aria-label="Download a copy of my resume"
+                                x={3} y={2} type="header" size="small">Resume</Style.TextElement>
                             <Style.TextElement as={ AnchorLink } href="#contact"
                                 aria-label="Scroll down to links with my contact information"
                                 x={4} y={2} type="header" size="small">Contact</Style.TextElement>
@@ -140,12 +140,12 @@ import BackgroundVideo from "./BackgroundVideo";
                                 <object><main_theme.logo.svg.mail fill={ main_theme.color.accent } /></object>
                             </Style.SVGCSS>
                             <Style.SVGCSS size="small" fixed_size="true"
-                                as="a" href="https://www.linkedin.com/in/prototypicalpro" rel="noopener noreferrer" target="_blank"
+                                as="a" href="https://www.linkedin.com/in/prototypicalpro" rel="noopener" target="_blank"
                                 aria-label="Follow me on LinkedIn">
                                 <object><main_theme.logo.svg.linkedin fill={ main_theme.color.accent } /></object>
                             </Style.SVGCSS>
                             <Style.SVGCSS size="small" fixed_size="true"
-                                as="a" href="https://github.com/prototypicalpro" rel="noopener noreferrer" target="_blank" 
+                                as="a" href="https://github.com/prototypicalpro" rel="noopener" target="_blank"
                                 aria-label="Check out projects I have worked with on GitHub">
                                 <object><main_theme.logo.svg.github fill={ main_theme.color.accent } /></object>
                             </Style.SVGCSS>
