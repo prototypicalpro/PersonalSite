@@ -57,7 +57,7 @@ import BackgroundVideo from "./BackgroundVideo";
                                 aria-label="View projects I have worked with on GitHub"
                                 x={2} y={2} type="header" size="small">Projects</Style.TextElement>
                             <Style.TextElement as="a" rel="noopener" target="_blank"
-                                href="https://drive.google.com/open?id=1qtI_LOuLn_JGNal-EaxP9C_GBVO2S0ZA"
+                                href="https://drive.google.com/open?id=1BFq08qwXKwoWRhGwUvSGmqYUZuWOVjtb"
                                 aria-label="Download a copy of my resume"
                                 x={3} y={2} type="header" size="small">Resume</Style.TextElement>
                             <Style.TextElement as={ AnchorLink } href="#contact"
