@@ -38,6 +38,7 @@ const BackgroundVideo: React.FunctionComponent<{ videoSrcs: Array<{ url: string,
     React.useEffect(() => {
         if (videoRef.current) {
             if (inView && videoRef.current) {
+                if (!videoRef.current.defaultMuted) videoRef.current.defaultMuted = true;
                 if (!videoRef.current.muted) videoRef.current.muted = true;
                 if (lastPromise.current) lastPromise.current.then(() => videoRef.current && videoRef.current.play() && undefined);
                 else lastPromise.current = videoRef.current.play();
@@ -51,7 +52,7 @@ const BackgroundVideo: React.FunctionComponent<{ videoSrcs: Array<{ url: string,
 
     return (
         <ContainerDiv ref={containerRef} className={className}>
-            <VideoStyle ref={(v) => { videoRef.current = v; view_ref(v); }} loop muted={true} preload="auto" playsInline poster={videoPoster}>
+            <VideoStyle ref={(v) => { videoRef.current = v; if (v !== null) v.defaultMuted = true; view_ref(v); }} loop muted={true} preload="auto" playsInline poster={videoPoster}>
                 { videoSrcs.map((src, ind) => <source key={ind} src={src.url} type={src.mime} />) }
             </VideoStyle>
             <OverlayDiv color={overlayColor}></OverlayDiv>
