@@ -22,6 +22,9 @@
     "styled-components": "~5.0.0",
     "typescript": "~3.7.5"
   },
+  "resolutions": {
+    "dot-prop": "~5.2.0"
+  },
   "scripts": {
     "postinstall": "patch-package",
     "start": "react-scripts start",
