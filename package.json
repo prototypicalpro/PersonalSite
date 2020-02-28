@@ -14,7 +14,7 @@
     "babel-polyfill": "~6.26.0",
     "countup.js": "~2.0.4",
     "intersection-observer": "~0.7.0",
-    "react": "~16.12.0",
+    "react": "~16.13.0",
     "react-anchor-link-smooth-scroll": "~1.0.12",
     "react-dom": "~16.12.0",
     "react-intersection-observer": "~8.26.0",
