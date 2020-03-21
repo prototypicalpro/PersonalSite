@@ -22,9 +22,6 @@
     "styled-components": "~5.0.1",
     "typescript": "~3.8.3"
   },
-  "resolutions": {
-    "@babel/preset-env": "7.5.5"
-  },
   "scripts": {
     "postinstall": "patch-package",
     "start": "react-scripts start",
