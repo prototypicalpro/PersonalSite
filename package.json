@@ -23,7 +23,7 @@
     "typescript": "~3.8.3"
   },
   "resolutions": {
-    "dot-prop": "~5.2.0"
+    "@babel/preset-env": "7.8.7"
   },
   "scripts": {
     "postinstall": "patch-package",
