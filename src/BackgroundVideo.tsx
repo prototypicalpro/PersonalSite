@@ -50,9 +50,16 @@ const BackgroundVideo: React.FunctionComponent<{ videoSrcs: Array<{ url: string,
         }
     }, [videoRef, inView, videoSrcs, lastPromise]);
 
+    const ref_callback = React.useCallback((v: HTMLVideoElement) => {
+        videoRef.current = v; 
+        if (v !== null) 
+            v.defaultMuted = true; 
+        view_ref(v);
+    }, [view_ref, videoRef]);
+
     return (
         <ContainerDiv ref={containerRef} className={className}>
-            <VideoStyle ref={(v) => { videoRef.current = v; if (v !== null) v.defaultMuted = true; view_ref(v); }} loop muted={true} preload="auto" playsInline poster={videoPoster}>
+            <VideoStyle ref={ref_callback} loop muted={true} preload="auto" playsInline poster={videoPoster}>
                 { videoSrcs.map((src, ind) => <source key={ind} src={src.url} type={src.mime} />) }
             </VideoStyle>
             <OverlayDiv color={overlayColor}></OverlayDiv>
@@ -60,4 +67,4 @@ const BackgroundVideo: React.FunctionComponent<{ videoSrcs: Array<{ url: string,
     );
 });
 
-export default BackgroundVideo;
+export default React.memo(BackgroundVideo);

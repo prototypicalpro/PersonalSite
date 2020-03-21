@@ -15,9 +15,9 @@ import BackgroundVideo from "./BackgroundVideo";
  * its own container.
  */
 
- // the API result as of 7/3/2019
- const BACKUP_COMMIT_COUNT = 919;
- const BACKUP_HOURS_COUNT = 4319;
+ // the API result as of 3/21/2020
+ const BACKUP_COMMIT_COUNT = 1354;
+ const BACKUP_HOURS_COUNT = 6360;
 
  const MainPage: React.FunctionComponent = () => {
     const [dimension, setDimension] = React.useState<number>(0);

@@ -161,12 +161,17 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, 
         }
     }, [inView, animation_callback_ref, animation_id_ref]);
 
+    const refCallback = React.useCallback((c: HTMLCanvasElement) => {
+        canvas_ref.current = c; 
+        view_ref(c); 
+    }, [canvas_ref, view_ref]);
+
     return (
         <PerfectCenter className={className || undefined}>
-            <canvas ref={ c => { canvas_ref.current = c; view_ref(c); } } width={canvasres} height={canvasres}
+            <canvas ref={ refCallback }  width={canvasres} height={canvasres}
                 style={{ width: canvassize, height: canvassize, backgroundColor: "#EEEEEE" }}/>
         </PerfectCenter>
     );
 };
 
-export default FluidGL;
+export default React.memo(FluidGL);
