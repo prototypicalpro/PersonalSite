@@ -120,7 +120,7 @@ import BackgroundVideo from "./BackgroundVideo";
                 <Style.ContentContainer id="text" height="70%" mobile_height="152.5vh" color="medium">
                     <Style.PerfectCenter className="content">
                         <Style.ResumeText>
-                            I am <Style.Mark>maker</Style.Mark> who enjoys the creative
+                            I am a <Style.Mark>maker</Style.Mark> who enjoys the creative
                             application of technology. I am a <Style.Mark>hard worker</Style.Mark> with
                             an ability to turn ideas into
                             reality. <Style.Mark>Resourceful</Style.Mark> and <Style.Mark>motivated</Style.Mark>,
