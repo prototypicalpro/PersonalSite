@@ -4,12 +4,12 @@
     "main.js.map": "/static/js/main.f6b90c91.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.e10923c1.js",
     "runtime-main.js.map": "/static/js/runtime-main.e10923c1.js.map",
-    "static/js/2.48a35cd7.chunk.js": "/static/js/2.48a35cd7.chunk.js",
-    "static/js/2.48a35cd7.chunk.js.map": "/static/js/2.48a35cd7.chunk.js.map",
+    "static/js/2.bc67d8bc.chunk.js": "/static/js/2.bc67d8bc.chunk.js",
+    "static/js/2.bc67d8bc.chunk.js.map": "/static/js/2.bc67d8bc.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.7f72a7cadbe21bdf6857c8a52ddd0b6e.js": "/precache-manifest.7f72a7cadbe21bdf6857c8a52ddd0b6e.js",
+    "precache-manifest.e9817a785cd071cc0ec3d5baca923531.js": "/precache-manifest.e9817a785cd071cc0ec3d5baca923531.js",
     "service-worker.js": "/service-worker.js",
-    "static/js/2.48a35cd7.chunk.js.LICENSE.txt": "/static/js/2.48a35cd7.chunk.js.LICENSE.txt",
+    "static/js/2.bc67d8bc.chunk.js.LICENSE.txt": "/static/js/2.bc67d8bc.chunk.js.LICENSE.txt",
     "static/media/backthumb.jpg": "/static/media/backthumb.a99c0b3c.jpg",
     "static/media/backvid.mp4": "/static/media/backvid.8a5d67d8.mp4",
     "static/media/backvid.webm": "/static/media/backvid.8b8bbaaf.webm",
@@ -26,7 +26,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.e10923c1.js",
-    "static/js/2.48a35cd7.chunk.js",
+    "static/js/2.bc67d8bc.chunk.js",
     "static/js/main.f6b90c91.chunk.js"
   ]
 }
