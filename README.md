@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/prototypicalpro/PrototypicalPro.svg?branch=master)](https://travis-ci.org/prototypicalpro/PrototypicalPro)
 [![Greenkeeper badge](https://badges.greenkeeper.io/prototypicalpro/PrototypicalPro.svg)](https://greenkeeper.io/)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/prototypicalpro/PrototypicalPro.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/prototypicalpro/PrototypicalPro/context:javascript)
 
 ![alt text](./docs/landing.png "The landing page, featuring a fluid effect.")
 
