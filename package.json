@@ -20,7 +20,8 @@
     "react-intersection-observer": "~8.26.2",
     "react-scripts": "~3.4.1",
     "styled-components": "~5.1.0",
-    "typescript": "~3.9.2"
+    "typescript": "~3.9.2",
+    "whatwg-fetch": "~3.0.0"
   },
   "scripts": {
     "postinstall": "patch-package",

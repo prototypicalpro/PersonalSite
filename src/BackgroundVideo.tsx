@@ -45,7 +45,7 @@ const BackgroundVideo: React.FunctionComponent<{ videoSrcs: Array<{ url: string,
             }
             else {
                 if (lastPromise.current) lastPromise.current.then(() => videoRef.current && videoRef.current.pause() && undefined);
-                else videoRef.current.pause();
+                else videoRef.current && videoRef.current.pause();
             }
         }
     }, [videoRef, inView, videoSrcs, lastPromise]);

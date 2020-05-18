@@ -5,6 +5,7 @@ import * as serviceWorker from "./serviceWorker";
 import MainPage from "./MainPage";
 import "core-js/stable";
 import "intersection-observer";
+import "whatwg-fetch";
 
 if(process.env.NODE_END !== "development")
   Sentry.init({dsn: "https://fd67b78fc5bc4a05bdd2297d68a44d08@sentry.io/1536614"});
