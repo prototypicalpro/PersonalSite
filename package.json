@@ -22,7 +22,8 @@
     "react-scripts": "~3.4.1",
     "styled-components": "~5.1.1",
     "typescript": "~3.9.3",
-    "whatwg-fetch": "~3.0.0"
+    "whatwg-fetch": "~3.0.0",
+    "snyk": "^1.328.0"
   },
   "scripts": {
     "postinstall": "patch-package",
@@ -33,7 +34,9 @@
     "predeploy": "yarn run build",
     "deploy": "gh-pages -d build",
     "generate-sw": "workbox generateSW --root=build scripts/sw-precache-config.js",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "reactSnap": {
     "source": "build",
@@ -61,5 +64,6 @@
     "postinstall-postinstall": "~2.1.0",
     "react-snap": "~1.23.0",
     "tslint": "~6.1.2"
-  }
+  },
+  "snyk": true
 }
