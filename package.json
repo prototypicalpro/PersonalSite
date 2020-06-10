@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@sentry/browser": "~5.16.0",
-    "@types/jest": "~25.2.3",
-    "@types/node": "~14.0.8",
-    "@types/react": "~16.9.35",
+    "@sentry/browser": "~5.17.0",
+    "@types/jest": "~26.0.0",
+    "@types/node": "~14.0.13",
+    "@types/react": "~16.9.36",
     "@types/react-dom": "~16.9.8",
     "@types/styled-components": "~5.1.0",
     "@types/webgl2": "~0.0.5",
@@ -21,7 +21,7 @@
     "react-is": "~16.13.1",
     "react-scripts": "~3.4.1",
     "styled-components": "~5.1.1",
-    "typescript": "~3.9.3",
+    "typescript": "~3.9.5",
     "whatwg-fetch": "~3.0.0"
   },
   "scripts": {
@@ -61,5 +61,9 @@
     "postinstall-postinstall": "~2.1.0",
     "react-snap": "~1.23.0",
     "tslint": "~6.1.2"
+  },
+  "resolutions": {
+    "serialize-javascript": ">=3.1.0",
+    "yargs-parser": ">=18.1.1"
   }
 }
