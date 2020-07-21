@@ -22,7 +22,7 @@
     "react-scripts": "~3.4.1",
     "styled-components": "~5.1.1",
     "typescript": "~3.9.5",
-    "whatwg-fetch": "~3.0.0"
+    "whatwg-fetch": "~3.1.0"
   },
   "scripts": {
     "postinstall": "patch-package",
