@@ -1,6 +1,6 @@
 # Prototypical Pro
 
-[![Build Status](https://travis-ci.org/prototypicalpro/PrototypicalPro.svg?branch=master)](https://travis-ci.org/prototypicalpro/PrototypicalPro)
+[![Build Status](https://travis-ci.org/prototypicalpro/PersonalSite.svg?branch=master)](https://travis-ci.org/prototypicalpro/PersonalSite)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/prototypicalpro/PrototypicalPro.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/prototypicalpro/PrototypicalPro/context:javascript)
 
 ![alt text](./docs/landing.png "The landing page, featuring a fluid effect.")
