@@ -137,7 +137,7 @@ const FluidGL: React.FunctionComponent<{ className?: string, canvasres: number, 
             };
         }
     }, [canvas_ref, fluid_ref]);
-    React.useEffect(createFluid, [canvas_ref, fluid_ref]);
+    React.useEffect(createFluid, [canvas_ref, fluid_ref, createFluid]);
     useEventListener("webglcontextrestored", createFluid, canvas_ref.current || undefined);
     // if the webgl context fails, handle it
     useEventListener("webglcontextlost", (e) => {
